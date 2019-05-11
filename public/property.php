@@ -1,0 +1,43 @@
+<?php require_once("../init.php"); ?>
+<?php
+  if(!Input::get('id')) {
+    Redirect::to('index.php');
+  }
+  
+  $property = Property::findById(Input::get('id'));
+    
+  if(!$property) {
+    $session->message("The property could not be located.");
+    redirect_to('index.php');
+  }else{
+  	$property->views = $property->views + 1;
+  	$property->save();
+  }
+	
+?>
+<?php include_layout_template('header.php'); ?>
+
+<p><a href="properties.php">My properties &raquo;</a></p>
+
+<?php echo output_message($message); ?>
+
+<div style="margin-left: 20px;">
+  	<img src="<?php echo $property->image_path(); ?>" />
+  	<div style=" margin: 20px 0;">
+		<?php 				
+			echo "<strong>K ".(int)$property->price." ".$property->terms."</strong><br>";		
+			echo $property->beds . " bedrooms <strong>·</strong> "; 
+			echo $property->baths . " bathrooms<br>"; 
+			echo $property->address . " ". $property->getLocation() ."<br>";
+			echo $property->type. " for ".$property->market."<br>";
+			echo "Listed by: ".$property->getPropertyUser()."<br>";
+			echo "<p>Views: ".$property->views."&nbsp;&nbsp; Status: <strong>".$property->getPropertyStatus()."</strong></p>";
+
+			echo "<h4 style=\"margin-bottom: 0;\">Description</h4>";
+			echo"<p>".ucfirst($property->description)."</p>";
+		 ?>
+ 	</div>
+</div>
+
+
+<?php include_layout_template('footer.php'); ?>
