@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title><?php echo page_title($page_title); ?>/</title>
+    <title><?php echo page_title($page_title); ?></title>
     <link href="assets/css/style.css" media="all" rel="stylesheet" type="text/css" />
   </head>
   <body>

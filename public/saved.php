@@ -26,7 +26,7 @@
 	// List all the property that the user saved
 		foreach ($properties as $property): ?>
 			<?php
-				echo "<p style=\"margin-bottom:1rem;\"><a href=\"property.php?id=$property->id\"><strong>K ".(int)$property->price."&nbsp;<small>".$property->getRentTerms()."</small></strong><br>";	
+				echo "<p style=\"margin-bottom:1rem;\"><a href=\"property.php?id=$property->id\"><strong>K ".(int)$property->price."&nbsp;<small>".$property->rentTerms()."</small></strong><br>";	
 				echo $property->beds   . " bedrooms <strong>·</strong> "; 
 				echo $property->baths  . " bathrooms <strong>·</strong> ";
 				echo $property->size   . " sqft<br>";

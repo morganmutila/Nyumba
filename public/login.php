@@ -72,7 +72,7 @@ else {?>
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>"/>
         <button type="submit" class="btn btn-primary btn-block font-weight-bold">Log in</button>
     </div>  
-    <p class="my-3 text-center"><a href="signup.php" class="small text-muted">Sign up</a></p>                      
+    <p class="my-3 text-center">New to Nyumba Yanga?&nbsp;<a href="signup.php" class="small text-muted">Join now</a></p>                      
 </form>
 
 <?php include_layout_template('footer.php'); ?>

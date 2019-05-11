@@ -41,17 +41,17 @@
 		<div style=" margin: 20px 0 2rem 0;">
 			<?php 
 				echo "<a href=\"property.php?id={$property->id}\">";			
-				echo "<strong>K ".(int)$property->price."&nbsp;<small>".$property->getRentTerms()."</small></strong><br>";		
+				echo "<strong>K ".(int)$property->price."&nbsp;<small>".$property->rentTerms()."</small></strong><br>";		
 				echo $property->beds    . " beds <strong>·</strong> "; 
 				echo $property->baths   . " baths <strong>·</strong> ";
 				echo $property->size    . " Sqft<br>";  
-				echo $property->address . ", ". $property->getLocation() ."<br>";
+				echo $property->address . ", ". $property->Location() ."<br>";
 				echo "For ".ucfirst($property->market);
 				echo "</a>";
 				if(isset($user)){
 					echo ($user->SavedProperty($property->id)) ?
-						"<a href=\"listremove.php?id=$property->id\" style=\"margin-left: 4.5rem;\">√ Save</a>":
-						"<a href=\"listsave.php?id=$property->id\" style=\"margin-left: 4.5rem;\">+ Save</a>";
+						"<a href=\"listremove.php?id=$property->id\" style=\"margin-left: 4.5rem;\">❤️</a>":
+						"<a href=\"listsave.php?id=$property->id\" style=\"margin-left: 4.5rem;\">Save</a>";
 				}else{
 					echo "<a href=\"login.php?redirect=saved\" style=\"margin-left: 4.5rem;\">+ Save</a>";
 				}		

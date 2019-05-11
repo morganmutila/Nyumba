@@ -177,7 +177,7 @@ if(Input::exists()){
   			<?php 
 		        $select_location = "<select name=\"location\">";
 		            $select_location .= "<option value=\"\">Please select</option>";
-		            foreach (Location::locations() as $key => $value) {
+		            foreach (Location::AllLocations() as $key => $value) {
 		                $select_location .= "<option value=\"$value\" ";
 		                    if((isset($property) && $property->location_id == $value) || Input::get('location') == $value){ 
 		                        $select_location .= "selected=\"selected\"";

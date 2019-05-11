@@ -49,7 +49,7 @@ class Property extends DatabaseObject{
         return $property_features;
     }   
 
-    public function getPropertyStatus(){
+    public function propertyStatus(){
         switch ($this->status) {                           
             case 1:
                 $status = "added";
@@ -70,10 +70,10 @@ class Property extends DatabaseObject{
                 $status = "archieved";
                 break;
         }
-         return ucfirst($status);
+         return strtoupper($status);
     }    
 
-    public function getRentTerms(){
+    public function rentTerms(){
         if($this->market == "rent"){
             switch ($this->terms) { 
                 case 1:
@@ -97,12 +97,12 @@ class Property extends DatabaseObject{
         return "";
     }    
 
-    public function getLocation(){ 
-        $location = Location::findLocationbyId($this->location_id);
+    public function location(){ 
+        $location = Location::findLocationOn($this->location_id);
         return $location;
     }
 
-    public function getPropertyUser(){ 
+    public function propertyUser(){ 
         $user = User::findbyId($this->user_id);
         return !empty($user) ? $user->fullname() : false;
     }

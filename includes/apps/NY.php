@@ -28,7 +28,7 @@ class Location extends DatabaseObject{
     public $location;
     public $description;
 
-	public function locations(){
+	public function AllLocations(){
 		$locations = array();
 		DB::getInstance()->direct_query("SELECT id, location FROM location ORDER BY location");
 		while ($row = DB::getInstance()->fetch()) {
@@ -37,7 +37,7 @@ class Location extends DatabaseObject{
 		return $locations;
 	}
 
-	public static function findLocationById($location_id){
+	public static function findLocationOn($location_id){
 		$sql = "SELECT location FROM location WHERE id=?";
 		$params = array($location_id);
 		DB::getInstance()->query($sql, $params);

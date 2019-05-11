@@ -2,7 +2,7 @@
 require '../init.php';
 if($session->isLoggedIn()){ Redirect::to("index.php");}
 
-$page_title = "Signup - Nyumba Yanga";
+$page_title = "Sign Up - Nyumba Yanga";
 
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))) {
