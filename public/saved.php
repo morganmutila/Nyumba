@@ -18,7 +18,7 @@
 
 <?php include_layout_template('header.php'); ?>
 
-	<h2>Saved properties</h2>
+	<h2>Saved properties(<?php echo SavedProperty::total();?>)</h2>
 	
 	<?php echo output_message($message); ?>
 
@@ -31,7 +31,7 @@
 				echo $property->baths  . " bathrooms <strong>·</strong> ";
 				echo $property->size   . " sqft<br>";
 				echo $property->address."<br>";
-				echo "<a href=\"listremove.php?id=$property->id&redirect=saved\">x Remove</a></p>";
+				echo "<a href=\"listremove.php?id=$property->id&redirect=saved\">-> Share</a>&nbsp;&nbsp;<a href=\"listremove.php?id=$property->id&redirect=saved\">x Remove</a></p>";
 
 			?>
 		<?php endforeach; ?>

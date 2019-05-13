@@ -47,8 +47,6 @@ require CLASS_PATH   .DS. "Common.php";
 //Include Nyumba yanga small classes
 require CLASS_PATH   .DS. "NY.php";
 
-// Create a simple variable handle for the database connection
-$db = DB::getInstance();
 
 // Start the session and initialise $message
 $session = new Session();

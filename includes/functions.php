@@ -36,10 +36,6 @@ function clean($str) {
     return $str;
 }
 
-function php_format_date($timeString){
-    return date("j M Y" ,strtotime($timeString));
-}
-
 function text_to_datetime($format){
     return strftime($format, time());
 }
@@ -98,7 +94,7 @@ function log_action($action, $message="") {
 
 function create_form_select($name="", $count=null, $accept=""){
     if($count > 0){
-        if($accept == "half_values"){
+        if($accept == "fractions"){
             $output = "<select name=\"{$name}\">";
                 for($i=1; $i <= $count; $i = $i + 0.5){               
                     if ($i == $count) {

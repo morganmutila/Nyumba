@@ -1,6 +1,4 @@
-<?php require_once("../init.php"); ?>
-
-<?php
+<?php require_once("../init.php"); 
 
 $page_title = "Add your location";
 	
@@ -17,11 +15,11 @@ if(Input::exists()){
 					// Add the location
 					//Add the location in a session
 					$_SESSION['location']  = (int) Input::get('location');
-					$session->message("We have saved ".$user->getLocation($_SESSION['location'])." as your default location for property listing");
+					$session->message("We have saved ".$user->location($_SESSION['location'])." as your default location for property listing");
 	                Redirect::to("index.php?location={$user->location_id}");
 	            } else{
 	            	//Add the location in a session
-	                $message = $user->getLocation($_SESSION['location'])." is still your default location";
+	                $message = $user->location($_SESSION['location'])." is still your default location";
 	            }
 	        }else{
 				$_SESSION['location']  = (int) Input::get('location');

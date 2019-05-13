@@ -10,7 +10,7 @@
 
 <?php include_layout_template('header.php'); ?>
 
-	<h2>My properties (<?php echo $user->numberOfProperty();?>)&nbsp;&nbsp;<small style="font-weight: normal;"><a href="list.php">+ Add property</a></small></h2>
+	<h2>My properties (<?php echo $user->propertyCount();?>)&nbsp;&nbsp;<small style="font-weight: normal;"><a href="list.php">+ Add property</a></small></h2>
 	
 	<?php echo output_message($message); ?>
 
@@ -23,7 +23,7 @@
 				echo $property->beds . " beds <strong>·</strong> "; 
 				echo $property->baths . " baths <strong>·</strong> ";
 				echo $property->size . " sqft<br>"; 
-				echo "Status: ".$property->getPropertyStatus() . "<br></a>";
+				echo "Status: ".$property->propertyStatus() . "<br></a>";
 				echo "<a href=\"delete.php?id={$property->id}\">× Delete</a></p>"; 
 
 			?>

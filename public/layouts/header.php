@@ -17,7 +17,7 @@
         <?php else: ?>
             <ul class="menu">
                 <li><a href="index.php">Home</a></li>  
-                <?php if($user->numberOfProperty() >= 1){ ?>          
+                <?php if($user->propertyCount() >= 1){ ?>          
                     <li><a href="properties.php">My properties</a></li>
                 <?php } ?>
                 <li><a href="list.php">List a property</a></li>
@@ -28,7 +28,7 @@
         <form action="search.php" method="GET" style="width:100%;padding-left:1.5rem;margin:0;">
             <table style="width: 400px;">
                 <tr>
-                    <td><input type="text" name="q" value="" placeholder="Search property" style="width: 102%;margin:0;"></td>
+                    <td><input type="text" name="q" value="" placeholder="Search location" style="width: 102%;margin:0;"></td>
                     <td><button type="submit">Search</button></td>
                 </tr>
             </table>

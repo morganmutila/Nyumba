@@ -14,20 +14,20 @@
 	// Instead of finding all records, just find the records 
 	// for this page
 	$sql  = "SELECT * FROM property WHERE status >= ? ";
-	$sql .= "ORDER BY added "; 
+	$sql .= "ORDER BY added DESC "; 
 	$sql .= "LIMIT {$per_page} ";
 	$sql .= "OFFSET {$pagination->offset()}";
 	$properties = Property::findBySql($sql, array(1));
 
 
-		// Instead of finding all records, just find the records 
+	// Instead of finding all records, just find the records 
 	// for this page
 	if(isset($_SESSION['location'])): 
-		$sql_2  = "SELECT * FROM property WHERE status >= ? AND location_id = ?";
-		$sql_2 .= "ORDER BY added "; 
-		$sql_2 .= "LIMIT {$per_page} ";
-		$sql_2 .= "OFFSET {$pagination->offset()}";
-		$properties_2 = Property::findBySql($sql_2, array(1, $_SESSION['location']));
+	$sql_2  = "SELECT * FROM property WHERE status >= ? AND location_id = ?";
+	$sql_2 .= "ORDER BY added DESC "; 
+	$sql_2 .= "LIMIT {$per_page} ";
+	$sql_2 .= "OFFSET {$pagination->offset()}";
+	$properties_2 = Property::findBySql($sql_2, array(1, $_SESSION['location']));
 	endif;
 ?>
 
@@ -53,7 +53,7 @@
 						"<a href=\"listremove.php?id=$property->id\" style=\"margin-left: 4.5rem;\">❤️</a>":
 						"<a href=\"listsave.php?id=$property->id\" style=\"margin-left: 4.5rem;\">Save</a>";
 				}else{
-					echo "<a href=\"login.php?redirect=saved\" style=\"margin-left: 4.5rem;\">+ Save</a>";
+					echo "<a href=\"login.php?redirect=saved\" style=\"margin-left: 4.5rem;\">Save</a>";
 				}		
 			 ?>
 	 	</div>
@@ -69,7 +69,7 @@
 		<div style=" margin: 20px 0;">
 			<?php 
 				echo "<a href=\"property.php?id={$property->id}\">";			
-				echo "<strong>K ".(int)$property_2->price."&nbsp;<small>".$property_2->rentTerms()."</small></strong><br>";		
+				echo amount_format($property_2->price)."&nbsp;<small>".$property_2->rentTerms()."</small></strong><br>";		
 				echo $property_2->beds  . " beds <strong>·</strong> "; 
 				echo $property_2->baths . " baths <strong>·</strong> ";
 				echo $property_2->size  . " Sqft<br>";  
@@ -77,11 +77,11 @@
 				echo "For ".ucfirst($property_2->market);
 				echo "</a>";
 				if(isset($user)){
-					echo ($user->SavedProperty($property_2->id)) ?
-						"<a href=\"listremove.php?id=$property_2->id\" style=\"margin-left: 4.5rem;\">√ Save</a>":
-						"<a href=\"listsave.php?id=$property_2->id\" style=\"margin-left: 4.5rem;\">+ Save</a>";
+					echo ($user->SavedProperty($property->id)) ?
+						"<a href=\"listremove.php?id=$property->id\" style=\"margin-left: 4.5rem;\">❤️</a>":
+						"<a href=\"listsave.php?id=$property->id\" style=\"margin-left: 4.5rem;\">Save</a>";
 				}else{
-					echo "<a href=\"login.php?redirect=saved\" style=\"margin-left: 4.5rem;\">+ Save</a>";
+					echo "<a href=\"login.php?redirect=saved\" style=\"margin-left: 4.5rem;\">Save</a>";
 				}		
 			 ?>
 	 	</div>

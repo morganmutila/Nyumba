@@ -69,12 +69,12 @@ class User extends DBO{
         }
     }
 
-    public function getLocation(){ 
-        $location = Location::findLocationbyId($this->location_id);
+    public function location(){ 
+        $location = Location::findLocationOn($this->location_id);
         return $location;
     }
 
-    public function numberOfProperty(){
+    public function propertyCount(){
         DB::getInstance()->direct_query("SELECT COUNT(*) FROM property WHERE user_id =".$this->id);
         $count = DB::getInstance()->result();
         return array_shift($count);
@@ -88,11 +88,6 @@ class User extends DBO{
                 return true;
             }
         }
-    }
-
-    public function getPropertyUser(){ 
-        $user = User::findbyId($this->user_id);
-        return !empty($user) ? $user->fullname() : false;
     }
 
     public function __toString(){

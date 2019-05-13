@@ -1,4 +1,4 @@
-<?php require_once("../init.php"); ?>
+<?php require_once("../../init.php"); ?>
 <?php if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=saved"); } ?>
 
 <?php
@@ -9,8 +9,8 @@
 		$sql  = "INSERT INTO saved_property (user_id, property_id) ";
 		$sql .= "VALUES (?, ?) ";
 		$params = array($_SESSION['user_id'], $property->id);
-		DB::getInstance()->query($sql, $params);
-		if(DB::getInstance()->count()){       
+		$db->query($sql, $params);
+		if($db->count()){       
 			$session->message('Property has been added to your list successfully');
             Redirect::to('index.php');
         }
@@ -23,8 +23,8 @@
 	elseif (!input::get('property')) {
 		// Get all the saved properties for the user
 		$sql = "SELECT * FROM saved_property WHERE user_id=?";
-		DB::getInstance()->query($sql, array($_SESSION['user_id']));
-		$properties = DB::getInstance()->fetchAll(null, null, 'FETCH_OBJ');
+		$db->query($sql, array($_SESSION['user_id']));
+		$properties = $db->fetchAll(null, null, 'FETCH_OBJ');
 	}
 
 ?>
@@ -32,7 +32,7 @@
 
 <?php include_layout_template('header.php'); ?>
 
-	<h2>Saved properties</h2>
+	<h2>Reported properties</h2>
 	
 	<?php echo output_message($message); ?>
 
