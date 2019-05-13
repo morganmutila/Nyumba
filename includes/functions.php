@@ -159,3 +159,41 @@ function generate_form_checkbox($name="", $key_values=array()){
     }
     return "";
 }
+
+
+//Money format
+function amount_format($amount = '0', $symbol = 'K') {
+    $amount = round($amount, 2);
+    $sign = '';
+    if ( substr($amount, 0, 1) == '-'){
+        $sign = '-';
+        $amount = substr($amount, 1);
+    }
+    if($symbol == " ") {        // If you want the format without any symbol then pass space, ie: " "
+        $amount = $sign . number_format($amount, 0,'.','');
+    } else {
+        $amount = $sign . $symbol . number_format($amount, 0);
+    }
+    return $amount;
+}
+
+/*************for thumbnail display**********/
+function thumb_image($imgsrc, $thumbsize = "100", $alt = "Image", $title = "Image" ) {
+    if (file_exists($imgsrc)) {
+        list($width, $height ) = getimagesize($imgsrc);
+    
+        $imgratio = $width/$height;
+    if ( $imgratio > 1 ) {
+        $newwidth  = $thumbsize;
+        $newheight = $thumbsize/$imgratio;
+    }else {
+        $newheight = $thumbsize;
+        $newwidth  = $thumbsize*$imgratio;
+    }
+     return '<img src="' . $imgsrc . '" width="' . $newwidth . '" height="' . $newheight . '"  alt="' . $alt . '" border="0" title="' . $title . '" >';
+    }
+    else {
+        echo "No Image";
+    }
+    
+ }

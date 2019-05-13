@@ -48,6 +48,9 @@ require CLASS_PATH   .DS. "Common.php";
 require CLASS_PATH   .DS. "NY.php";
 
 // Create a simple variable handle for the database connection
+$db = DB::getInstance();
+
+// Start the session and initialise $message
 $session = new Session();
 $message = $session->message();
 

@@ -1,6 +1,6 @@
 <?php
 
-class Property extends DatabaseObject{
+class Property extends DBO{
 
 	protected static $table_name = "property";
     protected static $db_fields = array('id', 'user_id', 'location_id', 'type', 'address',
@@ -105,6 +105,18 @@ class Property extends DatabaseObject{
     public function propertyUser(){ 
         $user = User::findbyId($this->user_id);
         return !empty($user) ? $user->fullname() : false;
+    }
+
+    public static function image(){
+        // return PPhoto::imagePath();
+        return  "________________
+                |                |
+                |                |
+                |                |
+                |                |
+                |                |
+                |                |
+                |________________|";
     }
 
     public function __toString(){

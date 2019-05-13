@@ -41,7 +41,7 @@
 		<div style=" margin: 20px 0 2rem 0;">
 			<?php 
 				echo "<a href=\"property.php?id={$property->id}\">";			
-				echo "<strong>K ".(int)$property->price."&nbsp;<small>".$property->rentTerms()."</small></strong><br>";		
+				echo "<strong>".amount_format($property->price)."&nbsp;<small>".$property->rentTerms()."</small></strong><br>";		
 				echo $property->beds    . " beds <strong>·</strong> "; 
 				echo $property->baths   . " baths <strong>·</strong> ";
 				echo $property->size    . " Sqft<br>";  
@@ -63,17 +63,17 @@
 
 
 <?php if(isset($_SESSION['location'])): ?>
-<h2><?php echo Location::findLocationbyId($_SESSION['location']);?></h2>
+<h2><?php echo Location::findLocationOn($_SESSION['location']);?></h2>
 <div class ="properties">
 	<?php foreach ($properties_2 as $property_2):?>
 		<div style=" margin: 20px 0;">
 			<?php 
 				echo "<a href=\"property.php?id={$property->id}\">";			
-				echo "<strong>K ".(int)$property_2->price."&nbsp;<small>".$property_2->getRentTerms()."</small></strong><br>";		
+				echo "<strong>K ".(int)$property_2->price."&nbsp;<small>".$property_2->rentTerms()."</small></strong><br>";		
 				echo $property_2->beds  . " beds <strong>·</strong> "; 
 				echo $property_2->baths . " baths <strong>·</strong> ";
 				echo $property_2->size  . " Sqft<br>";  
-				echo $property_2->address . ", ". $property_2->getLocation() ."<br>";
+				echo $property_2->address . ", ". $property_2->location() ."<br>";
 				echo "For ".ucfirst($property_2->market);
 				echo "</a>";
 				if(isset($user)){

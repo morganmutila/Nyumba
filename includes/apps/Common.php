@@ -1,6 +1,6 @@
 <?php
 
-//The Config class *******************************************************************************
+//The Config class ***********************************************************************************
 class Config {
 
     public static function get($path = null){
@@ -23,7 +23,7 @@ class Config {
 } 
 
 
-//The Input class *******************************************************************************
+//The Input class ************************************************************************************
 class Input {
 
     public static function exists($type = 'post'){
@@ -53,7 +53,7 @@ class Input {
 } 
 
 
-//The Redirect class *******************************************************************************
+//The Redirect class *********************************************************************************
 class Redirect {
     public static function to($location = null){
         if($location){
@@ -74,7 +74,7 @@ class Redirect {
 } 
 
 
-//The Cookie class *******************************************************************************
+//The Cookie class ***********************************************************************************
 class Cookie {
 
     public static function exists($name){

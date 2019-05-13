@@ -3,7 +3,7 @@
 /**
  * The location class
  */
-class SavedProperty extends DatabaseObject{	
+class SavedProperty extends DBO{	
 	protected static $table_name = "saved_property";
     protected static $db_fields = array('id', 'user_id', 'property_id', 'created');
 
@@ -19,7 +19,7 @@ class SavedProperty extends DatabaseObject{
 /**
  * The location class
  */
-class Location extends DatabaseObject{	
+class Location extends DBO{	
 	protected static $table_name = "location";
     protected static $db_fields = array('id', 'city_id', 'location', 'description');
 

@@ -105,6 +105,7 @@ class DB {
         }
     }
 
+
     public function result($column = null, $result = null, $method = 'FETCH_ASSOC'){
         if ($result == null){
             $result = $this->lastquery;
@@ -139,32 +140,32 @@ class DB {
         }    
     }
 
-    public function transaction(){
-        try{
-            $this->conn->beginTransaction();
-        }
-        catch(PDOException $e){
-            die($e->getMessage());
-        }
-    }
+    // public function transaction(){
+    //     try{
+    //         $this->conn->beginTransaction();
+    //     }
+    //     catch(PDOException $e){
+    //         die($e->getMessage());
+    //     }
+    // }
 
-    public function rollback(){
-        try{
-            $this->conn->rollback();
-        }
-        catch(PDOException $e){
-            die($e->getMessage());
-        }
-    }
+    // public function rollback(){
+    //     try{
+    //         $this->conn->rollback();
+    //     }
+    //     catch(PDOException $e){
+    //         die($e->getMessage());
+    //     }
+    // }
 
-    public function commit(){
-        try{
-            $this->conn->commit();
-        }
-        catch(PDOException $e){
-            die($e->getMessage());
-        }
-    }
+    // public function commit(){
+    //     try{
+    //         $this->conn->commit();
+    //     }
+    //     catch(PDOException $e){
+    //         die($e->getMessage());
+    //     }
+    // }
 
     private function error_handler($error){
         // TODO: DO SOMETHING
