@@ -53,6 +53,6 @@ $session = new Session();
 $message = $session->message();
 
 //Get the currently logged in user
-if(isset($_SESSION['user_id'])){
-	$user = User::findById($_SESSION['user_id']);
+if($session->isLoggedIn()){
+	$user = User::findById($session->user_id);
 }

@@ -1,5 +1,5 @@
 <?php require_once("../init.php"); ?>
-<?php if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=saved"); } ?>
+<?php if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=savedproperty"); } ?>
 
 <?php
 
@@ -7,7 +7,7 @@
 		
 		$property_id = Input::get('id');
 		$savedproperty = new SavedProperty();
-		$savedproperty->user_id     = $_SESSION['user_id'];
+		$savedproperty->user_id     = $session->user_id;
 		$savedproperty->property_id = $property_id;
 		
 		// Save the listing to the save list

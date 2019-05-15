@@ -22,7 +22,7 @@ if(Input::get('property')){
 	            ),
 	            'property_type' => array(
 	                'required' => true
-	            ),    
+	            ),
 	            'location' => array(
 	                'required' => true
 	            ),
@@ -32,15 +32,14 @@ if(Input::get('property')){
 	        ));
 
 	        if ($validation->passed()) {
-
-	            $property->user_id 			= (int)    $_SESSION['user_id'];
+	            $property->user_id 			= (int)    $session->user_id;
 	            $property->location_id  	= (int)    Input::get('location');
 	            $property->address     		= (string) Input::get('property_address');
 	            $property->beds      	    = 0;
-	            $property->baths     	    = 0;
+	            $property->baths     	   	= 0;
 	            $property->terms      	    = "";
 	            $property->size      		= 0;
-	            $property->type      	    = (string) Input::get('property_type');
+	            $property->type   			= (string) Input::get('property_type');
 	            $property->price            = 0.0;
 	            $property->description      = "";
 	            $property->cphoto           = "<br>";
@@ -67,10 +66,10 @@ if(Input::get('property')){
 	        } else {
 	            $message = join("<br>", $validation->errors());
 	        }
-	    } 
+	    }
 	}
 }
-	
+
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))) {
         $validate = new Validation();
@@ -82,7 +81,7 @@ if(Input::exists()){
             ),
             'property_type' => array(
                 'required' => true
-            ),    
+            ),
             'location' => array(
                 'required' => true
             ),
@@ -129,7 +128,7 @@ if(Input::exists()){
         } else {
             $message = join("<br>", $validation->errors());
         }
-    } 
+    }
 }
 
 
@@ -138,10 +137,10 @@ if(Input::exists()){
 
 	<p><a href="properties.php">&laquo; My properties</a></p>
 
-	<?php echo !isset($property) ? 
-		"<h2>Add a property</h2>":	
+	<?php echo !isset($property) ?
+		"<h2>Add a property</h2>":
 		"<h2>Edit your property</h2>";
-	?>		
+	?>
 
 	<h4>Provide your property's info</h4>
 	<?php echo output_message($message); ?>
@@ -150,7 +149,7 @@ if(Input::exists()){
 	  		<input type="text" name="property_address" value="<?php echo isset($property) ? $property->address : Input::get('address');?>" placeholder="Address or name"/>
 
 	  		<div>Property Type</div>
-  			<?php 
+  			<?php
 
   			$property_types = array(
 	  			"House" 			        => "House",
@@ -163,27 +162,27 @@ if(Input::exists()){
 	            $select_property_type .= "<option value=\"\">Please select</option>";
 	            foreach ($property_types as $type => $value) {
 	                $select_property_type .= "<option value=\"$value\" ";
-	                    if((isset($property) && $property->type == $value) || Input::get('property_type') == $value){ 
+	                    if((isset($property) && $property->type == $value) || Input::get('property_type') == $value){
 	                        $select_property_type .= "selected=\"selected\"";
 	                    }
 	                $select_property_type .= ">".$type."</option>";
-	            }            
+	            }
 	        $select_property_type .= "</select>";
 	        echo $select_property_type;
   			?>
 
 
 	  		<div>Location</div>
-  			<?php 
+  			<?php
 		        $select_location = "<select name=\"location\">";
 		            $select_location .= "<option value=\"\">Please select</option>";
 		            foreach (Location::AllLocations() as $key => $value) {
 		                $select_location .= "<option value=\"$value\" ";
-		                    if((isset($property) && $property->location_id == $value) || Input::get('location') == $value){ 
+		                    if((isset($property) && $property->location_id == $value) || Input::get('location') == $value){
 		                        $select_location .= "selected=\"selected\"";
 		                    }
 		                $select_location .= ">".$key."</option>";
-		            }            
+		            }
 		        $select_location .= "</select>";
 		        echo $select_location;
 			?>
@@ -197,7 +196,6 @@ if(Input::exists()){
 	    <button type="submit" class="btn btn-primary btn-block font-weight-bold">Add property</button></p>
   		<p style="margin-top: -0.4rem;font-size: 0.8rem">Click to continue and add more details to your property</p>
   	</form>
-  
+
 
 <?php include_layout_template('footer.php'); ?>
-		

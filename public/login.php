@@ -1,5 +1,4 @@
-<?php
-require '../init.php';
+<?php require '../init.php';
 if($session->isLoggedIn()){ Redirect::to("index.php");}
 
 $page_title = "Login - Nyumba Yanga";
@@ -39,26 +38,20 @@ if(Input::exists()){
 ?>
 
 <?php include_layout_template('header.php'); ?>
-<?php if(Input::get('redirect') == "listproperty"){?>
-    <h3>Log in / Sign up to</h3>
-    <ul>
-        <li>List your property</li>
-        <li>Save a property</li>
-        <li>Manage your property listing</li>
-    </ul>    
 
+<?php if(Input::get('redirect') == "listproperty"){?>
+    <h2 class="text-center mb-4 font-weight-bold">Log in or sign up to list your property</h2>
 <?php } 
 elseif(Input::get('redirect') == "savedproperty"){?>
-    <h3>You must be logged in to save a property listing</h3>  
+    <h2 class="text-center mb-4 font-weight-bold">Log in or sign up to save a listing</h2>  
 <?php }
 else {?>
     <h2 class="text-center mb-4 font-weight-bold">Log in to Nyumba yanga</h2>
 <?php } ?>
 
-<form action="login.php" method="post" autocomplete="off">
+<?php echo output_message($message); ?>
 
-    <?php echo output_message($message); ?>
-    
+<form action="login.php" method="post" autocomplete="off">    
     <div class="form-group mb-3">
         <label for="username" class="d-none">Username</label>
         <input type="text" name="username" class="form-control" placeholder="Email or Phone" value="<?php echo escape(Input::get('username'))?>" <?php if(array_key_exists('username', $validation->errors())){echo "style=\"border: 1px solid red;\"";}?>/>        

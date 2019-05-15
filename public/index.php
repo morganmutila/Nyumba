@@ -22,12 +22,12 @@
 
 	// Instead of finding all records, just find the records 
 	// for this page
-	if(isset($_SESSION['location'])): 
+	if(Session::exists('location')): 
 	$sql_2  = "SELECT * FROM property WHERE status >= ? AND location_id = ?";
 	$sql_2 .= "ORDER BY added DESC "; 
 	$sql_2 .= "LIMIT {$per_page} ";
 	$sql_2 .= "OFFSET {$pagination->offset()}";
-	$properties_2 = Property::findBySql($sql_2, array(1, $_SESSION['location']));
+	$properties_2 = Property::findBySql($sql_2, array(1, Session::get('location')));
 	endif;
 ?>
 
@@ -62,8 +62,8 @@
 </div>
 
 
-<?php if(isset($_SESSION['location'])): ?>
-<h2><?php echo Location::findLocationOn($_SESSION['location']);?></h2>
+<?php if(Session::exists('location')):?>
+<h2><?php echo Location::findLocationOn(Session::get('location'));?></h2>
 <div class ="properties">
 	<?php foreach ($properties_2 as $property_2):?>
 		<div style=" margin: 20px 0;">

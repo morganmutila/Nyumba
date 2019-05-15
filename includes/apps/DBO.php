@@ -25,7 +25,7 @@ Abstract class DBO{
         // The SQL syntax for Selecting or reading database rows is
         // - SELECT fields FROM table
         $result_set = DB::getInstance()->query($sql, $params);
-        $object_array = [];
+        $object_array = array();
         
         while ($row = DB::getInstance()->fetch($result_set, 'FETCH_ASSOC')) {
             $object_array[] = static::instantiate($row);

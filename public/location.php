@@ -14,16 +14,16 @@ if(Input::exists()){
 	        	if($user->save()){
 					// Add the location
 					//Add the location in a session
-					$_SESSION['location']  = (int) Input::get('location');
-					$session->message("We have saved ".$user->location($_SESSION['location'])." as your default location for property listing");
+					Session::get('location')  = (int) Input::get('location');
+					$session->message("We have saved ".$user->location(Session::get('location'))." as your default location for property listing");
 	                Redirect::to("index.php?location={$user->location_id}");
 	            } else{
 	            	//Add the location in a session
-	                $message = $user->location($_SESSION['location'])." is still your default location";
+	                $message = $user->location(Session::get('location')." is still your default location";
 	            }
 	        }else{
-				$_SESSION['location']  = (int) Input::get('location');
-	            Redirect::to("index.php?location={$_SESSION['location']}");
+				Session::get('location') = (int) Input::get('location');
+	            Redirect::to("index.php?location=".Session::get('location'));
 	        }
 	            
 

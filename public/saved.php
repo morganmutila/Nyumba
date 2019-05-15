@@ -2,10 +2,11 @@
 <?php if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=savedproperty"); } ?>
 
 <?php
-		
-	if(isset($_SESSION['user_id'])){
-		$user_id = $_SESSION['user_id'];
-	}	
+
+
+$page_title = "Saved properties";		
+
+	$user_id = $session->user_id;
 
 	$sql  = "SELECT property.* FROM property ";
 	$sql .="INNER JOIN saved_property ON (property.id = saved_property.property_id)";

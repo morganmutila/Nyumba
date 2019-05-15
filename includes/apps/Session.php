@@ -3,29 +3,47 @@
 
 class Session {
 
-    private  $logged_in = false;    
-    public   $user_id;
-    public   $message;
+    private $logged_in = false;    
+
+    public  $user_id;
+    public  $user_location;
+    public  $message;
 
     public function __construct(){        
         session_start();
         $this->checkMessage();
         $this->checkLogin();
+        $this->checkUserLocation();
     }
 
     private function checkMessage(){
         // Is there a session message stored
-        if (isset($_SESSION['message'])) {
-            $this->message = $_SESSION['message'];
-            unset($_SESSION['message']);
+        if (self::exists('message')) {
+            $this->message = self::get('message');
+            self::delete('message');
         }else{
             $this->message = "";
         }
     }
 
+    private function checkLogin(){
+        if(self::exists('user_id')){
+            $this->user_id = self::get('user_id');
+            $this->logged_in = true;
+        }
+        else{
+            unset($this->user_id);
+            $this->logged_in = false;
+        }
+    }
+
+    private function checkUserLocation(){
+
+    }
+
     public function message($msg=""){
         if(!empty($msg)){
-            $_SESSION['message'] = $msg;
+            self::put('message', $msg);
         }else{
             return htmlentities($this->message);
         }
@@ -33,17 +51,6 @@ class Session {
 
     public function isLoggedIn(){
         return $this->logged_in;
-    }
-
-    private function checkLogin(){
-        if(isset($_SESSION['user_id'])){
-            $this->user_id = $_SESSION['user_id'];
-            $this->logged_in = true;
-        }
-        else{
-            unset($this->user_id);
-            $this->logged_in = false;
-        }
     }
 
     public function login($user){
@@ -77,4 +84,32 @@ class Session {
         }
     }
 
+    // Helper functions for Sessions
+    public static function exists($name){
+        return (isset($_SESSION[$name])) ? true : false;
+    }
+
+    public static function put($name, $value){
+        return $_SESSION[$name] = $value;
+    }
+
+    public static function get($name){
+        return $_SESSION[$name];
+    }
+
+    public static function delete($name){
+        if (self::exists($name)) {
+            unset($_SESSION[$name]);
+        }
+    }
+
+    public static function flash($name, $string = ''){
+        if (self::exists($name)) {
+            $session = self::get($name);
+            self::delete($name);
+            return $session;
+        } else {
+            self::put($name, $string);
+        }
+    }
 }
