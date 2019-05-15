@@ -4,7 +4,7 @@ class Property extends DBO{
 
 	protected static $table_name = "property";
     protected static $db_fields = array('id', 'user_id', 'location_id', 'type', 'address',
-    'beds', 'baths', 'terms', 'cphoto', 'contact_number', 'contact_email','reference', 'listed_by', 'size', 'status', 'price', 'available', 'units','views', 'market', 'owner', 'description', 'added', 'flags');
+    'beds', 'baths', 'terms', 'cphoto', 'contact_number', 'contact_email','reference', 'listed_by', 'size', 'status', 'price','contained', 'available', 'units','views', 'market', 'owner', 'description', 'added', 'flags');
 
 
     public $id;
@@ -23,6 +23,7 @@ class Property extends DBO{
     public $size;
     public $status;
     public $price;
+    public $contained;
     public $units;
     public $available;
     public $views;
@@ -73,8 +74,9 @@ class Property extends DBO{
          return strtoupper($status);
     }    
 
-    public function rentTerms(){
+    public function rentTerms(){        
         if($this->market == "rent"){
+            $terms = "";
             switch ($this->terms) { 
                 case 1:
                     $terms = "/ mon";
@@ -94,7 +96,6 @@ class Property extends DBO{
             }
             return strtolower($terms);
         }
-        return "";
     }    
 
     public function location(){ 

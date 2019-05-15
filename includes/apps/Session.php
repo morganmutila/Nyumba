@@ -6,7 +6,7 @@ class Session {
     private $logged_in = false;    
 
     public  $user_id;
-    public  $user_location;
+    public  $location;
     public  $message;
 
     public function __construct(){        
@@ -38,7 +38,12 @@ class Session {
     }
 
     private function checkUserLocation(){
-
+        if(self::exists('location')){
+            $this->location = self::get('location');
+        }
+        else{
+            $this->location = "";
+        }
     }
 
     public function message($msg=""){

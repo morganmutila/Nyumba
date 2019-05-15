@@ -100,6 +100,7 @@ if(Input::exists()){
 
 ?>
 
+
 <?php include_layout_template('header.php'); ?>
 
 	<?php 
@@ -141,7 +142,7 @@ if(Input::exists()){
 	  	<input type="date" name="available" value="<?php echo escape(Input::get('available'));?>" placeholder="Enter date" />
 
 	  	<div>What's special about your listing</div>
-	  	<textarea name="description" cols="30" rows="4"><?php echo escape(Input::get('description'))?></textarea>
+	  	<textarea name="description" cols="60" rows="4"><?php echo escape(Input::get('description'))?></textarea>
 
 		<h4>Contact information</h4>  	 
 		<div>Name <input type="text" name="owner" value="<?php echo escape($user->fullName());?>" placeholder="Enter name" /></div>

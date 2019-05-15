@@ -41,6 +41,7 @@ if(Input::get('property')){
 	            $property->size      		= 0;
 	            $property->type   			= (string) Input::get('property_type');
 	            $property->price            = 0.0;
+	            $property->contained 		= (Input::get('self_contained') === 'yes') ? true : false;
 	            $property->description      = "";
 	            $property->cphoto           = "<br>";
 	            $property->contact_number   = "";
@@ -87,6 +88,9 @@ if(Input::exists()){
             ),
             'market_name' => array(
             	'required'=> true
+            ),            
+            'self_contained' => array(
+            	'required'=> true
             )
         ));
 
@@ -103,6 +107,7 @@ if(Input::exists()){
             $property->size      		= 0;
             $property->type      	    = (string) Input::get('property_type');
             $property->price            = 0.0;
+            $property->contained 		= (Input::get('self_contained') === 'yes') ? true : false;
             $property->description      = "";
             $property->cphoto           = "<br>";
             $property->contact_number   = "";
@@ -135,8 +140,6 @@ if(Input::exists()){
 ?>
 <?php include_layout_template('header.php'); ?>
 
-	<p><a href="properties.php">&laquo; My properties</a></p>
-
 	<?php echo !isset($property) ?
 		"<h2>Add a property</h2>":
 		"<h2>Edit your property</h2>";
@@ -153,6 +156,7 @@ if(Input::exists()){
 
   			$property_types = array(
 	  			"House" 			        => "House",
+	  			"Flat"				    	=> "Flat",
 	  			"Apartment"				    => "Apartment",
 	  			"Apartment(semi-detached)"  => "Apartment(semi-detached)",
 	  			"Town House"		    	=> "Town House"
@@ -192,9 +196,11 @@ if(Input::exists()){
 	  			<label><input type="radio" name="market_name" value="rent" checked="checked" <?php if((isset($property) && $property->market == "rent") || Input::get('market_name') == "rent"){echo "checked=\"checked\"";} ?> style="margin-left: 0;" />For Rent&nbsp;&nbsp;</label>
 	  			<label><input type="radio" name="market_name" value="sale" <?php if((isset($property) && $property->market == "sale") || Input::get('market_name') == "sale"){echo "checked=\"checked\"";} ?>  />For Sale</label>
 	  		</div>
+			<div class="checkbox-group">
+			<p><label><input type="checkbox" name="self_contained" value="yes" <?php if((isset($property) && $property->contained === "1") || Input::get('self_contained') === "yes"){echo "checked=\"checked\"";} ?>> This listing is self contained</label></p>
+			</div>	
 	    <p><input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
 	    <button type="submit" class="btn btn-primary btn-block font-weight-bold">Add property</button></p>
-  		<p style="margin-top: -0.4rem;font-size: 0.8rem">Click to continue and add more details to your property</p>
   	</form>
 
 

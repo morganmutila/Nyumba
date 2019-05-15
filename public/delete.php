@@ -9,7 +9,7 @@ if(!Input::get('id')) {
 
 $property = Property::findById(Input::get('id'));
 if($property && $property->delete()) {
-    $session->message("The property ".$property->address." in ".$property->getLocation()." was deleted");
+    $session->message("The property ".$property->address." in ".$property->location()." was deleted");
     Redirect::to('properties.php');
 } else {
     $session->message("The property could not be deleted.");
