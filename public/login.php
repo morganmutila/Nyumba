@@ -6,6 +6,7 @@ $page_title = "Login - Nyumba Yanga";
 // Get ready to store and output form errors
 $validation = new Validation();
 
+
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))){
         
@@ -24,7 +25,7 @@ if(Input::exists()){
 
             if($found_user){
                 $session->login($found_user);
-                Redirect::to('index.php');
+                Redirect::to("index.php");
             } else {
                 $message = "Log in failed, username or password does not match any account";
             }

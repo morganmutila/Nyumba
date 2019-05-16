@@ -55,17 +55,15 @@ if(Input::exists()){
             $user->password     = (string) password_hash(Input::get('password'), PASSWORD_DEFAULT);
 
             if($user->create()){
-
-                $session->message("Registered successfully");
-
                 // Log the newly created user
                 if($user){
                     $session->login($user);
                     //See if there is a return URL
                     if(Input::get('returnurl')){
                         //Then redirect to the return url
-                        Redirect::to('location.php?returnurl');
+                        Redirect::to("location.php?returnurl={Input::get('returnurl')}");
                     }
+                    Session::flash("joined", "Welcome <strong>". $user->fullname() ."</strong>, Thank you for joining Nyumba yanga");
                     Redirect::to('location.php');
                 }
             } else{
@@ -104,7 +102,7 @@ if(Input::exists()){
 
     <div class="form-group">
         <label for="email" class="sr-only">Email</label>                
-        <input type="text" name="email" class="form-control" value="<?php //echo escape(Input::get("email")); ?>" placeholder="Email"/>
+        <input type="text" name="email" class="form-control" value="<?php echo escape(Input::get("email")); ?>" placeholder="Email"/>
     </div>
 
     <div class="form-group">    

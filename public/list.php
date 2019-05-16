@@ -5,72 +5,18 @@
 
 $page_title = "List property";
 
-if(Input::get('property')){
 
-	// Find the previously inserted property
+if(Input::get('property')) {
 	$property_id = Input::get('property');
 	$property = Property::findById($property_id);
-
-	if(Input::exists()){
-	    if(Session::checkToken(Input::get('token'))) {
-	        $validate = new Validation();
-	        $validation = $validate->check($_POST, array(
-	            'property_address' => array(
-	                'required' => true,
-	                'text_only'=> true,
-	                'min' => 5
-	            ),
-	            'property_type' => array(
-	                'required' => true
-	            ),
-	            'location' => array(
-	                'required' => true
-	            ),
-	            'market_name' => array(
-	                'required' => true
-	            )
-	        ));
-
-	        if ($validation->passed()) {
-	            $property->user_id 			= (int)    $session->user_id;
-	            $property->location_id  	= (int)    Input::get('location');
-	            $property->address     		= (string) Input::get('property_address');
-	            $property->beds      	    = 0;
-	            $property->baths     	   	= 0;
-	            $property->terms      	    = "";
-	            $property->size      		= 0;
-	            $property->type   			= (string) Input::get('property_type');
-	            $property->price            = 0.0;
-	            $property->contained 		= (Input::get('self_contained') === 'yes') ? true : false;
-	            $property->description      = "";
-	            $property->cphoto           = "<br>";
-	            $property->contact_number   = "";
-	            $property->contact_email    = "";
-	            $property->owner     	    = "";
-	            $property->available        = "";
-	            $property->reference        = (string) rand();
-	            $property->status           = (int)    1;
-	            $property->units            = (int)    1;
-	            $property->views            = (int)    0;
-	            $property->flags            = (int)    0;
-	            $property->available    	= "";
-	            $property->listed_by    	= "";
-	            $property->market     		= (string) strtolower(Input::get('market_name'));
-
-	        	if($property->save()){
-					// Add the property
-	                    Redirect::to('activate.php?property='.$property->id);
-	            } else{
-	                $message = "Sorry could not add your property";
-	            }
-
-	        } else {
-	            $message = join("<br>", $validation->errors());
-	        }
-	    }
+	if($property->user_id !== $user->id) {
+		Redirect::to("index.php");
 	}
-}
+}else{
+	$property = new Property();
+}	
 
+// function new_property_listing($property_id = 0){
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))) {
         $validate = new Validation();
@@ -88,17 +34,12 @@ if(Input::exists()){
             ),
             'market_name' => array(
             	'required'=> true
-            ),            
-            'self_contained' => array(
-            	'required'=> true
             )
         ));
 
         if ($validation->passed()) {
 
-    		$property = new Property();
-
-            $property->user_id 			= (int)    $_SESSION['user_id'];
+            $property->user_id 			= (int)    $session->user_id;
             $property->location_id  	= (int)    Input::get('location');
             $property->address     		= (string) Input::get('property_address');
             $property->beds      	    = 0;
@@ -123,9 +64,9 @@ if(Input::exists()){
             $property->listed_by    	= "";
             $property->market     		= (string) strtolower(Input::get('market_name'));
 
-        	if($property->create()){
+        	if($property && $property->save()){
 				// Add the property
-                    Redirect::to('activate.php?property='.$property->id);
+                Redirect::to('activate.php?property='.$property->id);
             } else{
                 $message = "Sorry could not add your property";
             }
@@ -135,12 +76,12 @@ if(Input::exists()){
         }
     }
 }
-
+// }
 
 ?>
 <?php include_layout_template('header.php'); ?>
 
-	<?php echo !isset($property) ?
+	<?php echo !isset($property_id) ?
 		"<h2>Add a property</h2>":
 		"<h2>Edit your property</h2>";
 	?>

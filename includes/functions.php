@@ -78,6 +78,30 @@ function output_message($message="") {
   }
 }
 
+function flash($name, $type="info"){
+    $output = "";
+    if(Session::exists($name)){        
+        switch ($type) {
+            case $type == 'success':
+                $output .= "<p class=\"message-success\">".Session::flash($name)."</p>";
+                break;
+            
+            case $type == 'warning':
+                $output .= "<p class=\"message-warning\">".Session::flash($name)."</p>";
+                break;
+
+            case $type == 'info':
+                $output .= "<p class=\"message-info\">".Session::flash($name)."</p>";
+                break;  
+
+            case $type == 'danger':
+            $output .= "<p class=\"message-danger\">".Session::flash($name)."</p>";
+            break;   
+        }
+    }    
+    return $output;
+}
+
 function log_action($action, $message="") {
     $logfile = SITE_ROOT.DS.'logs'.DS.'log.txt';
     $new = file_exists($logfile) ? false : true;

@@ -14,10 +14,10 @@ if(Input::exists()){
 	        	if($user->save()){
 					//Add the location in a session
 					Session::put('location', $user->location_id);
-					$session->message("We have saved ".$user->location($user->location_id)." as your default location for property listing");
+					$session->message("We have saved ".$user->location($user->location_id)." as your default location for listed property");
 	                Redirect::to("index.php?location={$user->location_id}");
 	            } else{
-	                $message = $user->location($user->location_id." is still your default location");
+	                $message = $user->location($user->location_id)." is still your default location";
 	            }
 	        }else{
 				Session::put('location', (int)Input::get('location'));
@@ -36,7 +36,10 @@ if(Input::exists()){
 <?php include_layout_template('header.php'); ?>
 
 	<h2>Add your location</h2>
-	<p>We will display property based on your location, you can always change this</p>
+	
+	<?php echo flash("joined", "success"); ?>
+
+	<p>Select your location here, we will display property based on your location, you can always change your location</p>
 
 	<?php echo output_message($message); ?>
 

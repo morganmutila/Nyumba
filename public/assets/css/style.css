@@ -101,6 +101,40 @@ a{
 }
 
 #main .message{	
-	color: red;
-  font-size: 1rem;
+  background-color: #e8ebec;
+  color: #333;
+  padding: 1.1rem 1rem;
+  border-radius: 2px; 
+  font-size: 0.95rem; 
+}
+
+.message-info{
+  background-color: #e8ebec;
+  color: #333;
+  padding: 1.1rem 1rem;
+  border-radius: 2px; 
+  font-size: 0.95rem; 
+}
+
+
+.message-warning{
+  background-color: #ffe57e;
+  color: #333;
+  padding: 1.1rem 1rem;
+  border-radius: 2px; 
+}
+
+
+.message-success{
+  background-color: #ebf8a4;
+  color: #333;
+  padding: 1.1rem 1rem;
+  border-radius: 2px; 
+}
+
+.message-danger{
+  background-color: pink;
+  color: #333;
+  padding: 1.1rem 1rem;
+  border-radius: 2px; 
 }
