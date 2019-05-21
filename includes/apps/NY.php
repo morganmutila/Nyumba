@@ -28,7 +28,7 @@ class Location extends DBO{
     public $location;
     public $description;
 
-	public function AllLocations(){
+	public static function AllLocations(){
 		$locations = array();
 		DB::getInstance()->direct_query("SELECT id, location FROM location ORDER BY location");
 		while ($row = DB::getInstance()->fetch()) {

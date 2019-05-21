@@ -16,7 +16,7 @@ if(Input::get('property')) {
 	$property = new Property();
 }	
 
-// function new_property_listing($property_id = 0){
+
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))) {
         $validate = new Validation();
@@ -47,13 +47,13 @@ if(Input::exists()){
             $property->terms      	    = "";
             $property->size      		= 0;
             $property->type      	    = (string) Input::get('property_type');
-            $property->price            = 0.0;
-            $property->contained 		= (Input::get('self_contained') === 'yes') ? true : false;
+            $property->price            = 0;
+            $property->negotiabe 		= 0;
             $property->description      = "";
-            $property->cphoto           = "<br>";
-            $property->contact_number   = "";
-            $property->contact_email    = "";
-            $property->owner     	    = "";
+            $property->cphoto           = "";
+            $property->contact_number   = $user->phone;
+            $property->contact_email    = $user->email;
+            $property->owner     	    = $user->fullName();
             $property->available        = "";
             $property->reference        = (string) rand();
             $property->status           = (int)    1;
@@ -68,7 +68,7 @@ if(Input::exists()){
 				// Add the property
                 Redirect::to('activate.php?property='.$property->id);
             } else{
-                $message = "Sorry could not add your property";
+                $message = "Oops! could not add your property, something went wrong, please try again";
             }
 
         } else {
@@ -86,8 +86,8 @@ if(Input::exists()){
 		"<h2>Edit your property</h2>";
 	?>
 
-	<h4>Provide your property's info</h4>
-	<?php echo output_message($message); ?>
+	<h4>Provide your property info</h4>
+	<?php echo output_message($message, "danger"); ?>
   	<form action="list.php?property=<?php echo isset($property_id) ? $property_id: "";?>"  method="POST">
 	  	  	<div>Property Name / Address</div>
 	  		<input type="text" name="property_address" value="<?php echo isset($property) ? $property->address : Input::get('address');?>" placeholder="Address or name"/>
@@ -123,7 +123,7 @@ if(Input::exists()){
 		            $select_location .= "<option value=\"\">Please select</option>";
 		            foreach (Location::AllLocations() as $key => $value) {
 		                $select_location .= "<option value=\"$value\" ";
-		                    if((isset($property) && $property->location_id == $value) || Input::get('location') == $value){
+		                    if((isset($property) && $property->location_id == $value) || Input::get('location') == $value || $session->location == $value){
 		                        $select_location .= "selected=\"selected\"";
 		                    }
 		                $select_location .= ">".$key."</option>";
@@ -136,10 +136,7 @@ if(Input::exists()){
 			<div class="radio-group">
 	  			<label><input type="radio" name="market_name" value="rent" checked="checked" <?php if((isset($property) && $property->market == "rent") || Input::get('market_name') == "rent"){echo "checked=\"checked\"";} ?> style="margin-left: 0;" />For Rent&nbsp;&nbsp;</label>
 	  			<label><input type="radio" name="market_name" value="sale" <?php if((isset($property) && $property->market == "sale") || Input::get('market_name') == "sale"){echo "checked=\"checked\"";} ?>  />For Sale</label>
-	  		</div>
-			<div class="checkbox-group">
-			<p><label><input type="checkbox" name="self_contained" value="yes" <?php if((isset($property) && $property->contained === "1") || Input::get('self_contained') === "yes"){echo "checked=\"checked\"";} ?>> This listing is self contained</label></p>
-			</div>	
+	  		</div>	
 	    <p><input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
 	    <button type="submit" class="btn btn-primary btn-block font-weight-bold">Add property</button></p>
   	</form>

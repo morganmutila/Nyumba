@@ -2,7 +2,7 @@
 
 class Admin extends User {
  	
- 	function __construct(argument) 	{
+ 	function __construct() 	{
  		# code...
  	}
 

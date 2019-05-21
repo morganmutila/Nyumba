@@ -2,7 +2,7 @@
 require '../init.php';
 if($session->isLoggedIn()){ Redirect::to("index.php");}
 
-$page_title = "Sign Up - Nyumba Yanga";
+$page_title = "Sign up - Nyumba Yanga";
 
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))) {
@@ -67,11 +67,11 @@ if(Input::exists()){
                     Redirect::to('location.php');
                 }
             } else{
-                $message = "Sorry could not create user account";
+                $message = "Oops! Something went wrong, please try again";
             }
 
         } else {
-            $message = join("<br>", $validation->errors());
+            $message = join(", ", $validation->errors());
         }
     }
 }
@@ -79,12 +79,16 @@ if(Input::exists()){
 ?>
 <?php include_layout_template('header.php'); ?>
 
-<h2 class="text-center mb-4 font-weight-bold">Join Nyumba Yanga</h2>
-<p>Nyumba yanga is home to over&nbsp;<?php echo Property::total();?>,000 Houses, Apartments, Semi-detached aparments and Town House's. We are working together to host and manage property listings with property owners and renters and buyers.</p>
+<h2 class="text-center mb-4 font-weight-bold" style="text-align: center;">Join Nyumba Yanga</h2>
+<p style="text-align: center;">Nyumba yanga is home to over&nbsp;<?php echo Property::total();?>,000 Houses, Apartments, Flats and Town House's. We are working together to host property listings with owners, renters and buyers.</p>
 <form action="signup.php" method="post" autocomplete="off">
 
-    <?php echo output_message($message); ?>
 
+    <p style="text-align: center;"><button type="button">SIGN UP WITH FACEBBOK</button></p>
+    <br>
+    <p>----------------------------------------- OR ----------------------------------------</p>
+    <br>
+    <?php echo output_message($message, "danger"); ?>
     <div class="form-group col-6">    
         <label for="first_name" class="sr-only">First name</label>
         <input type="text" name="first_name" class="form-control" value="<?php echo escape(Input::get('first_name')); ?>" placeholder="First name"/>
@@ -109,12 +113,10 @@ if(Input::exists()){
         <label for="password" class="sr-only">Password</label>
         <input type="password" name="password" class="form-control" placeholder="Create password"/>
     </div>
-<p class="text-center text-muted py-2 px-4 small">By clicking “Sign up”, you agree to Nyumba Yanga<br>terms of service, privacy policy and cookie policy</p>
+<p class="text-center text-muted py-2 px-4 small">By clicking Sign up, you agree to Nyumba Yanga<br>terms of service, privacy policy and cookie policy</p>
     <div class="form-group mb-2"> 
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold">Sign up</button>
+        <button type="submit" class="btn btn-primary btn-block font-weight-bold">SIGN UP</button>
     </div>  
     <p class="my-3 text-center">Already have an account?<a href="login.php" class="small text-muted">&nbsp;Log in</a></p>  
 </form>
-
-<?php include_layout_template('footer.php'); ?>

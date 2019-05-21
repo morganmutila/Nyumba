@@ -14,9 +14,9 @@ Abstract class DBO{
         return static::findBySql("SELECT * FROM ".static::$table_name);
     }
 
-    public static function findById($user_id=0){
+    public static function findById(int $id=0){
         $sql = "SELECT * FROM ".static::$table_name." WHERE id = ?";
-        $params = array($user_id);
+        $params = array($id);
         $result_array = static::findBySql($sql, $params);             
         return !empty($result_array) ? array_shift($result_array) : false;
     }
@@ -24,9 +24,11 @@ Abstract class DBO{
     public static function findBySql($sql="", $params = array()){
         // The SQL syntax for Selecting or reading database rows is
         // - SELECT fields FROM table
-        $result_set = DB::getInstance()->query($sql, $params);
+
+        // Create a new object array out of a result set
         $object_array = array();
-        
+
+        $result_set = DB::getInstance()->query($sql, $params);       
         while ($row = DB::getInstance()->fetch($result_set, 'FETCH_ASSOC')) {
             $object_array[] = static::instantiate($row);
         }

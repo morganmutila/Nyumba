@@ -128,8 +128,13 @@ class PPhoto extends DBO{
         return false;
     }
 
-    public function imagePath() {
-      return $this->upload_dir.DS.$this->filename;
+    public static function imagePath(string $filename="") {
+        if(!$filename || !file_exists($filename)){
+            return $this->upload_dir.DS.'default.png';
+        }
+        else{
+            return $this->upload_dir.DS.$filename;
+        }
     }
 
     public function __toString(){

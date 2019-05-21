@@ -1,7 +1,7 @@
 <?php
 
 // Auto load classes in case they have not been required
-function __autoload($class_name){
+spl_autoload_register(function($class_name){
     $class_name = ucfirst($class_name);
     $path = CLASS_PATH .DS. $class_name . ".php";
     if (file_exists($path)) {
@@ -9,8 +9,9 @@ function __autoload($class_name){
     }
     else{
         die("The file {$class_name}.php can not be found");
-    }    
-}
+    }   
+});
+
 
 function pre($value){
     echo '<pre>';
@@ -18,7 +19,7 @@ function pre($value){
     echo '</pre>';
 }
 
-function varPre($value){
+function varpre($value){
     echo '<pre>';
     var_dump($value);
     echo '</pre>';
@@ -26,14 +27,6 @@ function varPre($value){
 
 function escape($string){
     return htmlentities($string, ENT_QUOTES, 'UTF-8');
-}
-
-function clean($str) {
-    $str = @trim($str);
-    if(get_magic_quotes_gpc()) {
-        $str = stripslashes($str);
-    }
-    return $str;
 }
 
 function text_to_datetime($format){
@@ -57,7 +50,7 @@ function page_title($page_title=""){
 
 function include_layout_template($template=""){
     global $page_title, $session, $user;
-    include(SITE_ROOT.DS.'public'.DS.'layouts'.DS.$template);
+    include(INCLUDE_PATH .DS.'layouts'.DS.$template);
 }
 
 function get_form_errors($errors=array()){
@@ -70,12 +63,28 @@ function get_form_errors($errors=array()){
     }
 }
 
-function output_message($message="") {
-  if (!empty($message)) { 
-    return "<p class=\"message\">{$message}</p>";
-  } else {
-    return "";
-  }
+function output_message($message="",  $type="info") {
+    $output = "";   
+    if (!empty($message)) {    
+        switch ($type) {
+            case $type == 'success':
+                $output .= "<p class=\"message-success\">".$message."</p>";
+                break;
+            
+            case $type == 'warning':
+                $output .= "<p class=\"message-warning\">".$message."</p>";
+                break;
+
+            case $type == 'info':
+                $output .= "<p class=\"message-info\">".$message."</p>";
+                break;  
+
+            case $type == 'danger':
+            $output .= "<p class=\"message-danger\">".$message."</p>";
+            break;   
+        }
+    }    
+    return $output;
 }
 
 function flash($name, $type="info"){
@@ -154,9 +163,7 @@ function generate_form_select($name="", $empty_select=true, $key_values=array())
             }
             foreach ($key_values as $key => $value) {
                 $output .= "<option value=\"$value\" ";
-                    if(Input::get($name) == $value){ 
-                        $output .= "selected";
-                    }
+                    if(Input::get($name) == $value){ $output .= "selected"; }
                 $output .= ">".$key."</option>";
             }            
         $output .= "</select>";

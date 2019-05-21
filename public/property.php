@@ -1,20 +1,21 @@
-<?php require_once("../init.php"); ?>
-<?php
-  if(!Input::get('id')) {
-    Redirect::to('index.php');
-  }
+<?php require_once("../init.php"); 
+
+if(!Input::get('id')) {
+  Redirect::to('index.php');
+}
   
-  $property = Property::findById(Input::get('id'));
-    
-  if(!$property) {
-    $session->message("The property could not be located.");
-    redirect_to('index.php');
-  }else{
-  	$property->views = $property->views + 1;
-  	$property->save();
-  }
+$property = Property::findById(Input::get('id'));
+  
+if(!$property) {
+  $session->message("The property could not be found.");
+  redirect_to('index.php');
+}else{
+	$property->views = $property->views + 1;
+	$property->save();
+}
 	
 ?>
+
 <?php include_layout_template('header.php'); ?>
 
 <p><a href="properties.php">My properties &raquo;</a></p>
@@ -24,7 +25,7 @@
 <div style="margin-left: 20px;">
   	<div style=" margin: 20px 0;">
 		<?php 				
-      echo thumb_image($property->image()) . "<br>";
+     		echo thumb_image($property->image()) . "<br>";
 			echo "<strong>K ".(int)$property->price." ".$property->terms."</strong><br>";		
 			echo $property->beds . " bedrooms <strong>·</strong> "; 
 			echo $property->baths . " bathrooms<br>"; 
@@ -38,6 +39,5 @@
 		 ?>
  	</div>
 </div>
-
 
 <?php include_layout_template('footer.php'); ?>

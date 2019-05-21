@@ -5,16 +5,14 @@
 
 $page_title = "Activate listing";
 
-if(Input::get('property')){
-	$property_id = Input::get('property');
+if(!Input::get('property')){
+    $session->message("Could not find that property");
+    Redirect::to("properties.php");
+}  
 
-}else{
-	$session->message("Could not find that property");
-	Redirect::to("properties.php");
-}
-	
-	// Find the previously inserted property
-	$property = Property::findById($property_id);
+// Find the previously inserted property
+$property_id = (int) Input::get('property');
+$property = Property::findById($property_id);
 
 if(Input::exists()){
 	if(Session::checkToken(Input::get('token'))) {
@@ -35,6 +33,9 @@ if(Input::exists()){
             ),
             'square_feet' => array(
                 'required' => true,
+                'number_only' => true,
+            ),
+            'units' => array(
                 'number_only' => true,
             ),
             'available' => array(
@@ -59,12 +60,9 @@ if(Input::exists()){
                 'min' => 10,
                 'max' => 15
             ),
-            'listed_by' => array(
+            'photo ' => array(
                 'required' => true
-            ),
-            // 'property_feature' => array(
-            //     'required' => true
-            // )
+            )
         ));
 
     	if ($validation->passed()) {
@@ -74,19 +72,21 @@ if(Input::exists()){
             $property->baths     	    = (float)  Input::get('baths');
             $property->terms      	    = (string) Input::get('rent_terms');
             $property->size      		= (string) Input::get('square_feet');
+            $property->units            = (int)    Input::get('units');
             $property->price            = (string) Input::get('price');
+            $property->negotiable       = (int)    (Input::get('nego') === 'yes') ? true : false;
             $property->description      = (string) ucfirst(Input::get('description'));
-            $property->cphoto           = (string) Input::get('cphoto');
+            $property->cphoto           = (string) Input::get('photo');
             $property->contact_number   = (string) Input::get('contact_phone');
             $property->contact_email    = (string) Input::get('contact_email');
             $property->owner     	    = (string) Input::get('owner');
             $property->available        = (string) Input::get('available');
             $property->status           = (int)    2;
-            $property->listed_by    	= (string) Input::get('listed_by');
+            $property->listed_by    	= (int) 1;
 
-        	if($property->save()){
+        	if($property && $property->save()){
 				// Add the property
-                $session->message("Your property has been added and is being reviewed, it will be listed as soon as we are done");
+                $session->message("Your property has been added and is being reviewed, it will be listed as soon as we are done reviewing");
                     Redirect::to('property.php?id='.$property->id);
             } else{
                 $message = "Sorry could not list your property";
@@ -108,13 +108,21 @@ if(Input::exists()){
 	?>
 	<?php echo output_message($message); ?>
     <form action="activate.php?property=<?php echo isset($property_id) ? $property_id: "";?>" enctype="multipart/form-data" method="POST">
+
   		<h4>Details and Description</h4>
+
   		<?php
   			echo ($property->market == "rent") ?
 	  			"<div>Rent Price</div>":
 		  		"<div>Sale Price</div>";
 	  	?>
 	  	<input type="text" name="price" value="<?php echo escape(Input::get('price'));?>" placeholder="Enter amount" />
+        <?php if($property->market == "sale"):?>
+            <p style="margin-top: -10px;">
+                <label><input type="checkbox" name="nego" value="yes" <?php if((isset($property) && $property->negotiable === 1) || Input::get('nego') === "yes"){echo "checked=\"checked\"";} ?>> <span style="color:#11cc11;">Negotiable</span>
+                </label>
+            </p>
+        <?php endif; ?>
 
 	  	<div>Bedrooms</div>
 	  	<?php echo create_form_select("beds", 5); ?>
@@ -141,20 +149,16 @@ if(Input::exists()){
 	  	<div>Date Available</div>
 	  	<input type="date" name="available" value="<?php echo escape(Input::get('available'));?>" placeholder="Enter date" />
 
+        <div>Units&nbsp;&nbsp;(<a href="#">What is this?</a>)</div>
+        <?php echo create_form_select("units", 5); ?>
+
 	  	<div>What's special about your listing</div>
 	  	<textarea name="description" cols="60" rows="4"><?php echo escape(Input::get('description'))?></textarea>
 
 		<h4>Contact information</h4>  	 
-		<div>Name <input type="text" name="owner" value="<?php echo escape($user->fullName());?>" placeholder="Enter name" /></div>
+		<div>Full Name <input type="text" name="owner" value="<?php echo escape($user->fullName());?>" placeholder="Enter name" /></div>
 		<div>Email <input type="email" name="contact_email" value="<?php echo escape($user->email);?>" placeholder="Enter email" /></div>
 		<div>Phone number<input type="tel" name="contact_phone" value="<?php echo escape($user->phone);?>" placeholder="Enter phone" /></div>
-		<div>Property listed by</div>
-		<div class="radio-group">
-			<label><input type="radio" name="listed_by" value="1" checked="checked"/>Owner</label>
-			&nbsp;&nbsp;&nbsp;
-			<label><input type="radio" name="listed_by" value="2"/>Company / Broker</label>
-		</div>	
-
 		<h4>Property features</h4>
 		<div class="checkbox-group">
 			<p><strong>Indoor</strong></p>
@@ -175,7 +179,7 @@ if(Input::exists()){
 
 		<h4>Upload Photo</h4>	
     	<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('max_file_size'); ?>" />
-    	<div><input type="file" name="cphoto" /></div>
+    	<div><input type="file" name="photo" /></div>
 
     	<input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
     	<button type="submit" class="btn btn-primary btn-block font-weight-bold">Finish listing</button>

@@ -5,28 +5,35 @@ $page_title = "Add your location";
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))) {
         $validate = new Validation();
-        $validation = $validate->check($_POST, array('location' => array('required' => true)));
+        $validation = $validate->check($_POST, array('location' => array('required' => false)));
 
-        if ($validation->passed()) {            
+        if ($validation->passed()) {      
+        	// Get the locaton in the form
+        	$form_location =  (int)Input::get('location');     
         	
 			if($session->isLoggedIn()){
-				$user->location_id  = (int) Input::get('location');
+				$user->location_id  = $form_location;
 	        	if($user->save()){
 					//Add the location in a session
-					Session::put('location', $user->location_id);
-					$session->message("We have saved ".$user->location($user->location_id)." as your default location for listed property");
+					Session::put('LOCATION', $user->location_id);
+					$session->message("We have saved ".$user->location()." as your default location for listed property");
 	                Redirect::to("index.php?location={$user->location_id}");
 	            } else{
-	                $message = $user->location($user->location_id)." is still your default location";
+	                $message = $user->location()." is still your default location";
 	            }
 	        }else{
-				Session::put('location', (int)Input::get('location'));
-	            Redirect::to("index.php?location=".Session::get('location'));
+	        	if($form_location === $session->location){
+	                $message = Location::findLocationOn($form_location)."  is still your default location";
+	            } else{
+					Session::put('LOCATION', $form_location);
+					$session->message("We have saved ".Location::findLocationOn($form_location)." as your default location for listed property");
+		            Redirect::to("index.php?location=".$session->location);
+		        }
 	        }
 	            
 
         } else {
-            $message = join("<br>", $validation->errors());
+            $message = implode("<br>", $validation->errors());
         }
     } 
 }
@@ -50,7 +57,7 @@ if(Input::exists()){
 	            $select_location .= "<option value=\"\">Please select</option>";
 	            foreach (Location::AllLocations() as $key => $value) {
 	                $select_location .= "<option value=\"$value\" ";
-	                    if((isset($user) && $user->location_id == $value) || Input::get('location') == $value || (Session::exists('location') && Session::get('location') == $value)){ 
+	                    if(($user && $user->location_id == $value) || (int)Input::get('location') == $value || (Session::exists('LOCATION') && $session->location == $value)){ 
 	                        $select_location .= "selected=\"selected\"";
 	                    }
 	                $select_location .= ">".$key."</option>";

@@ -16,7 +16,9 @@ ob_start();
 date_default_timezone_set("Africa/Lusaka");
 
 // Toggle PHP errors with error reporting using the custom error handler function
+ini_set("error_reporting", true);
 $error_reporting  = E_ALL;
+error_reporting($error_reporting);
 
 // Flag variable for web site status:
 //Displays the full error stack instead of friendly page
@@ -27,10 +29,10 @@ define('DEBUG_MODE', FALSE);
 define('DS', DIRECTORY_SEPARATOR);
 // Set the full path to the docroot
 // define('SITE_ROOT', DS.'xampp'.DS.'htdocs'.DS.'ny');
-define('SITE_ROOT', realpath(dirname(__FILE__)));
-define('INCLUDE_PATH', SITE_ROOT.DS.'includes');
-define('CLASS_PATH',   INCLUDE_PATH.DS.'apps');
-define("UPLOAD_FOLDER", SITE_ROOT.DS.'uploads'.DS.'property');
+define('SITE_ROOT',     realpath(dirname(__FILE__)));
+define('INCLUDE_PATH',  SITE_ROOT.DS.'includes');
+define('CLASS_PATH',    INCLUDE_PATH.DS.'apps');
+define('UPLOAD_FOLDER', SITE_ROOT.DS.'uploads'.DS.'property');
 
 // Include Application configuration script
 require INCLUDE_PATH .DS. 'config.php';

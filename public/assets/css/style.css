@@ -3,7 +3,7 @@
 }
 
 html { height: 100%; width: 100%; }
-body { height: 100%; width: 100%; margin: 0; padding: 0; border: 0;  font-size: .89rem; font-family: sans-serif;}
+body { height: 100%; width: 450px; margin: 0 auto; padding: 0; border: 0;  font-size: .9rem; font-family: sans-serif;}
 
 img { border: none; }
 
@@ -17,11 +17,11 @@ p + h2{
 }
 
 #header { height: auto; text-align: left; clear: both;}
-#header h1 { padding: 1rem 1.5rem; margin: 0;}
+#header h1 { padding: 1rem 0; margin: 0;}
 
 .menu{
   list-style: none;
-  padding: 0 1.5rem;
+  padding: 0;
   clear: both;
   display: inline-block;
   margin-top: 0;
@@ -33,9 +33,7 @@ p + h2{
     padding-right: 1rem;
 }    
 
-#main { min-height: 200px;  padding: 1rem 1.5rem; width: 430px;}
-
-#footer {padding: 1.5rem;}
+#main { min-height: 200px;  padding: 1rem 0; width: 100%}
 
 input, select{
   font-size: .95rem;
@@ -100,41 +98,28 @@ a{
 	color: blue;
 }
 
-#main .message{	
-  background-color: #e8ebec;
+.message, .message-info, .message-warning, .message-success, .message-danger{	
+  background-color: #f1f1f1;
   color: #333;
-  padding: 1.1rem 1rem;
-  border-radius: 2px; 
-  font-size: 0.95rem; 
-}
-
-.message-info{
-  background-color: #e8ebec;
-  color: #333;
-  padding: 1.1rem 1rem;
-  border-radius: 2px; 
-  font-size: 0.95rem; 
+  padding: 0.9rem 1rem;
+  border-radius: 3px; 
+  font-size: 0.85rem; 
+  line-height: 1.5;
 }
 
 
 .message-warning{
   background-color: #ffe57e;
-  color: #333;
-  padding: 1.1rem 1rem;
-  border-radius: 2px; 
 }
 
 
 .message-success{
   background-color: #ebf8a4;
-  color: #333;
-  padding: 1.1rem 1rem;
-  border-radius: 2px; 
-}
+}  
 
 .message-danger{
   background-color: pink;
-  color: #333;
-  padding: 1.1rem 1rem;
-  border-radius: 2px; 
+}
+#pagination{
+  text-align: center;
 }
