@@ -6,7 +6,6 @@ $page_title = "Login - Nyumba Yanga";
 // Get ready to store and output form errors
 $validation = new Validation();
 
-
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))){
         
@@ -41,10 +40,13 @@ if(Input::exists()){
 <?php include_layout_template('header.php'); ?>
 
 <?php if(Input::get('redirect') == "listproperty"){?>
-    <h2 class="text-center mb-4 font-weight-bold">Log in or sign up to list your property</h2>
+        <!--<h2 class="text-center mb-4 font-weight-bold">Log in or Sign up to list your property</h2>-->
+        <h2 class="text-center mb-4 font-weight-bold">First thing first, join Nyumba yanga to list a property</h2>
+        <p style="text-align: center;">-----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Already have an account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----</p>
+        <h2 class="text-center mb-4 font-weight-bold">Log in to Nyumba yanga</h2>
 <?php } 
-elseif(Input::get('redirect') == "savedproperty"){?>
-    <h2 class="text-center mb-4 font-weight-bold">Log in or sign up to save a listing</h2>  
+elseif(Input::get('redirect') == "savedproperty" || Input::get('redirect') == "saved"){?>
+    <h2 class="text-center mb-4 font-weight-bold">Log in or Sign up to save a listing</h2>  
 <?php }
 else {?>
     <h2 class="text-center mb-4 font-weight-bold">Log in to Nyumba yanga</h2>

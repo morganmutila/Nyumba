@@ -14,8 +14,7 @@
 	// Instead of finding all records, just find the records 
 	// for this page
 	$sql  = "SELECT * FROM property WHERE status >= ? ";
-	//$sql .= "ORDER BY added DESC "; 
-	$sql .= "ORDER BY RAND() "; 
+	$sql .= "ORDER BY added DESC "; 
 	$sql .= "LIMIT {$per_page} ";
 	$sql .= "OFFSET {$pagination->offset()}";
 	$properties = Property::findBySql($sql, array(1));
@@ -30,36 +29,37 @@
 		$sql_2 .= "OFFSET {$pagination->offset()}";
 		$properties_2 = Property::findBySql($sql_2, array(1, $session->location));
 	endif;
+
 ?>
 
 <?php include_layout_template('header.php'); ?>
+<?php echo NY_SEARCH_ENGINE(); ?>
 
 <?php echo output_message($message, "success"); ?>
 
 <?php if($session->location):?>
-<h2><?php echo Location::findLocationOn($session->location); //The Location name?></h2>
+<h2>In <?php echo Location::findLocationOn($session->location); //The Location name?></h2>
 <div class ="properties">
 	<?php foreach ($properties_2 as $property_2):?>
 		<div style=" margin: 20px 0 2rem 0;">
-			<?php 
-				echo "<a href=\"property.php?id={$property_2->id}\">";			
+			<?php 				
 				echo "<strong>".amount_format($property_2->price)."&nbsp;<small>".$property_2->rentTerms()."</small></strong>";
-				echo ($property_2->negotiable == true) ? "&nbsp;<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
-				echo "<br>";		
-				echo $property_2->type    . " "; 
-				echo $property_2->beds    . " beds <strong>·</strong> "; 
-				echo $property_2->baths   . " baths <strong>·</strong> ";
-				echo $property_2->size    . " Sqft<br>";  
-				echo $property_2->address . ", ". $property_2->Location() ."<br>";
-				echo "For ".ucfirst($property_2->market);
-				echo "</a>";
 				if(isset($user)){
 					echo ($user->SavedProperty($property_2->id)) ?
-						"<a href=\"listremove.php?id=$property_2->id\" style=\"margin-left: 4.5rem;\">❤️</a>":
-						"<a href=\"listsave.php?id=$property_2->id\" style=\"margin-left: 4.5rem;\">Save</a>";
+						"<a href=\"listremove.php?id=$property_2->id\" style=\"float:right;\">❤️</a>":
+						"<a href=\"listsave.php?id=$property_2->id\" style=\"float:right;\">Save</a>";
 				}else{
-					echo "<a href=\"login.php?redirect=saved\" style=\"margin-left: 4.5rem;\">Save</a>";
-				}		
+					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\">Save</a>";
+				}
+				echo "<a href=\"property.php?id={$property_2->id}\">";			
+				echo ($property_2->negotiable == true) ? "&nbsp;<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
+				echo "<br>";
+				echo $property_2->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>"; 
+				echo $property_2->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
+				echo $property_2->size    . " Sqft<br>";  
+				echo $property_2->address . ", ". $property_2->Location() ."<br>";
+				echo $property_2->type    . " for ".ucfirst($property_2->market);
+				echo "</a>";		
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
@@ -75,25 +75,24 @@
 			<img src="../uploads/property/default.png">		
 		</div> -->
 		<div style=" margin: 10px 0 2rem 0;">
-			<?php 
-				echo "<a href=\"property.php?id={$property->id}\">";			
+			<?php 			
 				echo "<strong>".amount_format($property->price)."&nbsp;<small>".$property->rentTerms()."</small></strong>";
-				echo ($property->negotiable == true) ? "&nbsp;<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
-				echo "<br>";		
-				echo $property->type    . " "; 
-				echo $property->beds    . " beds - "; 
-				echo $property->baths   . " baths - ";
-				echo $property->size    . " SqFt<br>";  
-				echo $property->address . ", ". $property->Location() ."<br>";
-				echo "For ".ucfirst($property->market);
-				echo "</a>";
 				if(isset($user)){
 					echo ($user->SavedProperty($property->id)) ?
-						"<a href=\"listremove.php?id=$property->id\" style=\"margin-left: 4.5rem;\">❤️</a>":
-						"<a href=\"listsave.php?id=$property->id\" style=\"margin-left: 4.5rem;\">Save</a>";
+						"<a href=\"listremove.php?id=$property->id\" style=\"float:right;\">❤️</a>":
+						"<a href=\"listsave.php?id=$property->id\" style=\"float:right;\">Save</a>";
 				}else{
-					echo "<a href=\"login.php?redirect=saved\" style=\"margin-left: 4.5rem;\">Save</a>";
-				}		
+					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\">Save</a>";
+				}
+				echo "<a href=\"property.php?id={$property->id}\">";
+				echo ($property->negotiable == true) ? "&nbsp;<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
+				echo "<br>";
+				echo $property->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>"; 
+				echo $property->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
+				echo $property->size    . " Sqft<br>";  
+				echo $property->address . ", ". $property->Location() ."<br>";						
+				echo $property->type    . " for ".ucfirst($property->market);
+				echo "</a>";		
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
@@ -104,13 +103,13 @@
 
 
 
-<div class="pagination" style="clear: both;">
+<div id="pagination" style="clear: both;">
 <?php
 	if($pagination->total_pages() > 1) {		
 		if($pagination->has_previous_page()) { 
     		echo "<a href=\"index.php?page=";
 	     	echo $pagination->previous_page();
-	        echo "\">&laquo; Previous</a> "; 
+	        echo "\">&laquo; Prev</a> "; 
 	    }
 
 			for($i=1; $i <= $pagination->total_pages(); $i++) {

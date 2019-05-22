@@ -22,7 +22,7 @@ error_reporting($error_reporting);
 
 // Flag variable for web site status:
 //Displays the full error stack instead of friendly page
-define('DEBUG_MODE', FALSE);
+// define('DEBUG_MODE', FALSE);
 
 // Define the paths
 // DIRECTORY_SEPARATOR is a PHP pre-defined constant (\ for Windows, / for Unix)

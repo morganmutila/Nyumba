@@ -13,6 +13,18 @@ spl_autoload_register(function($class_name){
 });
 
 
+function NY_SEARCH_ENGINE(){
+    $html  = "<form action=\"search.php\" method=\"GET\" style=\"width:100%;margin:0;\">";
+    $html .= "    <table style=\"width: 100%;\">";
+    $html .= "        <tr>";
+    $html .= "            <td><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"width:100%;margin:0;\"></td>";
+    $html .= "            <td><button type=\"submit\" style=\"width: 100%;\">Search</button></td>";
+    $html .= "        </tr>";
+    $html .= "    </table>";
+    $html .= "</form>";
+    return $html;
+}
+
 function pre($value){
     echo '<pre>';
     print_r($value);
