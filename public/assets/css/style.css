@@ -3,7 +3,7 @@
 }
 
 html { height: 100%; width: 100%; }
-body { height: 100%; width: 470px; margin: 0 auto; padding: 0 1rem; border: 0;  font-size: .9rem; font-family: sans-serif;}
+body {width: 320px; margin: 0 auto; padding: .8rem; border: 0;  font-size: .9rem; font-family: "Times New Roman";}
 
 img { border: none; }
 
@@ -13,14 +13,14 @@ ul{
 }
 
 #header { height: auto; text-align: left; clear: both;}
-#header h1 { padding: 1rem 0; margin: 0;}
+#header h2 { padding: .4rem 0; margin: 0;}
 
 .menu{
   list-style: none;
   padding: 0;
   clear: both;
   display: inline-block;
-  margin-top: 0;
+  margin: 0.4rem 0;
   width: 100%;
 }
 .menu li{
@@ -29,7 +29,7 @@ ul{
     padding-right: 1rem;
 }    
 
-#main { min-height: 200px;  padding: 1rem 0; width: 100%}
+#main {padding: 0  0 1rem 0; width: 100%;}
 
 input, select{
   font-size: .95rem;
@@ -37,7 +37,7 @@ input, select{
   padding: 0.4rem 0.5rem;
   border-radius: 2px;
   border: 1px solid #ccc;
-  margin: 0.3rem 0 1rem 0;
+  margin: 0.3rem 0 1.1rem 0;
   display: block;
 }
 textarea{
@@ -116,4 +116,8 @@ a{
 }
 #pagination{
   text-align: center;
+}
+
+table td{
+  padding: 0;
 }
