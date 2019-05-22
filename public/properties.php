@@ -10,7 +10,7 @@ if (!$session->isLoggedIn()) { Redirect::to("login.php"); } ?>
 
 <?php include_layout_template('header.php'); ?>
 
-	<h2>My Properties (<?php echo $user->propertyCount();?>)&nbsp;&nbsp;<small style="font-weight: normal;"><a href="list.php">+ Add property</a></small></h2>
+	<h2>My Listings (<?php echo $user->propertyCount();?>)&nbsp;&nbsp;<small style="font-weight: normal;"><a href="list.php">+ Add property</a></small></h2>
 	
 	<?php echo output_message($message); ?>
 

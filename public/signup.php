@@ -84,28 +84,26 @@ if(Input::exists()){
 <form action="signup.php" method="post" autocomplete="off">
 
 
-    <p style="text-align: center;"><button type="button">SIGN UP WITH FACEBBOK</button></p>
-    <br>
-    <p>----------------------------------------- OR ----------------------------------------</p>
-    <br>
+    <!-- <p style="text-align: center;"><button type="button">Sign up with Facebook</button></p>
+    <p style="text-align: center;">--------------- OR --------------</p> -->
     <?php echo output_message($message, "danger"); ?>
     <div class="form-group col-6">    
-        <label for="first_name" class="sr-only">First name</label>
+        <label for="first_name" class="sr-only">First Name</label>
         <input type="text" name="first_name" class="form-control" value="<?php echo escape(Input::get('first_name')); ?>" placeholder="First name"/>
     </div>
 
     <div class="form-group col-6">    
-        <label for="last_name" class="sr-only">Last name</label>
+        <label for="last_name" class="sr-only">Last Name</label>
         <input type="text" name="last_name" class="form-control" value="<?php echo escape(Input::get('last_name')); ?>" placeholder="Last name"/>
     </div>
 
     <div class="form-group">
-        <label for="phone" class="sr-only">Phone number</label>                
+        <label for="phone" class="sr-only">Phone Number</label>                
         <input type="text" name="phone" class="form-control" value="<?php echo escape(Input::get("phone")); ?>" placeholder="Phone Number"/>
     </div>
 
     <div class="form-group">
-        <label for="email" class="sr-only">Email</label>                
+        <label for="email" class="sr-only">Email Address</label>                
         <input type="text" name="email" class="form-control" value="<?php echo escape(Input::get("email")); ?>" placeholder="Email"/>
     </div>
 
@@ -116,7 +114,7 @@ if(Input::exists()){
 <p class="text-center text-muted py-2 px-4 small">By clicking Sign up, you agree to Nyumba Yanga<br>terms of service, privacy policy and cookie policy</p>
     <div class="form-group mb-2"> 
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold">SIGN UP</button>
+        <button type="submit" class="btn btn-primary btn-block font-weight-bold">Sign up</button>
     </div>  
     <p class="my-3 text-center">Already have an account?<a href="login.php" class="small text-muted">&nbsp;Log in</a></p>  
 </form>

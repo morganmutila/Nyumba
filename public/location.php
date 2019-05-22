@@ -16,7 +16,7 @@ if(Input::exists()){
 	        	if($user->save()){
 					//Add the location in a session
 					Session::put('LOCATION', $user->location_id);
-					$session->message("We have saved ".$user->location()." as your default location for listed property");
+					$session->message("We have saved ".$user->location()." as your default location for listed houses");
 	                Redirect::to("index.php?location={$user->location_id}");
 	            } else{
 	                $message = $user->location()." is still your default location";
@@ -42,7 +42,10 @@ if(Input::exists()){
 ?>
 <?php include_layout_template('header.php'); ?>
 
-	<h2>Add your location</h2>
+	<?php echo (isset($session->location) || isset($user->location_id)) ?		
+		"<h2>Change location</h2>":
+		"<h2>Add your location</h2>";
+	?>
 	
 	<?php echo flash("joined", "success"); ?>
 
@@ -54,7 +57,7 @@ if(Input::exists()){
   		<div>Location</div>
 		<?php 
 	        $select_location = "<select name=\"location\">";
-	            $select_location .= "<option value=\"\">Please select</option>";
+	            $select_location .= "<option value=\"\">Please select --</option>";
 	            foreach (Location::AllLocations() as $key => $value) {
 	                $select_location .= "<option value=\"$value\" ";
 	                    if(($user && $user->location_id == $value) || (int)Input::get('location') == $value || (Session::exists('LOCATION') && $session->location == $value)){ 

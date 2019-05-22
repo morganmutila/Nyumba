@@ -7,15 +7,15 @@ $page_title = "List property";
 
 
 if(Input::get('property')) {
-	$property_id = Input::get('property');
+	$property_id = (int) Input::get('property');
 	$property = Property::findById($property_id);
 	if($property->user_id !== $user->id) {
+        //Prevents insertions of Property ID in the url string
 		Redirect::to("index.php");
 	}
 }else{
 	$property = new Property();
 }	
-
 
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))) {
@@ -76,7 +76,7 @@ if(Input::exists()){
         }
     }
 }
-// }
+
 
 ?>
 <?php include_layout_template('header.php'); ?>
@@ -86,7 +86,7 @@ if(Input::exists()){
 		"<h2>Edit your property</h2>";
 	?>
 
-	<h4>Provide your property info</h4>
+	<!-- <h4>Provide your property info</h4> -->
 	<?php echo output_message($message, "danger"); ?>
   	<form action="list.php?property=<?php echo isset($property_id) ? $property_id: "";?>"  method="POST">
 	  	  	<div>Property Name / Address</div>
@@ -100,11 +100,12 @@ if(Input::exists()){
 	  			"Flat"				    	=> "Flat",
 	  			"Apartment"				    => "Apartment",
 	  			"Apartment(semi-detached)"  => "Apartment(semi-detached)",
-	  			"Town House"		    	=> "Town House"
+	  			"Townhouse"	      	    	=> "Townhouse",
+                "Condo"                     => "Condo"
 	  		);
 
 	        $select_property_type = "<select name=\"property_type\">";
-	            $select_property_type .= "<option value=\"\">Please select</option>";
+	            $select_property_type .= "<option value=\"\">Please select --</option>";
 	            foreach ($property_types as $type => $value) {
 	                $select_property_type .= "<option value=\"$value\" ";
 	                    if((isset($property) && $property->type == $value) || Input::get('property_type') == $value){
@@ -120,7 +121,7 @@ if(Input::exists()){
 	  		<div>Location</div>
   			<?php
 		        $select_location = "<select name=\"location\">";
-		            $select_location .= "<option value=\"\">Please select</option>";
+		            $select_location .= "<option value=\"\">Please select --</option>";
 		            foreach (Location::AllLocations() as $key => $value) {
 		                $select_location .= "<option value=\"$value\" ";
 		                    if((isset($property) && $property->location_id == $value) || Input::get('location') == $value || $session->location == $value){
@@ -132,11 +133,11 @@ if(Input::exists()){
 		        echo $select_location;
 			?>
 
-			<div>Market</div>
+			<!-- <div>Market</div> -->
 			<div class="radio-group">
 	  			<label><input type="radio" name="market_name" value="rent" checked="checked" <?php if((isset($property) && $property->market == "rent") || Input::get('market_name') == "rent"){echo "checked=\"checked\"";} ?> style="margin-left: 0;" />For Rent&nbsp;&nbsp;</label>
 	  			<label><input type="radio" name="market_name" value="sale" <?php if((isset($property) && $property->market == "sale") || Input::get('market_name') == "sale"){echo "checked=\"checked\"";} ?>  />For Sale</label>
-	  		</div>	
+	  		</div>	<br>
 	    <p><input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
 	    <button type="submit" class="btn btn-primary btn-block font-weight-bold">Add property</button></p>
   	</form>

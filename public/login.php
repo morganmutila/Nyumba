@@ -50,7 +50,7 @@ else {?>
     <h2 class="text-center mb-4 font-weight-bold">Log in to Nyumba yanga</h2>
 <?php } ?>
 
-<?php echo output_message($message); ?>
+<?php echo output_message($message, "danger"); ?>
 
 <form action="login.php" method="post" autocomplete="off">    
     <div class="form-group mb-3">
@@ -58,9 +58,10 @@ else {?>
         <input type="text" name="username" class="form-control" placeholder="Email or Phone" value="<?php echo escape(Input::get('username'))?>" <?php if(array_key_exists('username', $validation->errors())){echo "style=\"border: 1px solid red;\"";}?>/>        
     </div>
     <div class="form-group">
-        <label for="password" class="d-none">Password<a href="#" class="small text-muted" style="float: right;">Forgot password?</a></label>
+        <label for="password" class="d-none">Password</label>
         <input type="password" name="password" class="form-control" placeholder="Password" <?php if(array_key_exists('password', $validation->errors())){echo "style=\"border: 1px solid red;\"";}?>/> 
     </div>
+    <p class="form-text"><a href="#" class="small text-muted">Forgot password?</a></p>
    
     <div class="form-group text-center mb-4">    
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>"/>

@@ -38,16 +38,10 @@ class Session {
     }
 
     private function checkUserLocation(){
-        // if($this->isLoggedIn()){
-        //     self::delete('LOCATION');
-        //     //read from the COOKIE INSTEAD
-        //     $this->location = COOKIE::get('LOCATION');
-        // }
-        // else{
         if(self::exists('LOCATION')){
             $this->location = self::get('LOCATION');
         }else{
-             $this->location = false;
+             $this->location = null;
         }
     }
 

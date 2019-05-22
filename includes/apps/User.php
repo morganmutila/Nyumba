@@ -71,7 +71,7 @@ class User extends DBO{
 
     public function location(){ 
         $location = Location::findLocationOn($this->location_id);
-        return $location;
+        return ucwords($location);
     }
 
     public function propertyCount(){

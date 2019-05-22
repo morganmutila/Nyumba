@@ -57,4 +57,6 @@ $message = $session->message();
 //Get the currently logged in user
 if($session->isLoggedIn()){
 	$user = User::findById($session->user_id);
+	Session::put("LOCATION", $user->location_id);
+	$session->location = isset($user->location_id) ? $user->location_id : null;
 }

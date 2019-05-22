@@ -32,7 +32,7 @@ class Location extends DBO{
 		$locations = array();
 		DB::getInstance()->direct_query("SELECT id, location FROM location ORDER BY location");
 		while ($row = DB::getInstance()->fetch()) {
-			$locations[$row['location']] = $row['id'];
+			$locations[ucwords($row['location'])] = $row['id'];
 		}
 		return $locations;
 	}
@@ -42,6 +42,6 @@ class Location extends DBO{
 		$params = array($location_id);
 		DB::getInstance()->query($sql, $params);
 		$result = DB::getInstance()->result();
-		return !empty($result) ? array_shift($result) : "";
+		return !empty($result) ? ucwords(array_shift($result)) : "";
 	}
 }
