@@ -12,7 +12,22 @@ spl_autoload_register(function($class_name){
     }   
 });
 
+function NY_SEARCH_ENGINE(){
+    global $session;
 
+    $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
+    $html .= "    <input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding-right:7rem;\">";
+    $html .= "    <div style=\"font-size:.8rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #bbb;height:50%;line-height:1.4rem;margin:3% 0;\">◊&nbsp;";
+            if(isset($session->location)){
+    $html .=    Location::findLocationOn($session->location);
+            }
+            else{
+    $html .=    "Not set";
+            } 
+    $html .= "</div>";        
+    $html .= "</form>";
+    return $html;
+}
 
 function pre($value){
     echo '<pre>';

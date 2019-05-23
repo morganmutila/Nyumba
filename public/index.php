@@ -38,48 +38,29 @@
 <?php echo output_message($message, "success"); ?>
 
 <?php if($session->location):?>
-<<<<<<< HEAD
 <h4><?php echo Location::findLocationOn($session->location); //The Location name?></h4>
-=======
-<h2>In <?php echo Location::findLocationOn($session->location); //The Location name?></h2>
->>>>>>> master
 <div class ="properties">
 	<?php foreach ($properties_2 as $property_2):?>
 		<div style=" margin: 20px 0 2rem 0;">
 			<?php 				
-<<<<<<< HEAD
 				echo "<strong style=\"letter-spacing: 0.05rem;font-size:1.1rem;\">".amount_format($property_2->price)."<small>".$property_2->rentTerms()."</small></strong>";
-=======
-				echo "<strong>".amount_format($property_2->price)."&nbsp;<small>".$property_2->rentTerms()."</small></strong>";
->>>>>>> master
 				if(isset($user)){
 					echo ($user->SavedProperty($property_2->id)) ?
 						"<a href=\"listremove.php?id=$property_2->id\" style=\"float:right;\">❤️</a>":
 						"<a href=\"listsave.php?id=$property_2->id\" style=\"float:right;\">Save</a>";
 				}else{
 					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\">Save</a>";
-				}
-<<<<<<< HEAD
-						
-=======
-				echo "<a href=\"property.php?id={$property_2->id}\">";			
->>>>>>> master
+				}						
 				echo ($property_2->negotiable == true) ? "&nbsp;<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
 				echo "<br>";
 				echo $property_2->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>"; 
 				echo $property_2->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
 				echo $property_2->size    . " Sqft<br>";  
-<<<<<<< HEAD
 				echo "<a href=\"property.php?id={$property_2->id}\">";	
 				echo "<strong>".$property_2->address . ", ". $property_2->Location() ."</strong><br>";
 				echo $property_2->type    . " for ".ucfirst($property_2->market);
 				echo "</a>";	
 				echo "<p style=\"color:#666;font-size:0.75rem;margin-top:0.6rem;\">".time_ago($property_2->added)."</p>";	
-=======
-				echo $property_2->address . ", ". $property_2->Location() ."<br>";
-				echo $property_2->type    . " for ".ucfirst($property_2->market);
-				echo "</a>";		
->>>>>>> master
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
@@ -96,39 +77,24 @@
 		</div> -->
 		<div style=" margin: 10px 0 2rem 0;">
 			<?php 			
-<<<<<<< HEAD
 				echo "<strong style=\"letter-spacing: 0.05rem;font-size:1.1rem;\">".amount_format($property->price)."<small>".$property->rentTerms()."</small></strong>";
-=======
-				echo "<strong>".amount_format($property->price)."&nbsp;<small>".$property->rentTerms()."</small></strong>";
->>>>>>> master
 				if(isset($user)){
 					echo ($user->SavedProperty($property->id)) ?
 						"<a href=\"listremove.php?id=$property->id\" style=\"float:right;\">❤️</a>":
 						"<a href=\"listsave.php?id=$property->id\" style=\"float:right;\">Save</a>";
 				}else{
 					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\">Save</a>";
-<<<<<<< HEAD
 				}				
-=======
-				}
-				echo "<a href=\"property.php?id={$property->id}\">";
->>>>>>> master
 				echo ($property->negotiable == true) ? "&nbsp;<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
 				echo "<br>";
 				echo $property->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>"; 
 				echo $property->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
 				echo $property->size    . " Sqft<br>";  
-<<<<<<< HEAD
 				echo "<a href=\"property.php?id={$property->id}\">";
 				echo "<strong>".$property->address . ", ". $property->Location() ."</strong><br>";						
 				echo $property->type    . " for ".ucfirst($property->market);
 				echo "</a>";	
 				echo "<p style=\"color:#666;font-size:0.75rem;margin-top:0.6rem;\">".time_ago($property->added)."</p>";	
-=======
-				echo $property->address . ", ". $property->Location() ."<br>";						
-				echo $property->type    . " for ".ucfirst($property->market);
-				echo "</a>";		
->>>>>>> master
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
@@ -136,12 +102,6 @@
 </div>
 
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> master
 <div id="pagination" style="clear: both;">
 <?php
 	if($pagination->total_pages() > 1) {		

@@ -109,7 +109,7 @@ if(Input::exists()){
 	            foreach ($property_types as $type => $value) {
 	                $select_property_type .= "<option value=\"$value\" ";
 	                    if((isset($property) && $property->type == $value) || Input::get('property_type') == $value){
-	                        $select_property_type .= "selected=\"selected\"";
+	                        $select_property_type .= "selected";
 	                    }
 	                $select_property_type .= ">".$type."</option>";
 	            }
@@ -125,7 +125,7 @@ if(Input::exists()){
 		            foreach (Location::AllLocations() as $key => $value) {
 		                $select_location .= "<option value=\"$value\" ";
 		                    if((isset($property) && $property->location_id == $value) || Input::get('location') == $value || $session->location == $value){
-		                        $select_location .= "selected=\"selected\"";
+		                        $select_location .= "selected";
 		                    }
 		                $select_location .= ">".$key."</option>";
 		            }
@@ -135,8 +135,8 @@ if(Input::exists()){
 
 			<!-- <div>Market</div> -->
 			<div class="radio-group">
-	  			<label><input type="radio" name="market_name" value="rent" checked="checked" <?php if((isset($property) && $property->market == "rent") || Input::get('market_name') == "rent"){echo "checked=\"checked\"";} ?> style="margin-left: 0;" />For Rent&nbsp;&nbsp;</label>
-	  			<label><input type="radio" name="market_name" value="sale" <?php if((isset($property) && $property->market == "sale") || Input::get('market_name') == "sale"){echo "checked=\"checked\"";} ?>  />For Sale</label>
+	  			<label><input type="radio" name="market_name" value="rent" checked="checked" <?php if((isset($property) && $property->market == "rent") || Input::get('market_name') == "rent"){echo "checked";} ?> style="margin-left: 0;" />For Rent&nbsp;&nbsp;</label>
+	  			<label><input type="radio" name="market_name" value="sale" <?php if((isset($property) && $property->market == "sale") || Input::get('market_name') == "sale"){echo "checked";} ?>  />For Sale</label>
 	  		</div>	<br>
 	    <p><input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
 	    <button type="submit" class="btn btn-primary btn-block font-weight-bold">Add property</button></p>

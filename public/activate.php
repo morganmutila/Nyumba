@@ -119,7 +119,7 @@ if(Input::exists()){
 	  	<input type="text" name="price" value="<?php echo escape(Input::get('price'));?>" placeholder="Enter amount" />
         <?php if($property->market == "sale"):?>
             <p style="margin-top: -10px;">
-                <label><input type="checkbox" name="nego" value="yes" <?php if((isset($property) && $property->negotiable === 1) || Input::get('nego') === "yes"){echo "checked=\"checked\"";} ?>> <span style="color:#11cc11;">Negotiable</span>
+                <label><input type="checkbox" name="nego" value="yes" <?php if((isset($property) && $property->negotiable === 1) || Input::get('nego') === "yes"){echo "checked";} ?>> <span style="color:#11cc11;">Negotiable</span>
                 </label>
             </p>
         <?php endif; ?>
