@@ -13,17 +13,6 @@ spl_autoload_register(function($class_name){
 });
 
 
-function NY_SEARCH_ENGINE(){
-    $html  = "<form action=\"search.php\" method=\"GET\" style=\"width:100%;margin:0;\">";
-    $html .= "    <table style=\"width: 100%;\">";
-    $html .= "        <tr>";
-    $html .= "            <td><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"width:100%;margin:0;\"></td>";
-    $html .= "            <td><button type=\"submit\" style=\"width: 100%;\">Search</button></td>";
-    $html .= "        </tr>";
-    $html .= "    </table>";
-    $html .= "</form>";
-    return $html;
-}
 
 function pre($value){
     echo '<pre>';
@@ -41,6 +30,34 @@ function escape($string){
     return htmlentities($string, ENT_QUOTES, 'UTF-8');
 }
 
+
+//********************************************************************
+//Time functions
+//********************************************************************
+function time_ago($time){
+    $formated_time = strtotime($time);
+    $time_difference = time() - $formated_time;
+ 
+    if( $time_difference < 1 ) { return 'less than 1 second ago'; }
+    $condition = array( 
+                12 * 30 * 24 * 60 * 60 =>  'year',
+                30 * 24 * 60 * 60       =>  'month',
+                24 * 60 * 60            =>  'day',
+                60 * 60                 =>  'hour',
+                60                      =>  'minute',
+                1                       =>  'second'
+    );
+ 
+    foreach( $condition as $secs => $str ){
+        $d = $time_difference / $secs;
+ 
+        if( $d >= 1 ){
+            $t = round( $d );
+            return $t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago';
+        }
+    }
+}
+
 function text_to_datetime($format){
     return strftime($format, time());
 }
@@ -49,6 +66,7 @@ function datetime_to_text($datetime="") {
   $unixdatetime = strtotime($datetime);
   return strftime("%B %d, %Y at %I:%M %p", $unixdatetime);
 }
+//***********************************End Time functions
 
 function page_title($page_title=""){
     if(empty($page_title)  && !isset($page_title)){

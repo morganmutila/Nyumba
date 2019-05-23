@@ -41,15 +41,25 @@ class Session {
         if(self::exists('LOCATION')){
             $this->location = self::get('LOCATION');
         }else{
-             $this->location = null;
+            $this->location = null;
         }
     }
 
     public function message($msg=""){
         if(!empty($msg)){
-            self::put('message', $msg);
+            self::put('message', escape($msg));
         }else{
             return htmlentities($this->message);
+        }
+    }
+
+    public static function flash($name, $message = ''){
+        if(self::exists($name)){
+            $session = self::get($name);
+            self::delete($name);
+            return $session;
+        }else{
+            self::put($name, escape($message));
         }
     }
 
@@ -60,7 +70,9 @@ class Session {
     public function login($user){
         // The database will take care of finding user based on the username/password
         if($user){
-            $this->user_id = $_SESSION['user_id'] = $user->id;
+           // $this->user_id = $_SESSION['user_id'] = $user->id;
+            self::put('user_id', $user->id);
+            $this->user_id = self::get('user_id');
             // Put the user ID in the cookie as well
             //Cookie::put();
             $user->last_login = text_to_datetime(Config::get('mysql_date_time_format'));
@@ -104,16 +116,6 @@ class Session {
     public static function delete($name){
         if (self::exists($name)) {
             unset($_SESSION[$name]);
-        }
-    }
-
-    public static function flash($name, $message = ''){
-        if(self::exists($name)){
-            $session = self::get($name);
-            self::delete($name);
-            return $session;
-        }else{
-            self::put($name, $message);
         }
     }
 }

@@ -59,10 +59,10 @@ if(Input::exists()){
                 'number_only' => true,
                 'min' => 10,
                 'max' => 15
-            ),
-            'photo ' => array(
-                'required' => true
             )
+            // 'photo ' => array(
+            //     'required' => true
+            // )
         ));
 
     	if ($validation->passed()) {
@@ -82,7 +82,7 @@ if(Input::exists()){
             $property->owner     	    = (string) Input::get('owner');
             $property->available        = (string) Input::get('available');
             $property->status           = (int)    2;
-            $property->listed_by    	= (int) 1;
+            $property->listed_by    	= (int)    1;
 
         	if($property && $property->save()){
 				// Add the property
