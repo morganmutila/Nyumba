@@ -41,7 +41,7 @@ if(Input::exists()){
 
 ?>
 
-<form action="<?php echo escape($_SERVER['PHP_SELF'])?>" method="post">
+<form action="<?php echo escape($_SERVER['PHP_SELF'])?>" method="post" accept-charset="utf-8">
     <div class="field">
         <label for="first_name">First Name</label>
         <input type="text" name="firstname" id="first_name" value="<?php echo $user->data()->firstname;?>"/>

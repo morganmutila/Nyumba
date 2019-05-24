@@ -53,7 +53,7 @@ else {?>
 
 <?php echo output_message($message, "danger"); ?>
 
-<form action="login.php" method="post" autocomplete="off">    
+<form action="login.php" method="post" autocomplete="off" accept-charset="utf-8">    
     <div class="form-group mb-3">
         <label for="username" class="d-none">Username</label>
         <input type="text" name="username" class="form-control" placeholder="Email or Phone" value="<?php echo escape(Input::get('username'))?>" <?php if(array_key_exists('username', $validation->errors())){echo "style=\"border: 1px solid red;\"";}?>/>        

@@ -88,7 +88,7 @@ if(Input::exists()){
 
 	<!-- <h4>Provide your property info</h4> -->
 	<?php echo output_message($message, "danger"); ?>
-  	<form action="list.php?property=<?php echo isset($property_id) ? $property_id: "";?>"  method="POST">
+  	<form action="list.php?property=<?php echo isset($property_id) ? $property_id: "";?>"  method="POST" accept-charset="utf-8">
 	  	  	<div>Property Name / Address</div>
 	  		<input type="text" name="property_address" value="<?php echo isset($property) ? $property->address : Input::get('address');?>" placeholder="Address or name"/>
 

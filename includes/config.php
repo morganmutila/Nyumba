@@ -15,7 +15,7 @@ $GLOBALS['config'] = array(
 
     //These are the default reference values for the webapp
     'max_file_size'            => 1048576, // 1 MB
-    'allow_user_folders'	   => true,
+    'allow_user_folders'	   => false,
     'members_per_page'	       => 10,
     'records_per_page'	       => 3,
     'mysql_date_format'        => "%m/%d/%Y",

@@ -107,7 +107,7 @@ if(Input::exists()){
 		echo "<h2>FOR ".strtoupper($property->market)."<br>".$property->address.", ".Location::findLocationOn($property->location_id)."&nbsp<small><a href=\"list.php?property=$property->id\">&nbsp;&nbsp;¶</a></small></h2>";
 	?>
 	<?php echo output_message($message); ?>
-    <form action="activate.php?property=<?php echo isset($property_id) ? $property_id: "";?>" enctype="multipart/form-data" method="POST">
+    <form action="activate.php?property=<?php echo isset($property_id) ? $property_id: "";?>" enctype="multipart/form-data" method="POST" accept-charset="utf-8">
 
   		<h4>Details and Description</h4>
 

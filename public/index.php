@@ -23,6 +23,11 @@
 	// Instead of finding all records, just find the records
 	// for this page
 	if($session->location):
+		// Get the number of listings in the selected Location
+		$sql_count = "SELECT COUNT(*) AS count FROM property WHERE location_id = ?";
+		DB::getInstance()->query($sql_count, array($session->location));
+		$number_of_homes = DB::getInstance()->result('count');
+
 		$sql_2  = "SELECT * FROM property WHERE status >= ? AND location_id = ?";
 		$sql_2 .= "ORDER BY added DESC ";
 		$sql_2 .= "LIMIT {$per_page} ";
@@ -34,16 +39,48 @@
 <?php include_layout_template('header.php'); ?>
 <?php echo NY_SEARCH_ENGINE(); ?>
 
+<form action="#" method="get" accept-charset="utf-8" style="border:1px solid #ccc; padding: .5rem;width: auto;display:inline;border-radius:4px;">
+	<?php
+  		$sortby_types = array(
+  			"High-Low" 	    => "price",
+  			"Low-High"	    => "price",
+  			"New"  			=> "added",
+  			"Best match"	=> "Best match"
+	  	);
+
+        $select_sortby = "<span>Sort by:&nbsp;</span><select name=\"sortby\" style=\"width: auto;height:35px;display:inline;border:0;padding: 0;background-color:transparent;margin:0;\">";
+            foreach ($sortby_types as $type => $value) {
+                $select_sortby .= "<option value=\"$value\" ";
+                    if((Config::get('default_sortby') == $value) || Input::get('sortby') == $value){
+                        $select_sortby .= "selected";
+                    }
+                $select_sortby .= ">".$type."</option>";
+            }
+        $select_sortby .= "</select>";
+        echo $select_sortby;
+	?>
+</form>
+
+
 <?php echo output_message($message, "success"); ?>
 
 <?php if($session->location):?>
-<h4><?php echo Location::findLocationOn($session->location);//The Location name?>&nbsp;homes</h4>
+<h4><?php echo Location::findLocationOn($session->location);//The Location name?>&nbsp;homes&nbsp;&nbsp;·&nbsp;&nbsp;<small style="color: #555;"><?php echo $number_of_homes;?>&nbsp; Results</small></h4>
 <div class ="properties">
 	<?php foreach ($properties_2 as $property_2):?>
-		<div style=" margin: 20px 0 2rem 0;">
+		<div class="listing">
 			<?php
-				if(new_listing($property_2->added)){echo "<span style=\"color:#11cc11;font-size:0.7rem;\">NEW</span><br>";}
-				echo "<strong style=\"letter-spacing: 0.05rem;font-size:1.1rem;\">".amount_format($property_2->price)."&nbsp;<small>".$property_2->rentTerms()."</small></strong>";
+				echo "<p>";
+				    if(new_listing($property_2->added)){echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span>";}
+
+				echo "<span style=\"color:#666;font-size:0.75rem;float:right;line-height:1rem;\">".time_ago($property_2->added)."</span>";
+				echo "<div style=\"clear:both;\"></div></p>"; 
+				echo "<span style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property_2->price)."&nbsp;<small>".$property_2->rentTerms()."</small></span>";
+				echo ($property_2->negotiable == true) ? "<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
+				echo "<br>";
+				echo $property_2->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
+				echo $property_2->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
+				echo $property_2->size    . " Sqft";
 				if(isset($user)){
 					echo ($user->SavedProperty($property_2->id)) ?
 						"<a href=\"listremove.php?id=$property_2->id\" style=\"float:right;\">❤️</a>":
@@ -51,16 +88,11 @@
 				}else{
 					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\">Save</a>";
 				}
-				echo ($property_2->negotiable == true) ? "&nbsp;<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
 				echo "<br>";
-				echo $property_2->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
-				echo $property_2->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
-				echo $property_2->size    . " Sqft<br>";
 				echo "<a href=\"property.php?id={$property_2->id}\">";
 				echo "<strong>".$property_2->address . ", ". $property_2->Location() ."</strong><br>";
 				echo $property_2->type    . " for ".ucfirst($property_2->market);
 				echo "</a>";
-				echo "<p style=\"color:#666;font-size:0.75rem;margin-top:0.6rem;\">".time_ago($property_2->added)."</p>";
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
@@ -69,16 +101,25 @@
 <?php endif; ?>
 
 
-<h4>Houses on Nyumba Yanga</h4>
+<h4>Featured Houses</h4>
 <div class ="properties">
 	<?php foreach ($properties as $property):?>
 		<!-- <div style=" margin: 20px 0 0 0;">
 			<img src="../uploads/property/default.png">
 		</div> -->
-		<div style=" margin: 10px 0 2rem 0;">
+		<div class="listing">
 			<?php
-				if(new_listing($property->added)){echo "<span style=\"color:#11cc11;font-size:0.7rem;\">NEW</span><br>";}
-				echo "<strong style=\"letter-spacing: 0.05rem;font-size:1.1rem;\">".amount_format($property->price)."&nbsp;<small>".$property->rentTerms()."</small></strong>";
+				echo "<p>";
+				    if(new_listing($property->added)){echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span>";}
+
+				echo "<span style=\"color:#666;font-size:0.75rem;float:right;line-height:1rem;\">".time_ago($property->added)."</span>";
+				echo "<div style=\"clear:both;\"></div></p>";   
+				echo "<span style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property->price)."&nbsp;<small>".$property->rentTerms()."</small></span>";
+				echo ($property->negotiable == true) ? "<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
+				echo "<br>";
+				echo $property->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
+				echo $property->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
+				echo $property->size    . " Sqft";
 				if(isset($user)){
 					echo ($user->SavedProperty($property->id)) ?
 						"<a href=\"listremove.php?id=$property->id\" style=\"float:right;\">❤️</a>":
@@ -86,16 +127,11 @@
 				}else{
 					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\">Save</a>";
 				}
-				echo ($property->negotiable == true) ? "&nbsp;<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
 				echo "<br>";
-				echo $property->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
-				echo $property->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
-				echo $property->size    . " Sqft<br>";
 				echo "<a href=\"property.php?id={$property->id}\">";
 				echo "<strong>".$property->address . ", ". $property->Location() ."</strong><br>";
 				echo $property->type    . " for ".ucfirst($property->market);
 				echo "</a>";
-				echo "<p style=\"color:#666;font-size:0.75rem;margin-top:0.6rem;\">".time_ago($property->added)."</p>";
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
@@ -103,31 +139,38 @@
 </div>
 
 
-<div id="pagination" style="clear: both;">
-<?php
-	if($pagination->total_pages() > 1) {
-		if($pagination->has_previous_page()) {
-    		echo "<a href=\"index.php?page=";
-	     	echo $pagination->previous_page();
-	        echo "\">< Prev</a> ";
-	    }
-
-			for($i=1; $i <= $pagination->total_pages(); $i++) {
-				if($i == $page) {
-					echo " <span class=\"selected\">{$i}</span> ";
-				} else {
-					echo " <a href=\"index.php?page={$i}\">{$i}</a> ";
+<div style="text-align: center">
+	<ul class="pagination">					    			
+		<?php
+			$pages = ceil($pagination->offset() - 1);
+			if($pagination->total_pages() > 1){
+				if($pagination->has_previous_page()){								  
+				    echo "<li class=\"page-item\"><a class=\"page-link\" href=\"index.php?page=";
+				    echo $pagination->previous_page();
+				    echo "\">Prev</a></li>";	   
 				}
-			}
+			    if($pagination->previous_page() == 0){
+					echo "<li class=\"page-item disabled\"><span class=\"page-link\">Prev</span></li>";			
+				}	
+			    for($i = 1; $i <= $pagination->total_pages(); $i++){
+			    	if($i == $page){
+			    		echo "<li class=\"page-item active\"><span class=\"page-link\">{$i}</span></li>";
+			    	}else{
+				    	echo "<li class=\"page-item\"><a href=\"index.php?page={$i}\" class=\"page-link\">{$i}</a></li>";
+				    }
+			    }								    	
 
-		if($pagination->has_next_page()) {
-			echo " <a href=\"index.php?page=";
-			echo $pagination->next_page();
-			echo "\">Next ></a> ";
-	    }
-
-	}
-?>
+				if($pagination->total_pages() < $pagination->next_page()){
+			    	echo "<li class=\"page-item disabled\"><span class=\"page-link\">Next</span></li>";
+			    }				
+				if($pagination->has_next_page()){										  
+				    echo "<li class=\"page-item\"><a class=\"page-link\" href=\"index.php?page=";
+				    echo $pagination->next_page();
+				    echo "\">Next</a></li>";
+				}									
+			}							
+		?>
+	</ul>
 </div>
 
 <?php include_layout_template('footer.php'); ?>

@@ -42,15 +42,6 @@ function escape($string){
     return htmlentities($string, ENT_QUOTES, 'UTF-8');
 }
 
-// function new_listing($datetime){
-//     $formated_time = strtotime($datetime);
-//     if($formated_time <= Config::get('new_listing')){
-//         return true;
-//     }else{
-//         return false;
-//     }
-// }
-
 function new_listing($datetime){
     $datetime = new DateTime($datetime);
     $valid_for = new DateInterval(Config::get('new_listing'));
@@ -221,7 +212,7 @@ function generate_form_select($name="", $empty_select=true, $key_values=array())
     if(count($key_values)){
         $output = "<select name=\"{$name}\">";
             if ($empty_select) {
-                $output .= "<option>Please select</option>";
+                $output .= "<option>Please select --</option>";
             }
             foreach ($key_values as $key => $value) {
                 $output .= "<option value=\"$value\" ";
