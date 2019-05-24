@@ -3,9 +3,14 @@
 }
 
 html { height: 100%; width: 100%; }
-body {width: 320px; margin: 0 auto; padding: .8rem; border: 0;  font-size: .9rem; font-family: "Times New Roman";}
+body {width: 320px; margin: 0 auto; padding: .8rem; border: 0;  font-size: .9rem; font-family: helvetica;}
 
 img { border: none; }
+
+a{
+  color: #1db954; 
+  text-decoration: none;
+}
 
 ul{
   padding: 0;
@@ -36,7 +41,7 @@ input, select{
   height: 2.4rem;
   width: 100%;
   padding: 0.4rem 0.5rem;
-  border-radius: 2px;
+  border-radius: 3px;
   border: 1px solid #ccc;
   margin: 0.3rem 0 1.1rem 0;
   display: block;
@@ -80,11 +85,6 @@ button{
   border: 1px solid #ccc;
 }
 
-a{
-    color: blue;
-    text-decoration: none;
-}
-
 #main a{
 	color: #000;
 	text-decoration: none;
@@ -92,7 +92,7 @@ a{
 
 
 #main a:hover{
-	color: blue;
+	color: #1db954;
 }
 
 .message, .message-info, .message-warning, .message-success, .message-danger{	

@@ -10,7 +10,7 @@
   </head>
   <body>
     <div id="header">
-      <h2>Nyumba Yanga</h2>
+      <h2>NyumbaYanga</h2>
         <?php if(!$session->isLoggedIn()): ?>   
             <ul class="menu">
                 <li><a href="index.php">Home</a></li>

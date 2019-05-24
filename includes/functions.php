@@ -16,15 +16,12 @@ function NY_SEARCH_ENGINE(){
     global $session;
 
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
-    $html .= "    <input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding-right:7rem;\">";
-    $html .= "    <div style=\"font-size:.8rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #bbb;height:50%;line-height:1.4rem;margin:3% 0;\">◊&nbsp;";
-            if(isset($session->location)){
-    $html .=    Location::findLocationOn($session->location);
-            }
-            else{
-    $html .=    "Not set";
-            } 
-    $html .= "</div>";        
+    $html .= "    <input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding-right:7rem;border-radius: 4px;\">";
+    if(isset($session->location)){
+        $html .= "<div style=\"font-size:.9rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #bbb;height:65%;line-height:1.6rem;margin:2% 0;\">Ꝋ&nbsp;";            
+        $html .= "<small>".Location::findLocationOn($session->location)."</small>";
+        $html .= "</div>";   
+    }     
     $html .= "</form>";
     return $html;
 }
@@ -45,6 +42,26 @@ function escape($string){
     return htmlentities($string, ENT_QUOTES, 'UTF-8');
 }
 
+// function new_listing($datetime){
+//     $formated_time = strtotime($datetime);
+//     if($formated_time <= Config::get('new_listing')){
+//         return true;
+//     }else{
+//         return false;
+//     }
+// }
+
+function new_listing($datetime){
+    $datetime = new DateTime($datetime);
+    $valid_for = new DateInterval(Config::get('new_listing'));
+
+    $now = new DateTime();
+
+    $expiry_date = clone $datetime;
+    $expiry_date->add($valid_for);
+
+    return $now < $expiry_date;
+}
 
 //********************************************************************
 //Time functions

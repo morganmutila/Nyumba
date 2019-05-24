@@ -17,9 +17,10 @@ $GLOBALS['config'] = array(
     'max_file_size'            => 1048576, // 1 MB
     'allow_user_folders'	   => true,
     'members_per_page'	       => 10,
-    'records_per_page'	       => 5,
+    'records_per_page'	       => 3,
     'mysql_date_format'        => "%m/%d/%Y",
     'mysql_date_time_format'   => "%Y-%m-%d %H:%M:%S",
     'php_date_format'		   => "n/j/Y",
-    'php_date_time_format'	   => "m/d/Y, h:i a"
+    'php_date_time_format'	   => "m/d/Y, h:i a",
+    'new_listing'              => "P2D" // 2 days
 );
