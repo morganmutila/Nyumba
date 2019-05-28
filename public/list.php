@@ -22,7 +22,6 @@ if(Input::exists()){
         $validate = new Validation();
         $validation = $validate->check($_POST, array(
             'property_address' => array(
-                'required' => true,
                 'text_only'=> true,
                 'min' => 5
             ),
@@ -89,9 +88,6 @@ if(Input::exists()){
 	<!-- <h4>Provide your property info</h4> -->
 	<?php echo output_message($message, "danger"); ?>
   	<form action="list.php?property=<?php echo isset($property_id) ? $property_id: "";?>"  method="POST" accept-charset="utf-8">
-	  	  	<div>Property Name / Address</div>
-	  		<input type="text" name="property_address" value="<?php echo isset($property) ? $property->address : Input::get('address');?>" placeholder="Address or name"/>
-
 	  		<div>Property Type</div>
   			<?php
 
@@ -132,8 +128,11 @@ if(Input::exists()){
 		        $select_location .= "</select>";
 		        echo $select_location;
 			?>
+            
+            <div>Property Name / Address</div>
+            <input type="text" name="property_address" value="<?php echo isset($property) ? $property->address : Input::get('address');?>" placeholder="Address or name"/>
 
-			<!-- <div>Market</div> -->
+			<div>Market</div>
 			<div class="radio-group">
 	  			<label><input type="radio" name="market_name" value="rent" checked="checked" <?php if((isset($property) && $property->market == "rent") || Input::get('market_name') == "rent"){echo "checked";} ?> style="margin-left: 0;" />For Rent&nbsp;&nbsp;</label>
 	  			<label><input type="radio" name="market_name" value="sale" <?php if((isset($property) && $property->market == "sale") || Input::get('market_name') == "sale"){echo "checked";} ?>  />For Sale</label>

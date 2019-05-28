@@ -56,19 +56,20 @@ else {?>
 <form action="login.php" method="post" autocomplete="off" accept-charset="utf-8">    
     <div class="form-group mb-3">
         <label for="username" class="d-none">Username</label>
-        <input type="text" name="username" class="form-control" placeholder="Email or Phone" value="<?php echo escape(Input::get('username'))?>" <?php if(array_key_exists('username', $validation->errors())){echo "style=\"border: 1px solid red;\"";}?>/>        
+        <input type="text" name="username" class="form-control" placeholder="Email or Phone" value="<?php echo escape(Input::get('username'))?>" />        
     </div>
     <div class="form-group">
         <label for="password" class="d-none">Password</label>
-        <input type="password" name="password" class="form-control" placeholder="Password" <?php if(array_key_exists('password', $validation->errors())){echo "style=\"border: 1px solid red;\"";}?>/> 
+        <input type="password" name="password" class="form-control" placeholder="Password"/> 
     </div>
-    <p class="form-text"><a href="#" class="small text-muted">Forgot password?</a></p>
    
-    <div class="form-group text-center mb-4">    
+    <div class="form-group text-center mb-4" style="text-align: center;margin-bottom: .5rem">    
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>"/>
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold">Log in</button>
+        <button type="submit" class="btn btn-primary btn-block font-weight-bold">Login</button>
     </div>  
-    <p class="my-3 text-center">New to Nyumba Yanga?&nbsp;<a href="signup.php" class="small text-muted">Join now</a></p>                      
+    <p class="my-3 text-center" style="text-align: center;"><a href="signup.php" class="small text-muted">New to Nyumba Yanga? Join now</a></p>     
+    <p class="form-text" style="text-align: center;"><a href="#" class="small text-muted">Forgot password?</a></p>
+                 
 </form>
 
 <?php include_layout_template('footer.php'); ?>

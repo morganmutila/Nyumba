@@ -16,7 +16,7 @@ function NY_SEARCH_ENGINE(){
     global $session;
 
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
-    $html .= "    <input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding-right:7rem;border-radius: 4px;\">";
+    $html .= "    <input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding-right:10%;border-radius: 4px;margin-bottom:.7rem;\">";
     if(isset($session->location)){
         $html .= "<div style=\"font-size:.9rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #bbb;height:65%;line-height:1.6rem;margin:2% 0;\">Ꝋ&nbsp;";            
         $html .= "<small>".Location::findLocationOn($session->location)."</small>";
@@ -24,6 +24,24 @@ function NY_SEARCH_ENGINE(){
     }     
     $html .= "</form>";
     return $html;
+}
+
+function sort_filter($filter){
+    switch ($filter) {
+        case 'best':
+            $filter = "views DESC";
+            break;
+        case 'price_asc':
+            $filter = "price ASC";
+            break;
+        case 'price_desc':
+            $filter = "price DESC";
+            break;        
+        case 'new':
+            $filter = "added DESC";
+            break;
+    }
+    return $filter;
 }
 
 function pre($value){
@@ -61,7 +79,7 @@ function time_ago($time){
     $formated_time = strtotime($time);
     $time_difference = time() - $formated_time;
  
-    if( $time_difference < 1 ) { return 'less than 1 second ago'; }
+    if( $time_difference < 1 ) { return strtoupper('less than 1 second ago'); }
     $condition = array( 
                 12 * 30 * 24 * 60 * 60 =>  'year',
                 30 * 24 * 60 * 60       =>  'month',
@@ -76,7 +94,7 @@ function time_ago($time){
  
         if( $d >= 1 ){
             $t = round( $d );
-            return $t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago';
+            return strtoupper($t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago');
         }
     }
 }

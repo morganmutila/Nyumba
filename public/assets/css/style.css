@@ -120,6 +120,7 @@ button{
 
 .message-danger{
   background-color: #ffe8ed;
+  color: red;
 }
 
 .pagination {

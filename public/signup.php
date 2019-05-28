@@ -80,7 +80,7 @@ if(Input::exists()){
 <?php include_layout_template('header.php'); ?>
 
 <h2 class="text-center mb-4 font-weight-bold" style="text-align: center;margin-bottom: 0;">Join Nyumba Yanga</h2>
-<p style="text-align: center;">Nyumba yanga is home to over&nbsp;<?php echo Property::total();?>,000 Houses, Apartments, Flats and Town House's. We are working together to host property listings with owners, renters and buyers.</p>
+<p style="text-align: center;">Nyumba yanga is home to over&nbsp;<?php echo Property::total();?>,000 Houses, Apartments, Flats and Town House's. We are working together to host property listings with owners.</p>
 <form action="signup.php" method="post" autocomplete="off" accept-charset="utf-8">
 
     <!-- <p style="text-align: center;"><button type="button">Sign up with Facebook</button></p>
