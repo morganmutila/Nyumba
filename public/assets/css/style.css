@@ -102,12 +102,25 @@ button{
   line-height: 1.4rem;
 }
 .message, .message-info, .message-warning, .message-success, .message-danger{	
+  width: 100%;
   background-color: #f1f1f1;
   color: #333;
-  padding: 0.6rem 1rem;
+  display: table;
+  padding: 0.5rem 0.7rem;
   border-radius: 3px; 
-  font-size: 0.85rem; 
+  font-size: 0.8rem; 
   line-height: 1.5;
+}
+.message > i, .message-info > i, .message-warning > i, .message-success > i, .message-danger > i{ 
+  display: table-cell;
+  width: 10%;
+  vertical-align: text-bottom;
+  padding-right: .2rem;
+}
+
+.message > span, .message-info > span, .message-warning > span, .message-success > span, .message-danger > span{ 
+  display: table-cell;
+  width: 90%;
 }
 
 .message-warning{

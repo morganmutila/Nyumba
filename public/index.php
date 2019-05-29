@@ -100,10 +100,10 @@
 				echo number_format($property_2->size)    . " Sqft";
 				if(isset($user)){
 					echo ($user->SavedProperty($property_2->id)) ?
-						"<a href=\"listremove.php?id=$property_2->id\" style=\"float:right;\">❤️</a>":
-						"<a href=\"listsave.php?id=$property_2->id\" style=\"float:right;\">Save</a>";
+						"<a href=\"listremove.php?id=$property_2->id\" style=\"float:right;\"><i class=\"mdi mdi-heart mdi-24px\"></i></a>":
+						"<a href=\"listsave.php?id=$property_2->id\" style=\"float:right;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
 				}else{
-					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\">Save</a>";
+					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
 				}
 				echo "<br>";
 				echo "<a href=\"property.php?id={$property_2->id}\">";
@@ -143,10 +143,10 @@
 				echo number_format($property->size)    . " Sqft";
 				if(isset($user)){
 					echo ($user->SavedProperty($property->id)) ?
-						"<a href=\"listremove.php?id=$property->id\" style=\"float:right;\">❤️</a>":
-						"<a href=\"listsave.php?id=$property->id\" style=\"float:right;\">Save</a>";
+						"<a href=\"listremove.php?id=$property->id\" style=\"float:right;\"><i class=\"mdi mdi-heart mdi-24px\"></i></a>":
+						"<a href=\"listsave.php?id=$property->id\" style=\"float:right;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
 				}else{
-					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\">Save</a>";
+					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
 				}
 				echo "<br>";
 				echo "<a href=\"property.php?id={$property->id}\">";
@@ -172,10 +172,10 @@
 				if($pagination->has_previous_page()){								  
 				    echo "<li class=\"page-item\"><a class=\"page-link\" href=\"index.php?page=";
 				    echo $pagination->previous_page();
-				    echo "\">Prev</a></li>";	   
+				    echo "\"><i class=\"mdi mdi-chevron-left\"></i></a></li>";	   
 				}
 			    if($pagination->previous_page() == 0){
-					echo "<li class=\"page-item disabled\"><span class=\"page-link\">Prev</span></li>";			
+					echo "<li class=\"page-item disabled\"><span class=\"page-link\"><i class=\"mdi mdi-chevron-left\"></i></span></li>";			
 				}	
 			    for($i = 1; $i <= $pagination->total_pages(); $i++){
 			    	if($i == $page){
@@ -186,12 +186,12 @@
 			    }								    	
 
 				if($pagination->total_pages() < $pagination->next_page()){
-			    	echo "<li class=\"page-item disabled\"><span class=\"page-link\">Next</span></li>";
+			    	echo "<li class=\"page-item disabled\"><span class=\"page-link\"><i class=\"mdi mdi-chevron-right\"></i></span></li>";
 			    }				
 				if($pagination->has_next_page()){										  
 				    echo "<li class=\"page-item\"><a class=\"page-link\" href=\"index.php?page=";
 				    echo $pagination->next_page();
-				    echo "\">Next</a></li>";
+				    echo "\"><i class=\"mdi mdi-chevron-right\"></i></a></li>";
 				}									
 			}							
 		?>

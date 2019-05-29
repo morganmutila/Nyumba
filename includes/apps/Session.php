@@ -47,7 +47,7 @@ class Session {
 
     public function message($msg=""){
         if(!empty($msg)){
-            self::put('message', escape($msg));
+            self::put('message', $msg);
         }else{
             return htmlentities($this->message);
         }
@@ -59,7 +59,7 @@ class Session {
             self::delete($name);
             return $session;
         }else{
-            self::put($name, escape($message));
+            self::put($name, $message);
         }
     }
 

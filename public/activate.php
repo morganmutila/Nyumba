@@ -83,7 +83,6 @@ if(Input::exists()){
             $property->available        = (string) Input::get('available');
             $property->status           = (int)    2;
             $property->listed_by    	= (int)    1;
-            $property->added            = (string) "NOW()";
 
         	if($property && $property->save()){
 				// Add the property

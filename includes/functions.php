@@ -18,7 +18,7 @@ function NY_SEARCH_ENGINE(){
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
     $html .= "    <input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding-right:10%;border-radius: 4px;margin-bottom:.7rem;\">";
     if(isset($session->location)){
-        $html .= "<div style=\"font-size:.9rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #bbb;height:65%;line-height:1.6rem;margin:2% 0;\">Ꝋ&nbsp;";            
+        $html .= "<div style=\"font-size:.9rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #bbb;height:65%;line-height:1.6rem;margin:2% 0;\"><i class=\"mdi mdi-map-marker-outline\"></i>";            
         $html .= "<small>".Location::findLocationOn($session->location)."</small>";
         $html .= "</div>";   
     }     
@@ -139,19 +139,19 @@ function output_message($message="",  $type="info") {
     if (!empty($message)) {    
         switch ($type) {
             case $type == 'success':
-                $output .= "<p class=\"message-success\">".$message."</p>";
+                $output .= "<p class=\"message-success\"><i class=\"mdi mdi-check-circle-outline mdi-18px\"></i><span>".$message."</span></p>";
                 break;
             
             case $type == 'warning':
-                $output .= "<p class=\"message-warning\">".$message."</p>";
+                $output .= "<p class=\"message-warning\"><i class=\"mdi mdi-alert-circle-outline mdi-18px\"></i><span>".$message."</span></p>";
                 break;
 
             case $type == 'info':
-                $output .= "<p class=\"message-info\">".$message."</p>";
+                $output .= "<p class=\"message-info\"><i class=\"mdi mdi-information-outline mdi-18px\"></i><span>".$message."</span></p>";
                 break;  
 
             case $type == 'danger':
-            $output .= "<p class=\"message-danger\">".$message."</p>";
+            $output .= "<p class=\"message-danger\"><i class=\"mdi mdi-alert-circle-outline mdi-18px\"></i><span>".$message."</span></p>";
             break;   
         }
     }    
@@ -163,19 +163,19 @@ function flash($name, $type="info"){
     if(Session::exists($name)){        
         switch ($type) {
             case $type == 'success':
-                $output .= "<p class=\"message-success\">".Session::flash($name)."</p>";
+                $output .= "<p class=\"message-success\"><i class=\"mdi mdi-check-circle-outline mdi-18px\"></i><span>".Session::flash($name)."</span></p>";
                 break;
             
             case $type == 'warning':
-                $output .= "<p class=\"message-warning\">".Session::flash($name)."</p>";
+                $output .= "<p class=\"message-warning\"><i class=\"mdi mdi-alert-circle-outline mdi-18px\"></i><span>".Session::flash($name)."</span></p>";
                 break;
 
             case $type == 'info':
-                $output .= "<p class=\"message-info\">".Session::flash($name)."</p>";
+                $output .= "<p class=\"message-info\"><i class=\"mdi mdi-information-outline mdi-18px\"></i><span>".Session::flash($name)."</span></p>";
                 break;  
 
             case $type == 'danger':
-            $output .= "<p class=\"message-danger\">".Session::flash($name)."</p>";
+            $output .= "<p class=\"message-danger\"><i class=\"mdi mdi-alert-circle-outline mdi-18px\"></i><span>".Session::flash($name)."</span></p>";
             break;   
         }
     }    

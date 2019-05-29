@@ -9,28 +9,35 @@ $validation = new Validation();
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))){
         
-        $validation->check($_POST, array(
-            'username'  => array('required' => 'true', 'min' => 3),
-            'password'  => array('required' => 'true')
-        ));
+        if (empty(Input::get('username')) || empty(Input::get('password'))){
+            $message = "Username and Password is required.";
+        }    
+        else{
+            $validation->check($_POST, array(
+                'username'  => array('required' => 'true', 'min' => 3),
+                'password'  => array('required' => 'true')
+            ));
 
-        if($validation->passed()){
 
-            // Check the database to see if username / password exists
-            $username = $email = $phone = Input::get('username');
-            $password =  Input::get('password');
 
-            $found_user = User::authenticate($username, $password, $email, $phone);
+            if($validation->passed()){
 
-            if($found_user){
-                $session->login($found_user);
-                Redirect::to("index.php");
+                // Check the database to see if username / password exists
+                $username = $email = $phone = Input::get('username');
+                $password =  Input::get('password');
+
+                $found_user = User::authenticate($username, $password, $email, $phone);
+
+                if($found_user){
+                    $session->login($found_user);
+                    Redirect::to("index.php");
+                } else {
+                    $message = "Log in failed, username or password does not match any account";
+                }
+
             } else {
-                $message = "Log in failed, username or password does not match any account";
+                $message = get_form_errors($validation->errors());
             }
-
-        } else {
-            $message = get_form_errors($validation->errors());
         }
     }
 }

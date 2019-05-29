@@ -15,7 +15,7 @@
 		
 		if($savedproperty && $savedproperty->delete()){
 		// Delete the listing from the save list
-			$session->message('You have removed the listing from saved property');
+			$session->message('You have removed the listing from saved property', 'info');
 			if(Input::get('redirect') == "saved"){
 				Redirect::to('saved.php');
 			}else{
@@ -23,7 +23,7 @@
 			}
         }
         else{
-        	$session->message('Could not remove the listing from saved list');
+        	$session->message('Could not remove the listing from saved list', 'warning');
             if(Input::get('redirect') == "saved"){
 				Redirect::to('saved.php');
 			}else{

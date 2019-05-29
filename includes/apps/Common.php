@@ -156,7 +156,7 @@ class Validation {
                 $item  = escape($item);
 
                 if($rule === 'required' && empty($value)){
-                    $this->addError($item, "{$item} cannot be empty");
+                    $this->addError($item, "{$item} is required");
                 }else if(!empty($value)){
                     switch($rule){
                         case 'min':
@@ -180,7 +180,7 @@ class Validation {
                             $check = DB::getInstance()->query($sql, $params);
 
                             if(DB::getInstance()->count() > 0){
-                                $this->addError($item, "'$value' already exists");
+                                $this->addError($item, "$value already exists");
                             }
                             break;
 

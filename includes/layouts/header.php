@@ -7,6 +7,7 @@
     <title><?php echo page_title($page_title); ?></title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.png"/>
     <link href="assets/css/style.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="assets/css/mdicons.css" media="all" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div id="header">
