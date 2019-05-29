@@ -81,7 +81,7 @@ button{
 	font-size: 0.92rem; 
 	color: #000;
 	background-color: #fff;
-  border-radius: 2px;
+  border-radius: 3px;
   border: 1px solid #ccc;
 }
 
@@ -124,7 +124,7 @@ button{
 }
 
 .message-warning{
-  background-color: #ffe57e;
+  background-color: #fff4ca; /* #ffe57e*/
 }
 
 .message-success{

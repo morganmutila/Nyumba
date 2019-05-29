@@ -33,10 +33,12 @@ if(Input::exists()){
         ));
 
         if ($validation->passed()) {
+
             $fullname = explode(" ", Input::get('name'));
-            if (!empty($fullname[0]) && !empty($fullname[1])){  
-                $first_name = strtolower(preg_replace('#[^a-z0-9]#i', '', $fullname[0]));
-                $last_name = strtolower(preg_replace('#[^a-z0-9]#i', '', $fullname[1]));
+
+            if (count($fullname) === 2){  
+
+                list($first_name, $last_name) = $fullname; //Assign variables to the exploded values
 
                 // Add the user to the database
                 $user = new User();
@@ -68,8 +70,11 @@ if(Input::exists()){
                     $message = "Oops! Something went wrong, please try again";
                 }
             }
+            elseif((count($fullname) >= 2)){
+                $message = "Only the first name and the last name are required, no middle names";
+            }
             else{
-                $message = "<strong>Full name is required</strong>, Please separate your first and last name with a space";
+                $message = "Full name is required, Please separate your first and last name with a space";
             }            
 
         } else {
@@ -88,28 +93,28 @@ if(Input::exists()){
     <p style="text-align: center;">--------------- OR --------------</p> -->
     <?php echo output_message($message, "danger"); ?>
     <div class="form-group col-6">    
-        <label for="name" class="sr-only">Full Name</label>
+        <!-- <label for="name" class="sr-only">Full Name</label> -->
         <input type="text" name="name" class="form-control" value="<?php echo escape(Input::get('name')); ?>" placeholder="Full Name"/>
     </div>
 
     <div class="form-group">
-        <label for="phone" class="sr-only">Phone Number</label>                
+        <!-- <label for="phone" class="sr-only">Phone Number</label> -->                
         <input type="text" name="phone" class="form-control" value="<?php echo escape(Input::get("phone")); ?>" placeholder="Phone Number"/>
     </div>
 
     <div class="form-group">
-        <label for="email" class="sr-only">Email Address</label>                
+        <!-- <label for="email" class="sr-only">Email Address</label> -->                
         <input type="text" name="email" class="form-control" value="<?php echo escape(Input::get("email")); ?>" placeholder="Email"/>
     </div>
 
     <div class="form-group">    
-        <label for="password" class="sr-only">Password</label>
+        <!-- <label for="password" class="sr-only">Password</label> -->
         <input type="password" name="password" class="form-control" placeholder="Create password"/>
     </div>
     <p class="text-center text-muted py-2 px-4 small">By clicking Sign up, you agree to Nyumba Yanga terms of service and privacy policy</p>
     <div class="form-group mb-2"> 
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold">Sign up</button>
+        <button type="submit" class="btn btn-primary btn-block font-weight-bold">SIGN UP</button>
     </div>  
     <p class="my-3 text-center">Already have an account?<a href="login.php" class="small text-muted">&nbsp;Log in</a></p>  
 </form>

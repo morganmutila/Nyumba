@@ -13,10 +13,14 @@ spl_autoload_register(function($class_name){
 });
 
 function NY_SEARCH_ENGINE(){
-    global $session;
+    global $session, $found_location;
 
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
-    $html .= "    <input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding-right:10%;border-radius: 4px;margin-bottom:.7rem;\">";
+    $html .= "    <input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding-right:10%;border-radius: 4px;margin-bottom:.7rem;\" value=";
+        if(Input::get('q')){
+            $html .= $found_location;
+        }
+    $html .= ">";
     if(isset($session->location)){
         $html .= "<div style=\"font-size:.9rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #bbb;height:65%;line-height:1.6rem;margin:2% 0;\"><i class=\"mdi mdi-map-marker-outline\"></i>";            
         $html .= "<small>".Location::findLocationOn($session->location)."</small>";
@@ -39,6 +43,9 @@ function sort_filter($filter){
             break;        
         case 'new':
             $filter = "added DESC";
+            break;
+        case 'beds':
+            $filter = "beds DESC";
             break;
     }
     return $filter;
@@ -258,7 +265,6 @@ function generate_form_checkbox($name="", $key_values=array()){
     return "";
 }
 
-
 //Money format
 function amount_format($amount = '0', $symbol = 'K') {
     $amount = round($amount, 2);
@@ -292,6 +298,5 @@ function thumb_image($imgsrc, $thumbsize = "100", $alt = "Image", $title = "Imag
     }
     else {
         echo "No Image";
-    }
-    
- }
+    }    
+}

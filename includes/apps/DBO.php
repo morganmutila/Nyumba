@@ -35,6 +35,12 @@ Abstract class DBO{
         return $object_array;
     }
 
+    public static function findFirst($sql, $params=array()){
+        // Return only the first occurance
+        $result_array = static::findBySql($sql, $params); 
+        return !empty($result_array) ? array_shift($result_array) : false;
+    }
+
     //Instantiate the object properties
     protected static function instantiate($record){
         $object  = new static;

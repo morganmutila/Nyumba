@@ -59,10 +59,11 @@
 <form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" style="border:1px solid #ccc; padding: .5rem;width: auto;display:inline;border-radius:4px;">
 	<?php
 	  	$sortby_types = array(
-  			"Price (L-H)" => "price_asc",
+  			"Price (L-H)"   => "price_asc",
   			"Price (H-L)"	=> "price_desc",
   			"Newest"		=> "new",
-  			"Best match"	=> "best"
+  			"Best match"	=> "best",
+  			"Bedrooms"		=> "beds"
 	  	);
 
         $select_sortby = "<span>Sort:</span><select onchange=\"this.form.submit()\" name=\"sortby\" style=\"width: auto;height:35px;display:inline;border:0;padding: 0;background-color:transparent;margin:0;font-size:.9rem;\">";
@@ -80,6 +81,7 @@
 
 
 <?php echo output_message($message, "success"); ?>
+<?php echo flash("invalid_location", "warning"); ?>
 
 <?php if($session->location):?>
 <h4><?php echo Location::findLocationOn($session->location);//The Location name?>&nbsp;homes&nbsp;&nbsp;·&nbsp;&nbsp;<small style="color: #555;"><?php echo $number_of_homes;?>&nbsp; homes found</small></h4>
@@ -117,7 +119,7 @@
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
-	<?php if(empty($properties_2)){echo "<div style=\"padding: 1rem 0.3rem;\">There is currently no listing at the moment</div>";}?>
+	<?php if(empty($properties_2)){ ?><div style="text-align: center;color:#aaa;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no..&nbsp;<?php echo "<strong><a href=\"#\">".Location::findLocationOn($session->location)."</a></strong>&nbsp;"; ?>is quiet,  there is currently no listings at the moment, choose another location to see listings you might like</div><?php } ?>
 </div>
 <?php endif; ?>
 
@@ -160,7 +162,7 @@
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
-	<?php if(empty($properties)){echo "<div style=\"padding: 1rem 0.3rem;\">There is currently no listing at the moment</div>";}?>
+	<?php if(empty($properties)){ ?><div style="text-align: center;color:#aaa;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no..&nbsp;<?php echo "<strong><a href=\"#\">".Location::findLocationOn($session->location)."</a></strong>&nbsp;"; ?>is quiet,  there is currently no listings at the moment, choose another location to see listings you might like</div><?php } ?>
 </div>
 
 
