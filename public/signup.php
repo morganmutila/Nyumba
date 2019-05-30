@@ -35,7 +35,6 @@ if(Input::exists()){
         if ($validation->passed()) {
 
             $fullname = explode(" ", Input::get('name'));
-
             if (count($fullname) === 2){  
 
                 list($first_name, $last_name) = $fullname; //Assign variables to the exploded values
@@ -111,12 +110,12 @@ if(Input::exists()){
         <!-- <label for="password" class="sr-only">Password</label> -->
         <input type="password" name="password" class="form-control" placeholder="Create password"/>
     </div>
-    <p class="text-center text-muted py-2 px-4 small">By clicking Sign up, you agree to Nyumba Yanga terms of service and privacy policy</p>
-    <div class="form-group mb-2"> 
+    <p class="text-center text-muted py-2 px-4 small" style="text-align: center;">By signing up, you agree to Nyumba Yanga Terms and  Privacy Policy</p>
+    <div class="form-group mb-2" style="text-align: center;"> 
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold">SIGN UP</button>
+        <button type="submit" class="btn btn-primary btn-block font-weight-bold" style="width: 100%;">SIGN UP</button>
     </div>  
-    <p class="my-3 text-center">Already have an account?<a href="login.php" class="small text-muted">&nbsp;Log in</a></p>  
+    <p class="my-3 text-center" style="text-align: center;"><a href="login.php" class="small text-muted">Already on Nyumba yanga?&nbsp;Log in</a></p>  
 </form>
 
 <?php include_layout_template('footer.php'); ?>

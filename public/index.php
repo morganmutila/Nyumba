@@ -1,7 +1,7 @@
 <?php require '../init.php';
 
 	// 1. the current page number ($current_page)
-	$page = !empty(Input::get('page')) ? (int)Input::get('page') : 1;
+	$page = Input::get('page') ? (int) Input::get('page') : 1;
 
 	// 2. records per page ($per_page)
 	$per_page = Config::get('records_per_page');
@@ -16,19 +16,20 @@
 
 	//Get the sort by from the Query string if any
 	if(Input::get('sortby')) {
-		Session::put('SORT_BY', Input::get('sortby'));
+		Session::put('SORT_BY', escape(Input::get('sortby')));
 		$sortby = Session::get('SORT_BY');
-	}elseif(Session::exists('SORT_BY')){
+	}elseif(Session::exists('SORT_BY') == true){
 		$sortby = Session::get('SORT_BY');
 	}
 	else{
+		Session::put('SORT_BY', Config::get('default_sortby'));
 		$sortby = Config::get('default_sortby');
 	}
 
 
 	$sql  = "SELECT * FROM property WHERE status >= ? ";
 	$sql .= "ORDER BY ";
-	$sql .=  sort_filter($sortby);	
+	$sql .=  sortby_filters($sortby);	
 	$sql .= " LIMIT {$per_page} ";
 	$sql .= "OFFSET {$pagination->offset()}";
 
@@ -45,7 +46,7 @@
 
 		$sql_2  = "SELECT * FROM property WHERE status >= ? AND location_id = ? ";
 		$sql_2 .= "ORDER BY ";
-		$sql_2 .=  sort_filter($sortby);
+		$sql_2 .=  sortby_filters($sortby);
 		$sql_2 .= " LIMIT {$per_page} ";
 		$sql_2 .= "OFFSET {$pagination->offset()}";
 
@@ -53,23 +54,24 @@
 	endif;
 ?>
 
+
 <?php include_layout_template('header.php'); ?>
 <?php echo NY_SEARCH_ENGINE(); ?>
 
 <form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" style="border:1px solid #ccc; padding: .5rem;width: auto;display:inline;border-radius:4px;">
 	<?php
-	  	$sortby_types = array(
+	  	$sortby_types = array(	  		
+  			"Newest"		=> "new",  			
+  			"Best match"	=> "best",
   			"Price (L-H)"   => "price_asc",
   			"Price (H-L)"	=> "price_desc",
-  			"Newest"		=> "new",
-  			"Best match"	=> "best",
   			"Bedrooms"		=> "beds"
 	  	);
 
         $select_sortby = "<span>Sort:</span><select onchange=\"this.form.submit()\" name=\"sortby\" style=\"width: auto;height:35px;display:inline;border:0;padding: 0;background-color:transparent;margin:0;font-size:.9rem;\">";
             foreach ($sortby_types as $type => $value) {
                 $select_sortby .= "<option value=\"$value\" ";
-                    if(Session::exists('SORT_BY') && Session::get('SORT_BY') == $value){
+                    if(Session::get('SORT_BY') == $value || Config::get('default_sortby') == $value){
                         $select_sortby .= "selected";
                     }
                 $select_sortby .= ">".$type."</option>";
@@ -78,6 +80,7 @@
         echo $select_sortby;
 	?>
 </form>
+<button type="button" style="float: right;"><i class="mdi mdi-tune"></i>&nbsp;Filters</button>
 
 
 <?php echo output_message($message, "success"); ?>
@@ -89,13 +92,13 @@
 	<?php foreach ($properties_2 as $property_2):?>
 		<div class="listing">
 			<?php
-				echo "<p>";
-				    if(new_listing($property_2->added)){echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span>";}
+				echo "<div>";
+				    if(new_listing($property_2->added)){echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span>";}else{echo "&nbsp;";}
 
-				echo "<span style=\"color:#666;font-size:0.75rem;float:right;line-height:1rem;\">".time_ago($property_2->added)."</span>";
-				echo "<div style=\"clear:both;\"></div></p>"; 
-				echo "<span style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property_2->price)."&nbsp;<small>".$property_2->rentTerms()."</small></span>";
-				echo ($property_2->negotiable == true) ? "<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
+				echo "<span style=\"color:#666;font-size:0.75rem;float:right;line-height:1rem;\">".time_ago($property_2->added)."</span><div style=\"clear:both;\"></div></div>";   
+				echo "<div style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property_2->price)."&nbsp;<small>".$property_2->rentTerms()."</small>";
+				echo  ($property_2->negotiable == true) ? "<small style=\"color:#11cc11;\">NEG</small>" : "";
+				echo "<span style=\"float:right;\">".$property_2->oldPrice()."</span></div>";
 				echo "<br>";
 				echo $property_2->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
 				echo $property_2->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
@@ -119,7 +122,7 @@
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
-	<?php if(empty($properties_2)){ ?><div style="text-align: center;color:#aaa;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no..&nbsp;<?php echo "<strong><a href=\"#\">".Location::findLocationOn($session->location)."</a></strong>&nbsp;"; ?>is quiet,  there is currently no listings at the moment, choose another location to see listings you might like</div><?php } ?>
+	<?php if(empty($properties_2)){ ?><div style="text-align: center;color:#777;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no,  there is currently no listings at the moment</div><?php } ?>
 </div>
 <?php endif; ?>
 
@@ -132,13 +135,13 @@
 		</div> -->
 		<div class="listing">
 			<?php
-				echo "<p>";
-				    if(new_listing($property->added)){echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span>";}
+				echo "<div>";
+				    if(new_listing($property->added)){echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span>";}else{echo "&nbsp;";}
 
-				echo "<span style=\"color:#666;font-size:0.75rem;float:right;line-height:1rem;\">".time_ago($property->added)."</span>";
-				echo "<div style=\"clear:both;\"></div></p>";   
-				echo "<span style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property->price)."&nbsp;<small>".$property->rentTerms()."</small></span>";
-				echo ($property->negotiable == true) ? "<span style=\"color:#11cc11;font-size:0.7rem;\">NEG</span>" : "";
+				echo "<span style=\"color:#666;font-size:0.75rem;float:right;line-height:1rem;\">".time_ago($property->added)."</span><div style=\"clear:both;\"></div></div>";   
+				echo "<div style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property->price)."&nbsp;<small>".$property->rentTerms()."</small>";
+				echo  ($property->negotiable == true) ? "<small style=\"color:#11cc11;\">NEG</small>" : "";
+				echo "<span style=\"float:right;\">".$property->oldPrice()."</span></div>";
 				echo "<br>";
 				echo $property->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
 				echo $property->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
@@ -162,42 +165,12 @@
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
-	<?php if(empty($properties)){ ?><div style="text-align: center;color:#aaa;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no..&nbsp;<?php echo "<strong><a href=\"#\">".Location::findLocationOn($session->location)."</a></strong>&nbsp;"; ?>is quiet,  there is currently no listings at the moment, choose another location to see listings you might like</div><?php } ?>
+	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no,  there is currently no listings at the moment</div><?php } ?>
 </div>
 
 
 <div style="text-align: center">
-	<ul class="pagination">					    			
-		<?php
-			$pages = ceil($pagination->offset() - 1);
-			if($pagination->total_pages() > 1){
-				if($pagination->has_previous_page()){								  
-				    echo "<li class=\"page-item\"><a class=\"page-link\" href=\"index.php?page=";
-				    echo $pagination->previous_page();
-				    echo "\"><i class=\"mdi mdi-chevron-left\"></i></a></li>";	   
-				}
-			    if($pagination->previous_page() == 0){
-					echo "<li class=\"page-item disabled\"><span class=\"page-link\"><i class=\"mdi mdi-chevron-left\"></i></span></li>";			
-				}	
-			    for($i = 1; $i <= $pagination->total_pages(); $i++){
-			    	if($i == $page){
-			    		echo "<li class=\"page-item active\"><span class=\"page-link\">{$i}</span></li>";
-			    	}else{
-				    	echo "<li class=\"page-item\"><a href=\"index.php?page={$i}\" class=\"page-link\">{$i}</a></li>";
-				    }
-			    }								    	
-
-				if($pagination->total_pages() < $pagination->next_page()){
-			    	echo "<li class=\"page-item disabled\"><span class=\"page-link\"><i class=\"mdi mdi-chevron-right\"></i></span></li>";
-			    }				
-				if($pagination->has_next_page()){										  
-				    echo "<li class=\"page-item\"><a class=\"page-link\" href=\"index.php?page=";
-				    echo $pagination->next_page();
-				    echo "\"><i class=\"mdi mdi-chevron-right\"></i></a></li>";
-				}									
-			}							
-		?>
-	</ul>
+	<?php echo NY_PAGINATION(); ?>
 </div>
 
 <?php include_layout_template('footer.php'); ?>

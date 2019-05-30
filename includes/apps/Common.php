@@ -45,10 +45,10 @@ class Input {
         if(isset($_POST[$item])){
             return $_POST[$item];
         }elseif(isset($_GET[$item])){
-            return ($_GET[$item]);
+            return $_GET[$item];
         }
 
-        return '';
+        return false;
     }
 } 
 
@@ -61,7 +61,7 @@ class Redirect {
                 switch($location){
                     case 404:
                         header('HTTP/1.0 404 Not Found');
-                        include 'includes/error404.php';
+                        include 'includes/404.php';
                         exit();
                     break;
                 }
@@ -70,31 +70,6 @@ class Redirect {
             header('Location: '.$location);
             exit();
         }
-    }
-} 
-
-
-//The Cookie class ***********************************************************************************
-class Cookie {
-
-    public static function exists($name){
-        return (isset($_COOKIE[$name])) ? true : false;
-    }
-
-    public static function get ($name){
-        return $_COOKIE[$name];
-    }
-
-    public static function put($name, $value, $expiry){
-        if(setcookie($name, $value, time() + $expiry, '/')){
-            return true;
-        }
-
-        return false;
-    }
-
-    public static function delete($name){
-        self::put($name, '', time() - 1);
     }
 } 
 

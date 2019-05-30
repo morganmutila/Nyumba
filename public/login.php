@@ -72,7 +72,7 @@ else {?>
    
     <div class="form-group text-center mb-4" style="text-align: center;margin-bottom: .5rem">    
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>"/>
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold">LOGIN</button>
+        <button type="submit" class="btn btn-primary btn-block font-weight-bold" style="width: 100%;">LOGIN</button>
     </div>  
     <p class="my-3 text-center" style="text-align: center;"><a href="signup.php" class="small text-muted">New to Nyumba Yanga? Join now</a></p>     
     <p class="form-text" style="text-align: center;"><a href="#" class="small text-muted">Forgot password?</a></p>

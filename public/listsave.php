@@ -12,7 +12,7 @@
 		
 		// Save the listing to the save list
 		if ($savedproperty->create()) {
-			$session->message('You have saved the property listing', 'success');
+			$session->message('Added to saved properties', 'success');
             Redirect::to('index.php');
         }
         else{

@@ -3,7 +3,7 @@
 }
 
 html { height: 100%; width: 100%; }
-body {width: 320px; margin: 0 auto; padding: .8rem; border: 0;  font-size: .9rem; font-family: helvetica;}
+body {width: 320px; margin: 0 auto; padding: 0 .8rem; border: 0;  font-size: .9rem; font-family: helvetica;}
 
 img { border: none; }
 
@@ -33,7 +33,13 @@ ul{
     float: left;
     padding-right: 1rem;
 }    
-
+#footer .menu{
+  text-transform: uppercase;
+  font-size: .75rem;
+}
+#footer .menu li{
+  padding-right: .5rem;
+}
 #main {padding: 0  0 1rem 0; width: 100%;}
 
 input, select{
@@ -85,19 +91,17 @@ button{
   border: 1px solid #ccc;
 }
 
-#main a{
+.properties a{
 	color: #000;
 	text-decoration: none;
 }
-
-
-#main a:hover{
+.properties a:hover{
 	color: #1db954;
 }
 
 .listing{
   margin: 0 -1rem 0 -1rem;
-  padding: .3rem 1rem 1rem 1rem;
+  padding: 1rem 1rem;
   border-bottom: 3px solid #eee;
   line-height: 1.4rem;
 }
@@ -152,7 +156,7 @@ button{
   padding: 6px 12px;
   margin-left: -1px;
   line-height: 1.42857143;
-  color: #337ab7;
+  color: #333;
   text-decoration: none;
   background-color: #fff;
 /*  border: 1px solid #ddd;

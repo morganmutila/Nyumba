@@ -90,12 +90,4 @@ class User extends DBO{
         }
     }
 
-    public function __toString(){
-        $output  =  "User ID: " .    $this->id ."<br>";
-        $output .=  "Username: " .   $this->username ."<br>";
-        $output .=  "Name: " .       $this->fullName() ."<br>";
-        $output .=  "Joined: " .     $this->joined ."<br>";
-        return $output;
-    }
-
 } 

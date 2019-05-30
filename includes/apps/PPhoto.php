@@ -137,21 +137,6 @@ class PPhoto extends DBO{
         }
     }
 
-    public function __toString(){
-        $output  = "ID: ". 		    	$this->id ."<br>";
-        $output .= "Address: ". 	    $this->address ."<br>";
-		$output .= "Bedrooms: ".    	$this->beds."<br>";
-		$output .= "Bathrooms: ".   	$this->baths."<br>";
-		$output .= "Plot Size: ".   	$this->size." sqft"."<br>";
-		$output .= "Added On: ".		$this->added."<br>";
-		$output .= "Description: ". 	$this->description."<br>";
-		$output .= "Owner: ". 			$this->owner."<br>";
-		$output .= "Rent: K". 			$this->price."<br>";
-		$output .= "Available: ". 		$this->available."<br>";
-		$output .= "Views: ".			$this->views."<br>";
-		$output .= "Market Name: ". 	ucfirst($this->market)."<br>";
-        return $output;
-    }
 }
 
 

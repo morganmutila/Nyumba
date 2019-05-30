@@ -16,13 +16,13 @@ function NY_SEARCH_ENGINE(){
     global $session, $found_location;
 
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
-    $html .= "    <input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding-right:10%;border-radius: 4px;margin-bottom:.7rem;\" value=";
+    $html .= "    <i class=\" mdi mdi-magnify mdi-24px\" style=\"position:absolute;left:0;top:0;padding:0 .5rem;color: #aaa;height:65%;line-height:1.6rem;margin:2% 0;\"></i><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding:0 35% 0 12%;border-radius: 4px;margin-bottom:.7rem;background-color: #F8F8F8;font-size:.9rem;\" value=";
         if(Input::get('q')){
             $html .= $found_location;
         }
     $html .= ">";
     if(isset($session->location)){
-        $html .= "<div style=\"font-size:.9rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #bbb;height:65%;line-height:1.6rem;margin:2% 0;\"><i class=\"mdi mdi-map-marker-outline\"></i>";            
+        $html .= "<div style=\"font-size:.9rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #aaa;height:65%;line-height:1.6rem;margin:2% 0;\"><i class=\"mdi mdi-map-marker-outline\"></i>";            
         $html .= "<small>".Location::findLocationOn($session->location)."</small>";
         $html .= "</div>";   
     }     
@@ -30,25 +30,116 @@ function NY_SEARCH_ENGINE(){
     return $html;
 }
 
-function sort_filter($filter){
-    switch ($filter) {
-        case 'best':
-            $filter = "views DESC";
-            break;
-        case 'price_asc':
-            $filter = "price ASC";
-            break;
-        case 'price_desc':
-            $filter = "price DESC";
-            break;        
-        case 'new':
-            $filter = "added DESC";
-            break;
-        case 'beds':
-            $filter = "beds DESC";
-            break;
-    }
-    return $filter;
+function NY_PAGINATION(){
+    global $pagination, $page;
+
+    $html = "<ul class=\"pagination\">"; 
+            $pages = ceil($pagination->offset() - 1);
+            if($pagination->total_pages() > 1){
+                if($pagination->has_previous_page()){                                 
+                    $html .= "<li class=\"page-item\"><a class=\"page-link\" href=\"".escape($_SERVER['PHP_SELF'])."?page=". $pagination->previous_page();
+                    $html .= "\"><i class=\"mdi mdi-chevron-left\"></i></a></li>";     
+                }
+                if($pagination->previous_page() == 0){
+                    $html .= "<li class=\"page-item disabled\"><span class=\"page-link\"><i class=\"mdi mdi-chevron-left\"></i></span></li>";           
+                }   
+                for($i = 1; $i <= $pagination->total_pages(); $i++){
+                    if($i == $page){
+                        $html .= "<li class=\"page-item active\"><span class=\"page-link\">{$i}</span></li>";
+                    }else{
+                        $html .= "<li class=\"page-item\"><a href=\"".escape($_SERVER['PHP_SELF'])."?page={$i}\" class=\"page-link\">{$i}</a></li>";
+                    }
+                }                                       
+
+                if($pagination->total_pages() < $pagination->next_page()){
+                    $html .= "<li class=\"page-item disabled\"><span class=\"page-link\"><i class=\"mdi mdi-chevron-right\"></i></span></li>";
+                }               
+                if($pagination->has_next_page()){                                         
+                    $html .= "<li class=\"page-item\"><a class=\"page-link\" href=\"".escape($_SERVER['PHP_SELF'])."?page=". $pagination->next_page();
+                    $html .= "\"><i class=\"mdi mdi-chevron-right\"></i></a></li>";
+                }                                   
+            }                           
+
+    $html .= "</ul>";
+    return $html;
+}   
+
+function sortby_filters($sortby){
+    if (isset($sortby)):
+        switch ($sortby) {
+            case 'best':
+                $sortby = "views DESC";
+                break;
+            case 'price_asc':
+                $sortby = "price ASC";
+                break;
+            case 'price_desc':
+                $sortby = "price DESC";
+                break;        
+            case 'new':
+                $sortby = "added DESC";
+                break;
+            case 'beds':
+                $sortby = "beds DESC";
+                break;
+        }
+        return $sortby;
+    else: 
+        return "added DESC";   
+    endif;
+}
+
+
+function search_filters($price_filters, $beds_filters){
+    //if(isset($price_filters) AND isset($beds_filter)):
+        switch ($price_filters) {
+            case 'anyprice':
+                $price_filters = "IS NOT NULL";
+                break;
+            case 'below2k':
+                $price_filters = "<= 2000";
+                break;
+            case 'between2kto5k':
+                $price_filters = "BETWEEN 2000 AND 5000";
+                break;        
+            case 'between5kto10k':
+                $price_filters = "BETWEEN 5000 AND 10000";
+                break;
+            case 'between10kto15k':
+                $price_filters = "BETWEEN 10000 AND 15000";
+                break;
+            case 'between15kto20k':
+                $price_filters = "BETWEEN 15000 AND 20000";
+                break;
+            case 'above20k':
+                $price_filters = ">= 20000";
+                break;        
+        }
+
+        switch ($beds_filters) {
+            case 'any':
+                $beds_filters = "IS NOT NULL";
+                break;
+            case '1':
+                $beds_filters = "= 1";
+                break;
+            case '2':
+                $beds_filters = "= 2";
+                break;        
+            case '3':
+                $beds_filters = "= 3";
+                break;
+            case '4':
+                $beds_filters = "= 4";
+                break;
+            case 'above5':
+                $beds_filters = ">= 5";
+                break;       
+        }
+         return " AND price ".$price_filters . " AND beds " . $beds_filters;
+    // else:    
+    //     return "";
+    // endif;
 }
 
 function pre($value){
