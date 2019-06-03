@@ -3,12 +3,13 @@
 }
 
 html { height: 100%; width: 100%; }
-body {width: 320px; margin: 0 auto; padding: 0 .8rem; border: 0;  font-size: .9rem; font-family: helvetica;}
+body {width: 350px; margin: 0 auto; padding: 0 .8rem; border: 0;  font-size: .9rem; font-family: helvetica;}
 
 img { border: none; }
 
 a{
-  color: #1db954; 
+  /*color: #1db954; */  /*Green from Spotify*/
+  color: #15c39a;  /*Light green from Grammarly*/
   text-decoration: none;
 }
 
@@ -29,10 +30,13 @@ ul{
   width: 100%;
 }
 .menu li{
-    display: inline-block;
-    float: left;
-    padding-right: 1rem;
+    display: inline;
+    text-align: center;
+} 
+.menu li a{
+  margin: 0 .5rem;
 }    
+
 #footer .menu{
   text-transform: uppercase;
   font-size: .75rem;
@@ -44,11 +48,11 @@ ul{
 
 input, select{
   font-size: .95rem;
-  height: 2.4rem;
+  height: 2.6rem;
   width: 100%;
   padding: 0.4rem 0.5rem;
   border-radius: 3px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   margin: 0.3rem 0 1.1rem 0;
   display: block;
 }
@@ -84,6 +88,7 @@ input[type=radio], input[type=checkbox]{
 
 button{
 	padding: 0.5rem;
+  height: 2.6rem;
 	font-size: 0.92rem; 
 	color: #000;
 	background-color: #fff;

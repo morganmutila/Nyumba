@@ -17,8 +17,7 @@ date_default_timezone_set("Africa/Lusaka");
 
 // Toggle PHP errors with error reporting using the custom error handler function
 ini_set("error_reporting", true);
-$error_reporting  = E_ALL;
-error_reporting($error_reporting);
+error_reporting(E_ALL);
 
 // Flag variable for web site status:
 //Displays the full error stack instead of friendly page

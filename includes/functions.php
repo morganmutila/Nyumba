@@ -372,22 +372,3 @@ function amount_format($amount = '0', $symbol = 'K') {
     return $amount;
 }
 
-/*************for thumbnail display**********/
-function thumb_image($imgsrc, $thumbsize = "100", $alt = "Image", $title = "Image" ) {
-    if (file_exists($imgsrc)) {
-        list($width, $height ) = getimagesize($imgsrc);
-    
-        $imgratio = $width/$height;
-    if ( $imgratio > 1 ) {
-        $newwidth  = $thumbsize;
-        $newheight = $thumbsize/$imgratio;
-    }else {
-        $newheight = $thumbsize;
-        $newwidth  = $thumbsize*$imgratio;
-    }
-     return '<img src="' . $imgsrc . '" width="' . $newwidth . '" height="' . $newheight . '"  alt="' . $alt . '" border="0" title="' . $title . '" >';
-    }
-    else {
-        echo "No Image";
-    }    
-}

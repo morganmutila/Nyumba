@@ -62,20 +62,23 @@ else {?>
 
 <form action="login.php" method="post" autocomplete="off" accept-charset="utf-8">    
     <div class="form-group mb-3">
-        <label for="username" class="d-none">Username</label>
+        <!-- <label for="username" class="d-none">Username</label> -->
         <input type="text" name="username" class="form-control" placeholder="Email or Phone" value="<?php echo escape(Input::get('username'))?>" />        
     </div>
     <div class="form-group">
-        <label for="password" class="d-none">Password</label>
+        <!-- <label for="password" class="d-none">Password</label> -->
         <input type="password" name="password" class="form-control" placeholder="Password"/> 
     </div>
    
     <div class="form-group text-center mb-4" style="text-align: center;margin-bottom: .5rem">    
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>"/>
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold" style="width: 100%;">LOGIN</button>
+        <button type="submit" class="btn btn-primary btn-block font-weight-bold" style="width: 100%;">LOG IN</button>
     </div>  
-    <p class="my-3 text-center" style="text-align: center;"><a href="signup.php" class="small text-muted">New to Nyumba Yanga? Join now</a></p>     
-    <p class="form-text" style="text-align: center;"><a href="#" class="small text-muted">Forgot password?</a></p>
+    <ul class="menu" style="text-align: center;">
+        <li><a href="#" class="small text-muted">Forgot password?</a></li>
+        <li><strong>·</strong></li>
+        <li><a href="signup.php" class="small text-muted">Join NyumbaYanga?</a></li>
+    </ul>    
                  
 </form>
 
