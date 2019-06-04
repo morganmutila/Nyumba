@@ -4,7 +4,7 @@
         <p style="text-align: center"><a href="location.php">Location:&nbsp;</a>&nbsp;<strong><?php echo isset($session->location) ? Location::findLocationOn($session->location) : "Change";?></strong>
         </p>
         <ul class="menu">
-        	<li><a href="aboutus">About us</a></li>
+        	<li><a href="aboutus">About</a></li>
         	<li><a href="support">Support</a></li>
         	<li><a href="terms">Terms</a></li>
         	<li><a href="privacy">Privacy</a></li>

@@ -91,6 +91,9 @@
 <?php include_layout_template('header.php'); ?>
 <?php echo NY_SEARCH_ENGINE(); ?>
 
+<h2 style="font-size: 1.15rem;"><?php echo $found_location; ?>&nbsp;homes</h2>
+<p style="color: #555;margin-top: -0.6rem"><?php echo number_format($property_count);?>&nbsp;properties on market found</p>
+
 <form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" style="display: inline;">
 	<?php
 	  	$price_filters = array(
@@ -103,7 +106,7 @@
   			"Above K20k"		 => "above20k",
 	  	);
 
-        $price_select = "<select onchange=\"this.form.submit()\" name=\"price\" style=\"width: auto;display:inline;background-color:transparent;margin:0;border:1px solid #ccc; padding:.6rem;font-size:.85rem;border-radius:4px;\">";
+        $price_select = "<select onchange=\"this.form.submit()\" name=\"price\" style=\"width: auto;display:inline;background-color:transparent;margin:0;border:1px solid #ccc; padding:.5rem .8rem;font-size:.8rem;border-radius:4px;height:2rem;\">";
             foreach ($price_filters as $type => $value) {
                 $price_select .= "<option value=\"$value\" ";
                     if(Session::get('SRCH_FILTER_PRICE') == $value || Config::get('default_srch_filter/filter_price') == $value){
@@ -125,7 +128,7 @@
 			"5+"   => "above5",
 		);
 
-   		$bed_select = "<select onchange=\"this.form.submit()\" name=\"beds\" style=\"width: auto;display:inline;background-color:transparent;margin:0;border:1px solid #ccc; padding:.6rem;font-size:.85rem;border-radius:4px;\">";
+   		$bed_select = "<select onchange=\"this.form.submit()\" name=\"beds\" style=\"width: auto;display:inline;background-color:transparent;margin:0;border:1px solid #ccc; padding:.5rem .8rem;font-size:.8rem;border-radius:4px;height:2rem;\">";
             foreach ($beds_filters as $type => $value) {
                 $bed_select .= "<option value=\"$value\" ";
                     if(Session::get('SRCH_FILTER_BEDS') == $value || Config::get('default_srch_filter/filter_beds') == $value){
@@ -139,11 +142,12 @@
 	<input type="hidden" name="q" value="<?php echo escape($search_query);?>"/>
 </form>
 &nbsp;
-<button type="button"><i class="mdi mdi-tune"></i>&nbsp;Filters</button>
+<button type="button" style="height: 2rem"><i class="mdi mdi-tune"></i>&nbsp;Filters</button>
 
 <?php echo output_message($message, "success"); ?>
 
-<h4><?php echo $found_location; ?>&nbsp;homes&nbsp;&nbsp;·&nbsp;&nbsp;<small style="color: #555;"><?php echo $property_count;?>&nbsp; Results found</small></h4>
+
+
 <div class ="properties">
 	<?php foreach ($properties as $property):?>
 		<!-- <div style=" margin: 20px 0 0 0;">
@@ -159,6 +163,17 @@
 				echo  ($property->negotiable == true) ? "<small style=\"color:#11cc11;\">NEG</small>" : "";
 				echo "<span style=\"float:right;\">".$property->oldPrice()."</span></div>";
 				echo "<br>";
+				echo $property->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
+				echo $property->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
+				echo number_format($property->size)    . " Sqft";
+				if(isset($user)){
+					echo ($user->SavedProperty($property->id)) ?
+						"<a href=\"listremove.php?id=$property->id\" style=\"float:right;\"><i class=\"mdi mdi-heart mdi-24px\"></i></a>":
+						"<a href=\"listsave.php?id=$property->id\" style=\"float:right;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
+				}else{
+					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
+				}
+				echo "<br>";
 				echo "<a href=\"property.php?id={$property->id}\">";
 				if(!empty($property->address)){
 					echo "<strong>".$property->address . ", ". $property->Location() ."<br>";
@@ -170,7 +185,7 @@
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
-	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no, we didnt find any listing's based on your search, Try changing the filters</div><?php } ?>
+	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no,  there is currently no listings at the moment</div><?php } ?>
 </div>
 
 <div style="text-align: center">

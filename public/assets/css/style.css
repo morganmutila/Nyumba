@@ -3,13 +3,13 @@
 }
 
 html { height: 100%; width: 100%; }
-body {width: 350px; margin: 0 auto; padding: 0 .8rem; border: 0;  font-size: .9rem; font-family: helvetica;}
+body { width: 320px; margin: 0 auto; padding: 0 .8rem; border: 0;  font-size: .9rem; font-family: helvetica;}
 
 img { border: none; }
 
 a{
-  /*color: #1db954; */  /*Green from Spotify*/
-  color: #15c39a;  /*Light green from Grammarly*/
+  color: #1db954;   /*Green from Spotify*/
+  /*color: #15c39a;*/  /*Light green from Grammarly*/
   text-decoration: none;
 }
 
@@ -48,7 +48,7 @@ ul{
 
 input, select{
   font-size: .95rem;
-  height: 2.6rem;
+  height: 2.55rem;
   width: 100%;
   padding: 0.4rem 0.5rem;
   border-radius: 3px;
@@ -88,7 +88,7 @@ input[type=radio], input[type=checkbox]{
 
 button{
 	padding: 0.5rem;
-  height: 2.6rem;
+  height: 2.55rem;
 	font-size: 0.92rem; 
 	color: #000;
 	background-color: #fff;
@@ -141,7 +141,7 @@ button{
 }  
 
 .message-danger{
-  background-color: #ffe8ed;
+  background-color: #fff2f5;
   color: red;
 }
 

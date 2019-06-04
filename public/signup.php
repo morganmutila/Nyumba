@@ -1,43 +1,52 @@
 <?php
 require '../init.php';
+require PACKAGE_PATH;
 if($session->isLoggedIn()){ Redirect::to("index.php");}
 
 $page_title = "Sign up - Nyumba Yanga";
 
+use Rakit\Validation\Validator;
+$validator = new Validator;
+
+//Add this rule to the Validator Class
+$validator->addValidator('unique', new UniqueRule());
+
 if(Input::exists()){   
     if(Session::checkToken(Input::get('token'))) {
-        $validate = new Validation();
-        $validation = $validate->check($_POST, array(
-            'name' => array(
-                'required' => true,
-                'text_only'=> true,
-                'max' => 50
-            ),
-            'phone' => array(
-                'required' => true,
-                'min' => 10,
-                'max' => 15,
-                'number_only' => true,
-                'unique' => 'users'
-            ),
-            'email' => array(
-                'required' => true,
-                'max' => 50,
-                'valid_email' => true,
-                'unique' => 'users'
-            ),
-            'password' => array(
-                'required' => true,
-                'min' => 6
-            )
-        ));
 
-        if ($validation->passed()) {
+        $validation = $validator->make($_POST, [
+            'name'       => 'required|max:50',
+            'phone'      => 'required|numeric|min:10|max:14|unique:users,phone',
+            'email'      => 'required|email|unique:users,email',
+            'password'   => 'required|min:6'
+        ]);
+
+        $validation->setAliases([
+            'name'  => 'Fullname',
+            'phone' => 'Phone number',
+            'email' => 'Email address'
+        ]);
+
+        $validation->setMessages([
+            'name:required' => ':attribute can not be empty',
+            'unique'        => ':attribute already exists'
+        ]);
+
+        // run the validation method
+        $validation->validate();
+
+        if($validation->fails()) {
+            // handling errors
+            $errors  = $validation->errors();
+            $message = implode(", ", $errors->firstOfAll());
+        }
+        else{
 
             $fullname = explode(" ", Input::get('name'));
             if (count($fullname) === 2){  
-
-                list($first_name, $last_name) = $fullname; //Assign variables to the exploded values
+                
+                // Assign variables to the exploded values
+                list($first_name, $last_name) = $fullname;
 
                 // Add the user to the database
                 $user = new User();
@@ -74,11 +83,8 @@ if(Input::exists()){
             }
             else{
                 $message = "Full name is required, Please separate your first and last name with a space";
-            }            
-
-        } else {
-            $message = implode(", ", $validation->errors());
-        }
+            }         
+        }            
     }
 }
 
@@ -86,7 +92,7 @@ if(Input::exists()){
 <?php include_layout_template('header.php'); ?>
 
 <h2 class="text-center mb-4 font-weight-bold" style="text-align: center;margin-bottom: 0;">Join Nyumba Yanga</h2>
-<p style="text-align: center;">Nyumba yanga is home to over&nbsp;<?php echo Property::total();?>,000 Houses, Apartments, Flats and Town House's. We are working together to host property listings with owners.</p>
+<p style="text-align: center;">Join Nyumba yanga and see Houses, Apartments, Flats and Town House's on rent and sale by property owners.</p>
 <form action="signup.php" method="post" autocomplete="off" accept-charset="utf-8">
     <!-- <p style="text-align: center;"><button type="button">Sign up with Facebook</button></p>
     <p style="text-align: center;">--------------- OR --------------</p> -->
@@ -110,6 +116,7 @@ if(Input::exists()){
         <!-- <label for="password" class="sr-only">Password</label> -->
         <input type="password" name="password" class="form-control" placeholder="Create password"/>
     </div>
+
     <p class="text-center text-muted py-2 px-4 small" style="text-align: center;">By signing up, you agree to Nyumba Yanga Terms and  Privacy Policy</p>
     <div class="form-group mb-2" style="text-align: center;"> 
         <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
@@ -118,4 +125,4 @@ if(Input::exists()){
     <p class="my-3 text-center" style="text-align: center;"><a href="login.php" class="small text-muted">Already on Nyumba yanga?&nbsp;Log in</a></p>  
 </form>
 
-<?php include_layout_template('footer.php'); ?>
+<?php //include_layout_template('footer.php'); ?>

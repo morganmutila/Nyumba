@@ -1,27 +1,37 @@
-<?php require '../init.php';
+<?php 
+require '../init.php';
+require PACKAGE_PATH;
+
 if($session->isLoggedIn()){ Redirect::to("index.php");}
 
 $page_title = "Login - Nyumba Yanga";
 
+use Rakit\Validation\Validator;
+$validator = new Validator;
+
 // Get ready to store and output form errors
-$validation = new Validation();
+// $validation = new Validation();
 
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))){
-        
+            
         if (empty(Input::get('username')) || empty(Input::get('password'))){
             $message = "Username and Password is required.";
         }    
         else{
-            $validation->check($_POST, array(
-                'username'  => array('required' => 'true', 'min' => 3),
-                'password'  => array('required' => 'true')
+
+            $validation = $validator->validate($_POST, array(
+                'username'  => 'required|min:3',
+                'password'  => 'required|min:6'
             ));
 
-
-
-            if($validation->passed()){
-
+            if ($validation->fails()) {
+                // handling errors
+                $errors = $validation->errors();
+                $message = get_form_errors($errors->firstOfAll());
+            } 
+            else {
+                // validation passes    
                 // Check the database to see if username / password exists
                 $username = $email = $phone = Input::get('username');
                 $password =  Input::get('password');
@@ -34,9 +44,6 @@ if(Input::exists()){
                 } else {
                     $message = "Log in failed, username or password does not match any account";
                 }
-
-            } else {
-                $message = get_form_errors($validation->errors());
             }
         }
     }
@@ -63,7 +70,7 @@ else {?>
 <form action="login.php" method="post" autocomplete="off" accept-charset="utf-8">    
     <div class="form-group mb-3">
         <!-- <label for="username" class="d-none">Username</label> -->
-        <input type="text" name="username" class="form-control" placeholder="Email or Phone" value="<?php echo escape(Input::get('username'))?>" />        
+        <input type="text" name="username" class="form-control" placeholder="Email, Phone or username" value="<?php echo escape(Input::get('username'))?>" />        
     </div>
     <div class="form-group">
         <!-- <label for="password" class="d-none">Password</label> -->
@@ -82,4 +89,4 @@ else {?>
                  
 </form>
 
-<?php include_layout_template('footer.php'); ?>
+<?php //include_layout_template('footer.php'); ?>

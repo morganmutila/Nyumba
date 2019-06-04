@@ -1,9 +1,13 @@
-<?php require_once("../init.php"); ?>
-<?php if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=listproperty"); } ?>
+<?php 
+require '../init.php';
+require PACKAGE_PATH;
+if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=listproperty"); } 
 
-<?php
 
 $page_title = "List property";
+
+use Rakit\Validation\Validator;
+$validator = new Validator;
 
 
 if(Input::get('property')) {
@@ -19,24 +23,32 @@ if(Input::get('property')) {
 
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))) {
-        $validate = new Validation();
-        $validation = $validate->check($_POST, array(
-            'property_address' => array(
-                'text_only'=> true,
-                'min' => 5
-            ),
-            'property_type' => array(
-                'required' => true
-            ),
-            'location' => array(
-                'required' => true
-            ),
-            'market_name' => array(
-            	'required'=> true
-            )
-        ));
 
-        if ($validation->passed()) {
+        $validation = $validator->make($_POST, [
+            'property_type'     => 'required',
+            'location'          => 'required',
+            'market_name'       => 'required'
+        ]);
+
+        $validation->setAliases([
+            'property_address'  => 'Property address',
+            'property_type'     => 'Property type',
+            'market_name'       => 'Market type'
+        ]);
+
+        $validation->setMessages([
+            'required'      => ':attribute can not be empty'
+        ]);
+
+        // run the validation method
+        $validation->validate();
+
+        if($validation->fails()) {
+            // handling errors
+            $errors  = $validation->errors();
+            $message = implode(", ", $errors->firstOfAll());
+        }
+        else {
 
             $property->user_id 			= (int)    $session->user_id;
             $property->location_id  	= (int)    Input::get('location');
@@ -47,6 +59,7 @@ if(Input::exists()){
             $property->size      		= 0;
             $property->type      	    = (string) Input::get('property_type');
             $property->price            = 0;
+            $property->price_old        = 0;
             $property->negotiabe 		= 0;
             $property->description      = "";
             $property->cphoto           = "";
@@ -60,7 +73,7 @@ if(Input::exists()){
             $property->views            = (int)    0;
             $property->flags            = (int)    0;
             $property->available    	= "";
-            $property->listed_by    	= "";
+            $property->listed_by        = (int)    1;
             $property->market     		= (string) strtolower(Input::get('market_name'));
 
         	if($property && $property->save()){
@@ -70,8 +83,6 @@ if(Input::exists()){
                 $message = "Oops! could not add your property, something went wrong, please try again";
             }
 
-        } else {
-            $message = join("<br>", $validation->errors());
         }
     }
 }

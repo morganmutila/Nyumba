@@ -1,9 +1,13 @@
-<?php require_once("../init.php"); ?>
-<?php if (!$session->isLoggedIn()) { Redirect::to("login.php"); } ?>
+<?php 
+require '../init.php';
+require PACKAGE_PATH;
+if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=listproperty"); } 
 
-<?php
 
 $page_title = "Activate listing";
+
+use Rakit\Validation\Validator;
+$validator = new Validator;
 
 if(!Input::get('property')){
     $session->message("Could not find that property");
@@ -16,56 +20,44 @@ $property = Property::findById($property_id);
 
 if(Input::exists()){
 	if(Session::checkToken(Input::get('token'))) {
-		$validate = new Validation();
-        $validation = $validate->check($_POST, array(
-            'price' => array(
-                'required' => true,
-                'number_only' => true,
-                'min' => 3,
-                'max' => 10
-            ),
-            'beds' => array(
-                'required' => true,
-                'number_only' => true
-            ),
-            'baths' => array(
-                'required' => true
-            ),
-            'square_feet' => array(
-                'required' => true,
-                'number_only' => true,
-            ),
-            'units' => array(
-                'number_only' => true,
-            ),
-            'available' => array(
-                'required' => true
-            ),
-            'description' => array(
-                'required' => true,
-                'text_only' => true,
-                'min' => 10
-            ),
-            'owner' => array(
-                'required' => true,
-                'min' => 3
-            ),
-            'contact_email' => array(
-                'max' => 50,
-                'valid_email' => true
-            ),
-            'contact_phone' => array(
-                'required' => true,
-                'number_only' => true,
-                'min' => 10,
-                'max' => 15
-            )
-            // 'photo ' => array(
-            //     'required' => true
-            // )
-        ));
 
-    	if ($validation->passed()) {
+        $validation = $validator->make($_POST, [
+            'price'          => 'required|numeric|min:3|max:10',
+            'beds'           => 'required|numeric',
+            'baths'          => 'required|numeric',
+            'square_feet'    => 'required|numeric',
+            'units'          => 'numeric',
+            'available'      => 'required|date',
+            'description'    => 'required',
+            'owner'          => 'required|min:3',
+            'contact_email'  => 'required|email',
+            'contact_phone'  => 'required|numeric',
+            'photo'          => 'required|uploaded_file:0,1000K,png,jpeg'  
+        ]);
+
+        $validation->setAliases([
+            'square_feet'      => 'Plot size',
+            'available'        => 'Availability date',
+            'description'      => 'Property description',
+            'contact_email'    => 'Contact email',
+            'contact_phone'    => 'contact phone'
+        ]);
+
+        $validation->setMessages([
+            'required'           => ':attribute can not be empty',
+            'available:required' => ':attribute is required',
+            'photo:required'     => ':attribute is required'
+        ]);
+
+        // run the validation method
+        $validation->validate();
+
+        if($validation->fails()) {
+            // handling errors
+            $errors  = $validation->errors();
+            $message = implode(", ", $errors->firstOfAll());
+        }
+    	else{
             // Add the property to the database
 
             $property->beds      	    = (int)    Input::get('beds');
@@ -73,7 +65,7 @@ if(Input::exists()){
             $property->terms      	    = (string) Input::get('rent_terms');
             $property->size      		= (string) Input::get('square_feet');
             $property->units            = (int)    Input::get('units');
-            $property->price            = (string) Input::get('price');
+            $property->price            = (int)    Input::get('price');
             $property->negotiable       = (int)    (Input::get('nego') === 'yes') ? true : false;
             $property->description      = (string) ucfirst(Input::get('description'));
             $property->cphoto           = (string) Input::get('photo');
@@ -81,8 +73,7 @@ if(Input::exists()){
             $property->contact_email    = (string) Input::get('contact_email');
             $property->owner     	    = (string) Input::get('owner');
             $property->available        = (string) Input::get('available');
-            $property->status           = (int)    2;
-            $property->listed_by    	= (int)    1;
+            $property->status           = (int)    2;            
 
         	if($property && $property->save()){
 				// Add the property
@@ -92,8 +83,6 @@ if(Input::exists()){
                 $message = "Sorry could not list your property";
             }
 
-        } else {
-            $message = join("<br>", $validation->errors());
         }
     }
 }   
@@ -106,13 +95,15 @@ if(Input::exists()){
 	<?php 
         if (empty($property->address)) {
             echo "<h2>".strtoupper($property->type)." FOR ".strtoupper($property->market)."<br>";
-           echo "in ".Location::findLocationOn($property->location_id)."&nbsp<small><a href=\"list.php?property=$property->id\">&nbsp;&nbsp;¶</a></small></h2>"; 
+            echo "in ".Location::findLocationOn($property->location_id)."&nbsp<small><a href=\"list.php?property=$property->id\">&nbsp;&nbsp;¶</a></small></h2>"; 
         }else{
             echo "<h2>FOR ".strtoupper($property->market)."<br>";
             echo $property->address.", ".Location::findLocationOn($property->location_id)."&nbsp<small><a href= \"list.php?property=$property->id\">&nbsp;&nbsp;¶</a></small></h2>";
         }
 	?>
-	<?php echo output_message($message); ?>
+    
+    <?php echo output_message($message, "danger"); ?>
+
     <form action="activate.php?property=<?php echo isset($property_id) ? $property_id: "";?>" enctype="multipart/form-data" method="POST" accept-charset="utf-8">
 
   		<h4>Details and Description</h4>

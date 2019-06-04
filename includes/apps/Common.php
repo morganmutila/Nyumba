@@ -117,93 +117,36 @@ class Pagination {
 }
 
 
-//The Validation class *******************************************************************************
-class Validation {
+//The Unique key Validation class *******************************************************************************
+require PACKAGE_PATH;
+use Rakit\Validation\Rule;
 
-    private $passed = false,
-            $errors = array();
+class UniqueRule extends Rule {
 
-    public function check($source, $items = array()){
-        foreach($items as $item => $rules){
-            foreach($rules as $rule => $rule_value){
-
-                $value = trim($source[$item]);
-                $item  = escape($item);
-
-                if($rule === 'required' && empty($value)){
-                    $this->addError($item, "{$item} is required");
-                }else if(!empty($value)){
-                    switch($rule){
-                        case 'min':
-                            if(strlen($value) < $rule_value){
-                                $this->addError($item, "{$item} must be a minimum of {$rule_value} characters");
-                            }
-                            break;
-                        case 'max':
-                            if(strlen($value) > $rule_value){
-                                $this->addError($item, "{$item} should not exceed {$rule_value} characters");
-                            }
-                            break;
-                        case 'matches':
-                            if($value != $source[$rule_value]){
-                                $this->addError($item, "{$rule_value} must match {$item}");
-                            }
-                            break;
-                        case 'unique':
-                            $sql    = "SELECT ".$item." FROM ".$rule_value." WHERE ".$item." = ?";
-                            $params = array($value);
-                            $check = DB::getInstance()->query($sql, $params);
-
-                            if(DB::getInstance()->count() > 0){
-                                $this->addError($item, "$value already exists");
-                            }
-                            break;
-
-                        case 'number_only':
-                            if(!preg_match("/^[0-9]+$/", $value)){
-                                $this->addError($item, "{$item} has Invalid format, only numbers are allowed");
-                            }
-                            break;
-
-                        case 'text_only':
-                            if (!is_numeric((int)$value) && filter_var($value, FILTER_SANITIZE_STRING)){
-                                $this->addError($item, "{$item} has invalid format, no numbers are allowed");
-                            }
-                            break;    
-
-                        case 'valid_email':
-                            if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                                $this->addError($item, "Invalid email address '$value'");
-                            }
-                            break; 
-                        case 'value_in_array':
-                            if(!in_array($value, )){
-                                $this->addError($item, "Invalid option". $value);
-                            }   
-                            break;
-                    }
-                }
-            }
+    protected $message = ":attribute :value has been used";    
+    protected $fillableParams = ['table', 'column', 'except'];
+    
+    public function check($value): bool {
+        // make sure required parameters exists
+        $this->requireParameters(['table', 'column']);
+    
+        // getting parameters
+        $column = $this->parameter('column');
+        $table  = $this->parameter('table');
+        $except = $this->parameter('except');
+    
+        if ($except AND $except == $value) {
+            return true;
         }
-
-        if(empty($this->errors)){
-            $this->passed = true;
-        }
-
-        return $this;
+    
+        // do query
+        $sql    = "SELECT COUNT(*) AS count FROM `{$table}` WHERE `{$column}` = ?";
+        DB::getInstance()->query($sql, [$value]);
+        $result = DB::getInstance()->result("count");
+   
+        // true for valid, false for invalid
+        return intval($result) === 0;
     }
+}
 
-    private function addError($field, $error){
-        $clean_field = escape($field);
-        $clean_error = ucfirst(str_ireplace('_', ' ', $error));
-        $this->errors[$clean_field] = $clean_error;
-    }
-
-    public function errors(){
-        return $this->errors;
-    }
-
-    public function passed(){
-        return $this->passed;
-    }
-} 
+//Add this unique Rule to the to the Validator

@@ -33,6 +33,9 @@ define('INCLUDE_PATH',  SITE_ROOT.DS.'includes');
 define('CLASS_PATH',    INCLUDE_PATH.DS.'apps');
 define('UPLOAD_FOLDER', SITE_ROOT.DS.'uploads'.DS.'property');
 
+// Path for loading external Packages
+define('PACKAGE_PATH', CLASS_PATH.DS.'vendor'.DS.'vendor'.DS.'autoload.php');
+
 // Include Application configuration script
 require INCLUDE_PATH .DS. 'config.php';
 
