@@ -2,102 +2,102 @@
 
 class PPhoto extends DBO{
 
-	protected static $table_name = "property_photo";
-    protected static $db_fields = array('id', 'property_id', 'photo', 'type', 'last_update');
-
+	protected static $table_name = "property_image";
+    protected static $db_fields  = ['id', 'property_id', 'filename', 'type','size','width','height', 'last_update'];
 
     public $id;
     public $property_id;
-    public $photo;
+    public $filename;
     public $type;
+    public $size;
+    public $width;
+    public $height;
     public $last_update;
 
-    private $temp_path;
-    public $upload_dir;
-    public $errors=array();
-      
-    private $upload_errors = array(
-        UPLOAD_ERR_OK         => "No errors.",
-        UPLOAD_ERR_INI_SIZE   => "Larger than upload_max_filesize.",
-        UPLOAD_ERR_FORM_SIZE  => "Larger than form MAX_FILE_SIZE.",
-        UPLOAD_ERR_PARTIAL    => "Partial upload.",
-        UPLOAD_ERR_NO_FILE    => "No file.",
-        UPLOAD_ERR_NO_TMP_DIR => "No temporary directory.",
-        UPLOAD_ERR_CANT_WRITE => "Can't write to disk.",
-        UPLOAD_ERR_EXTENSION  => "File upload stopped by extension."
-    );
+    private $upload_errors = array();
+    private static $upload_dir = UPLOAD_FOLDER;
 
-    public function __construct(){     
-        // Make sure the upload directory exits and we have file perms.
-        $this->createUploadFolder();
-    }
-
-    // Pass in $_FILE(['uploaded_file']) as an argument
-    public function attachFile($file) {
-        // Perform error checking on the form parameters
-        if(!$file || empty($file) || !is_array($file)) {
-          // error: nothing uploaded or wrong argument usage
-          $this->errors[] = "No file was uploaded.";
-          return false;
-        } elseif($file['error'] != 0) {
-          // error: report what PHP says went wrong
-          $this->errors[] = $this->upload_errors[$file['error']];
-          return false;
-        } else {
-            // Set object attributes to the form parameters.
-          $this->temp_path  = $file['tmp_name'];
-          $this->filename   = basename($file['name']);
-            // Don't worry about saving anything to the database yet.
-            return true;
-        }
-    }
-  
-    public function save() {
-        // A new record won't have an id yet.
-        if(isset($this->id)) {
-            // Really just to update the caption
-            $this->update();
-        } else {
-            // Make sure there are no errors
-            
-            // Can't save if there are pre-existing errors
-            if(!empty($this->errors)) { return false; }
-          
-            // Make sure the caption is not too long for the DB
-            if(strlen($this->caption) > 255) {
-                $this->errors[] = "The caption can only be 255 characters long.";
-                return false;
-            }
+    public function attachFile($files, $property_id=0){
         
-            // Can't save without filename and temp location
-            if(empty($this->filename) || empty($this->temp_path)) {
-                $this->errors[] = "The file location was not available.";
-                return false;
+        // ---------- MULTIPLE UPLOADS ----------
+
+        // as it is multiple uploads, we will parse the $_FILES array to reorganize it into $files
+        $file_array = array();
+        foreach ($files as $k => $l) {
+            foreach ($l as $i => $v) {
+                if (!array_key_exists($i, $file_array)){
+                    $file_array[$i] = array();
+                }    
+                $file_array[$i][$k] = $v;
             }
-            
-            // Determine the target_path
-            $target_path = SITE_ROOT .DS. 'public' .DS. $this->upload_dir .DS. $this->filename;
-          
-            // Make sure a file doesn't already exist in the target location
-            if(file_exists($target_path)) {
-                $this->errors[] = "The file {$this->filename} already exists.";
-                return false;
-            }
-            
-            // Attempt to move the file 
-            if(move_uploaded_file($this->temp_path, $target_path)) {
-            // Success
-                // Save a corresponding entry to the database
-                if($this->create()) {
-                    // We are done with temp_path, the file isn't there anymore
-                    unset($this->temp_path);
-                    return true;
+        }
+        // now we can loop through $files, and feed each element to the class
+        foreach ($file_array as $file) {
+
+            $handle = new upload($file);
+            // Set variables
+            $handle->allowed = ['image/*'];
+            $handle->file_safe_name = true;
+            $handle->file_auto_rename = false;
+
+            $handle->image_ratio_crop = true;
+            $handle->image_resize     = true;
+            $handle->image_ratio_y    = true;
+            $handle->image_x          = 450;
+            $handle->image_contrast   = 20;
+
+
+            if ($handle->uploaded) {
+                //Yes, the file is on the server           
+                $handle->process(self::$upload_dir);
+
+                // we check if everything went OK
+                if ($handle->processed) {
+                    // everything was fine  
+                    $this->property_id = $property_id;
+                    $this->filename    = $handle->file_dst_name;
+                    $this->type        = $handle->file_dst_name_ext;
+                    $this->size        = filesize($handle->file_dst_pathname);
+                    $this->width       = $handle->image_dst_x;
+                    $this->height      = $handle->image_dst_y;
+                    $this->create();
+                    //Increment the ID to avoid duplicate IDs
+                    $this->id++;
                 }
-            } else {
-                // File was not moved.
-            $this->errors[] = "The file upload failed, possibly due to incorrect permissions on the upload folder.";
-            return false;
+                else {
+                    // one error occured
+                    $this->upload_errors[] = $handle->error;
+                }  
             }
+            else {
+               $this->upload_errors[] = $handle->error;
+            }
+            // we delete the Original files
+            $handle->clean();  
+        } 
+    }   
+
+    public function uploadSuccess(){
+        return empty($this->upload_errors) ? true : false;
+    }   
+
+    public function uploadErrors(){
+        return $this->upload_errors;
+    }    
+
+    public static function imagePath(int $property_id=0) {
+        $sql  = "SELECT filename FROM ". self::$table_name;
+        $sql .= " WHERE property_id = ?";
+        $sql .= " ORDER BY RAND()";
+        $sql .= " LIMIT 1";
+        DB::getInstance()->query($sql, array($property_id));
+        $result = DB::getInstance()->result();
+        $path = !empty($result) ? array_shift($result) : "";
+        if($path == ""){
+            return UPLOAD_FOLDER.DS.'default.png';
+        }
+        else{
+            return UPLOAD_FOLDER.DS.$path;
         }
     }
     
@@ -107,36 +107,13 @@ class PPhoto extends DBO{
             // then remove the file
           // Note that even though the database entry is gone, this object 
             // is still around (which lets us use $this->image_path()).
-            $target_path = SITE_ROOT.DS.'public'.DS.$this->image_path();
+            $target_path = $this->upload_dir.DS.$this->image_path();
             return unlink($target_path) ? true : false;
         } else {
             // database delete failed
             return false;
         }
     }
-
-    private function createUploadFolder(){      
-        if(!file_exists(UPLOAD_FOLDER)) {
-            mkdir(UPLOAD_FOLDER, 0777, true);
-            $this->upload_dir = UPLOAD_FOLDER;
-            return true;
-        }
-        else{
-            $this->upload_dir = UPLOAD_FOLDER;
-            return true;
-        }
-        return false;
-    }
-
-    public static function imagePath(string $filename="") {
-        if(!$filename || !file_exists($filename)){
-            return $this->upload_dir.DS.'default.png';
-        }
-        else{
-            return $this->upload_dir.DS.$filename;
-        }
-    }
-
 }
 
 

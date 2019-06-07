@@ -222,16 +222,6 @@ function include_layout_template($template=""){
     include(INCLUDE_PATH .DS.'layouts'.DS.$template);
 }
 
-function get_form_errors($errors=array()){
-    $form_errors = array();
-    if(!empty($errors)){
-        foreach ($errors as $key => $error) {
-            $form_errors[$key] = $error;
-        }
-        return join("<br>", $form_errors);     
-    }
-}
-
 function output_message($message="",  $type="info") {
     $output = "";   
     if (!empty($message)) {    

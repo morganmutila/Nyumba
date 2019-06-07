@@ -5,7 +5,7 @@
  */
 class SavedProperty extends DBO{	
 	protected static $table_name = "saved_property";
-    protected static $db_fields = array('id', 'user_id', 'property_id', 'created');
+    protected static $db_fields = ['id', 'user_id', 'property_id', 'created'];
 
     public $id;
     public $user_id;
@@ -21,7 +21,7 @@ class SavedProperty extends DBO{
  */
 class Location extends DBO{	
 	protected static $table_name = "location";
-    protected static $db_fields = array('id', 'city_id', 'location', 'description');
+    protected static $db_fields = ['id', 'city_id', 'location', 'description'];
 
     public $id;
     public $city_id;
@@ -38,9 +38,8 @@ class Location extends DBO{
 	}
 
 	public static function findLocationOn($location_id){
-		$sql = "SELECT location FROM location WHERE id=?";
-		$params = array($location_id);
-		DB::getInstance()->query($sql, $params);
+		$sql = "SELECT location FROM ".self::$table_name." WHERE id=?";
+		DB::getInstance()->query($sql, array($location_id));
 		$result = DB::getInstance()->result();
 		return !empty($result) ? ucwords(array_shift($result)) : "";
 	}

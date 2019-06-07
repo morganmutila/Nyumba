@@ -24,7 +24,7 @@ if (!$session->isLoggedIn()) { Redirect::to("login.php"); } ?>
 				echo $property->beds . " beds <strong>·</strong> "; 
 				echo $property->baths . " baths <strong>·</strong> ";
 				echo $property->size . " sqft<br>"; 
-				echo "Status: ".$property->propertyStatus() . "<br></a>";
+				echo "Status: ".$property->status() . "<br></a>";
 				echo "<a href=\"delete.php?id={$property->id}\">× Delete</a></p>"; 
 
 			?>

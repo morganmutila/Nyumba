@@ -1,10 +1,9 @@
 <?php 
 require '../init.php';
 require PACKAGE_PATH;
+require LIB_PATH.DS.'class.upload'.DS.'class.upload.php';
 if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=listproperty"); } 
 
-
-$page_title = "Activate listing";
 
 use Rakit\Validation\Validator;
 $validator = new Validator;
@@ -19,45 +18,51 @@ $property_id = (int) Input::get('property');
 $property = Property::findById($property_id);
 
 if(Input::exists()){
-	if(Session::checkToken(Input::get('token'))) {
 
-        $validation = $validator->make($_POST, [
-            'price'          => 'required|numeric|min:3|max:10',
-            'beds'           => 'required|numeric',
-            'baths'          => 'required|numeric',
-            'square_feet'    => 'required|numeric',
-            'units'          => 'numeric',
-            'available'      => 'required|date',
-            'description'    => 'required',
-            'owner'          => 'required|min:3',
-            'contact_email'  => 'required|email',
-            'contact_phone'  => 'required|numeric',
-            'photo'          => 'required|uploaded_file:0,1000K,png,jpeg'  
-        ]);
+    $validation = $validator->make($_POST + $_FILES, [
+        'price'          => 'required|numeric|min:3|max:10',
+        'beds'           => 'required|numeric',
+        'baths'          => 'required|numeric',
+        'square_feet'    => 'required|numeric',
+        'units'          => 'numeric',
+        'available'      => 'required|date',
+        'description'    => 'required',
+        'owner'          => 'required|min:3',
+        'contact_email'  => 'required|email',
+        'contact_phone'  => 'required|numeric',
+        'image_upload.*' => 'required|uploaded_file:10k,20000M,png,jpeg'  
+    ]);
 
-        $validation->setAliases([
-            'square_feet'      => 'Plot size',
-            'available'        => 'Availability date',
-            'description'      => 'Property description',
-            'contact_email'    => 'Contact email',
-            'contact_phone'    => 'contact phone'
-        ]);
+    $validation->setAliases([
+        'square_feet'      => 'Plot size',
+        'available'        => 'Date available',
+        'description'      => 'Property description',
+        'contact_email'    => 'Contact email',
+        'contact_phone'    => 'contact phone',
+        'image_upload'     => 'property photo'
+    ]);
 
-        $validation->setMessages([
-            'required'           => ':attribute can not be empty',
-            'available:required' => ':attribute is required',
-            'photo:required'     => ':attribute is required'
-        ]);
+    $validation->setMessages([
+        'required'              => ':attribute can not be empty',
+        'available:required'    => ':attribute is required',
+        'image_upload:required' => 'You need to upload a :attribute to continue'
+    ]);
 
-        // run the validation method
-        $validation->validate();
+    // run the validation method
+    $validation->validate();
 
-        if($validation->fails()) {
-            // handling errors
-            $errors  = $validation->errors();
-            $message = implode(", ", $errors->firstOfAll());
-        }
-    	else{
+    if($validation->fails()) {
+        // handling errors
+        $errors  = $validation->errors();
+        $message = implode(", ", $errors->firstOfAll());
+    }
+	else{
+        // Upload the Photo(s) first
+        $pphoto = new PPhoto();
+
+        $pphoto->attachFile($_FILES['image_upload'], $property_id);
+
+        if($pphoto->uploadSuccess()){
             // Add the property to the database
 
             $property->beds      	    = (int)    Input::get('beds');
@@ -68,7 +73,7 @@ if(Input::exists()){
             $property->price            = (int)    Input::get('price');
             $property->negotiable       = (int)    (Input::get('nego') === 'yes') ? true : false;
             $property->description      = (string) ucfirst(Input::get('description'));
-            $property->cphoto           = (string) Input::get('photo');
+            $property->cphoto           = (string) "";
             $property->contact_number   = (string) Input::get('contact_phone');
             $property->contact_email    = (string) Input::get('contact_email');
             $property->owner     	    = (string) Input::get('owner');
@@ -76,17 +81,20 @@ if(Input::exists()){
             $property->status           = (int)    2;            
 
         	if($property && $property->save()){
-				// Add the property
+				// Save a corresponding entry to the database;
                 $session->message("Your property has been added and is being reviewed, it will be listed as soon as we are done reviewing");
-                    Redirect::to('property.php?id='.$property->id);
+                Redirect::to('property.php?id='.$property->id);
             } else{
-                $message = "Sorry could not list your property";
+                $message = "Ooops something went wrong, try again";
             }
-
+        }
+        else{
+            $message = implode("<br> ", $pphoto->uploadErrors());
         }
     }
 }   
 
+$page_title = "Activate listing";
 ?>
 
 
@@ -156,29 +164,29 @@ if(Input::exists()){
 		<div>Full Name <input type="text" name="owner" value="<?php echo escape($user->fullName());?>" placeholder="Enter name" /></div>
 		<div>Email <input type="email" name="contact_email" value="<?php echo escape($user->email);?>" placeholder="Enter email" /></div>
 		<div>Phone number<input type="tel" name="contact_phone" value="<?php echo escape($user->phone);?>" placeholder="Enter phone" /></div>
-		<h4>Property features</h4>
+		
+        <!-- <h4>Property features</h4>
 		<div class="checkbox-group">
 			<p><strong>Indoor</strong></p>
 			<?php 
 				// These will come from the database
-				$indoor_features = Property::propertyFeatures("indoor");
-				echo generate_form_checkbox("property_feature", $indoor_features);
+				//$indoor_features = Property::features("indoor");
+				//echo generate_form_checkbox("property_feature", $indoor_features);
 			?>
 
 
 			<p><strong>Outdoor</strong></p>
 			<?php 
 				// These will come from the database
-				$outdoor_features = Property::propertyFeatures("outdoor");
-				echo generate_form_checkbox("property_feature", $outdoor_features);
+				//$outdoor_features = Property::features("outdoor");
+				//echo generate_form_checkbox("property_feature", $outdoor_features);
 			?>		
-		</div>	
+		</div>	 -->
 
 		<h4>Upload Photo</h4>	
     	<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('max_file_size'); ?>" />
-    	<div><input type="file" name="photo" /></div>
+    	<div><input type="file" name="image_upload[]"  multiple="multiple" /></div>
 
-    	<input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
     	<button type="submit" class="btn btn-primary btn-block font-weight-bold">Finish listing</button>
     </form>
   

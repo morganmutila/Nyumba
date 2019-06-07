@@ -3,8 +3,8 @@
 class Property extends DBO{
 
 	protected static $table_name = "property";
-    protected static $db_fields = array('id', 'user_id', 'location_id', 'type', 'address',
-    'beds', 'baths', 'terms', 'cphoto', 'contact_number', 'contact_email','reference', 'listed_by', 'size', 'status', 'price', 'price_old', 'negotiable', 'available', 'units','views', 'market', 'owner', 'description', 'added', 'flags');
+    protected static $db_fields = ['id', 'user_id', 'location_id', 'type', 'address',
+    'beds', 'baths', 'terms', 'cphoto', 'contact_number', 'contact_email','reference', 'listed_by', 'size', 'status', 'price', 'price_old', 'negotiable', 'available', 'units','views', 'market', 'owner', 'description', 'added', 'flags'];
 
 
     public $id;
@@ -35,7 +35,7 @@ class Property extends DBO{
     public $flags;
 
 
-    public static function propertyFeatures($type="indoor"){
+    public static function features($type="indoor"){
         //These will come from the database
         $property_features = array();
         if($type == "indoor"){
@@ -51,7 +51,11 @@ class Property extends DBO{
         return $property_features;
     }   
 
-    public function propertyStatus(){
+    public function cphoto(){
+        return PPhoto::imagePath($this->id);
+    }
+
+    public function status(){
         switch ($this->status) {                           
             case 1:
                 $status = "added";
@@ -75,7 +79,7 @@ class Property extends DBO{
          return strtoupper($status);
     }    
 
-    public function oldPrice(){
+    public function priceCut(){
         if((int) $this->price_old == true /*&& $this->market == "sale"*/){
             if($this->price > $this->price_old){
                 $price_diff = $this->price - $this->price_old;
@@ -94,7 +98,7 @@ class Property extends DBO{
         return $price_diff;
     }
 
-    public function rentTerms(){        
+    public function terms(){        
         if($this->market == "rent"){
             $terms = "";
             switch ($this->terms) { 
@@ -123,7 +127,7 @@ class Property extends DBO{
         return ucwords($location);
     }
 
-    public function propertyUser(){ 
+    public function manager(){ 
         $user = User::findbyId($this->user_id);
         return !empty($user) ? $user->fullname() : false;
     }

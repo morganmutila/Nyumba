@@ -8,10 +8,10 @@ class DB {
     private        $fetchquery;
     private        $error = false;
 
-    private $fetch_methods = array(
+    private $fetch_methods = [
         "FETCH_OBJ"    => PDO::FETCH_OBJ,
         "FETCH_ASSOC"  => PDO::FETCH_ASSOC
-    );
+    ];
 
     private function __construct(){
         try{

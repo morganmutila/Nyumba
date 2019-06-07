@@ -86,13 +86,16 @@
 	$sql .= " LIMIT {$per_page} ";
 	$sql .= " OFFSET {$pagination->offset()}";
 	$properties = Property::findBySql($sql, array(1, $found_location_id));
+
+
+	$number_of_homes = 458;
 ?>
 
 <?php include_layout_template('header.php'); ?>
 <?php echo NY_SEARCH_ENGINE(); ?>
 
 <h2 style="font-size: 1.15rem;"><?php echo $found_location; ?>&nbsp;homes</h2>
-<p style="color: #555;margin-top: -0.6rem"><?php echo number_format($property_count);?>&nbsp;properties on market found</p>
+<p style="color: #555;margin-top: -0.6rem"><?php echo number_format($property_count);?>&nbsp;properties found on market</p>
 
 <form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" style="display: inline;">
 	<?php
@@ -159,9 +162,9 @@
 				    if(new_listing($property->added)){echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span>";}else{echo "&nbsp;";}
 
 				echo "<span style=\"color:#666;font-size:0.75rem;float:right;line-height:1rem;\">".time_ago($property->added)."</span><div style=\"clear:both;\"></div></div>";   
-				echo "<div style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property->price)."&nbsp;<small>".$property->rentTerms()."</small>";
+				echo "<div style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property->price)."&nbsp;<small>".$property->priceCut()."</small>";
 				echo  ($property->negotiable == true) ? "<small style=\"color:#11cc11;\">NEG</small>" : "";
-				echo "<span style=\"float:right;\">".$property->oldPrice()."</span></div>";
+				echo "<span style=\"float:right;\">".$property->priceCut()."</span></div>";
 				echo "<br>";
 				echo $property->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
 				echo $property->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
@@ -187,9 +190,34 @@
 	<?php endforeach; ?>
 	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no,  there is currently no listings at the moment</div><?php } ?>
 </div>
-
+	
 <div style="text-align: center">
 	<?php echo NY_PAGINATION(); ?>
+</div>
+
+<div>
+	<h4>About&nbsp;<?php echo $found_location; ?></h4>
+	<span>Properties on market:..........<?php echo number_format($number_of_homes);?> </span><br>
+	<span>Average rent pricet:..............<?php echo $number_of_homes;?> </span><br>
+	<span>Average sale price:...............<?php echo $number_of_homes;?> </span><br>
+</div>	
+<hr>
+<div>
+	<h4>Find by style</h4>
+	<a href="#">Houses in&nbsp;<?php echo $found_location; ?></a><br>
+	<a href="#">Apartments in&nbsp;<?php echo $found_location; ?></a><br>
+	<a href="#">Semi-detached apartments in &nbsp;<?php echo $found_location; ?></a><br>
+	<a href="#">Flats in &nbsp;<?php echo $found_location; ?></a><br>
+	<a href="#">Townhouses in &nbsp;<?php echo $found_location; ?></a><br>
+</div>
+<hr>
+<div>
+	<h4>Number of bedrooms</h4>
+	<a href="#">1 bedrooms</a><br>
+	<a href="#">2 bedrooms</a><br>
+	<a href="#">3 bedrooms</a><br>
+	<a href="#">4 bedrooms</a><br>
+	<a href="#">5 bedrooms</a><br>
 </div>
 
 <?php include_layout_template('footer.php'); ?>

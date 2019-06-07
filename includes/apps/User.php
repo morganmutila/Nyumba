@@ -3,8 +3,8 @@
 class User extends DBO{
 
     protected static $table_name = "users";
-    protected static $db_fields = array('id','username', 'first_name', 'last_name', 'email',
-             'phone', 'joined', 'group_id', 'location_id', 'status', 'password', 'last_login', 'ip');
+    protected static $db_fields = ['id','username', 'first_name', 'last_name', 'email',
+             'phone', 'joined', 'group_id', 'location_id', 'status', 'password', 'last_login', 'ip'];
 
     // Class attributes
     public $id;

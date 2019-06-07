@@ -31,10 +31,13 @@ define('DS', DIRECTORY_SEPARATOR);
 define('SITE_ROOT',     realpath(dirname(__FILE__)));
 define('INCLUDE_PATH',  SITE_ROOT.DS.'includes');
 define('CLASS_PATH',    INCLUDE_PATH.DS.'apps');
-define('UPLOAD_FOLDER', SITE_ROOT.DS.'uploads'.DS.'property');
+define('UPLOAD_FOLDER', SITE_ROOT.DS.'uploads');
 
-// Path for loading external Packages
-define('PACKAGE_PATH', CLASS_PATH.DS.'vendor'.DS.'vendor'.DS.'autoload.php');
+// Path for loading external Libraries
+define('LIB_PATH', INCLUDE_PATH.DS.'apps'.DS.'library');
+
+// Path for loading external Packages using Composer
+define('PACKAGE_PATH', LIB_PATH.DS.'vendor'.DS.'autoload.php');
 
 // Include Application configuration script
 require INCLUDE_PATH .DS. 'config.php';
@@ -49,7 +52,7 @@ require INCLUDE_PATH .DS. 'messages.php';
 require CLASS_PATH   .DS. "Common.php";
 
 //Include Nyumba yanga small classes
-require CLASS_PATH   .DS. "NY.php";
+require CLASS_PATH   .DS. "Nyumbayanga.php";
 
 
 // Start the session and initialise $message

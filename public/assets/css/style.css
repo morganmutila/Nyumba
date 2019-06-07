@@ -41,9 +41,7 @@ ul{
   text-transform: uppercase;
   font-size: .75rem;
 }
-#footer .menu li{
-  padding-right: .5rem;
-}
+
 #main {padding: 0  0 1rem 0; width: 100%;}
 
 input, select{

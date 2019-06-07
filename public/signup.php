@@ -1,9 +1,9 @@
 <?php
 require '../init.php';
+require LIB_PATH.DS.'formr'.DS.'class.formr.php';
 require PACKAGE_PATH;
-if($session->isLoggedIn()){ Redirect::to("index.php");}
 
-$page_title = "Sign up - Nyumba Yanga";
+if($session->isLoggedIn()){ Redirect::to("index.php");}
 
 use Rakit\Validation\Validator;
 $validator = new Validator;
@@ -11,7 +11,7 @@ $validator = new Validator;
 //Add this rule to the Validator Class
 $validator->addValidator('unique', new UniqueRule());
 
-if(Input::exists()){   
+if(Input::exists()):   
     if(Session::checkToken(Input::get('token'))) {
 
         $validation = $validator->make($_POST, [
@@ -29,6 +29,7 @@ if(Input::exists()){
 
         $validation->setMessages([
             'name:required' => ':attribute can not be empty',
+            'email:required' => 'Please provide a valid :attribute',
             'unique'        => ':attribute already exists'
         ]);
 
@@ -86,43 +87,33 @@ if(Input::exists()){
             }         
         }            
     }
-}
+endif; //End if(Input::exists())
 
+$page_title = "Sign up - Nyumba Yanga";
 ?>
 <?php include_layout_template('header.php'); ?>
 
 <h2 class="text-center mb-4 font-weight-bold" style="text-align: center;margin-bottom: 0;">Join Nyumba Yanga</h2>
+
 <p style="text-align: center;">Join Nyumba yanga and see Houses, Apartments, Flats and Town House's on rent and sale by property owners.</p>
-<form action="signup.php" method="post" autocomplete="off" accept-charset="utf-8">
-    <!-- <p style="text-align: center;"><button type="button">Sign up with Facebook</button></p>
-    <p style="text-align: center;">--------------- OR --------------</p> -->
-    <?php echo output_message($message, "danger"); ?>
-    <div class="form-group col-6">    
-        <!-- <label for="name" class="sr-only">Full Name</label> -->
-        <input type="text" name="name" class="form-control" value="<?php echo escape(Input::get('name')); ?>" placeholder="Full Name"/>
-    </div>
 
-    <div class="form-group">
-        <!-- <label for="phone" class="sr-only">Phone Number</label> -->                
-        <input type="text" name="phone" class="form-control" value="<?php echo escape(Input::get("phone")); ?>" placeholder="Phone Number"/>
-    </div>
+<?php
+    $form = new Formr('bootstrap');
 
-    <div class="form-group">
-        <!-- <label for="email" class="sr-only">Email Address</label> -->                
-        <input type="text" name="email" class="form-control" value="<?php echo escape(Input::get("email")); ?>" placeholder="Email"/>
-    </div>
+    $html_form  = output_message($message, "danger");   
+    $form->html5 = true; 
+    $form->method = 'POST';
+    $html_form .= $form->form_open("register");
+    $html_form .= $form->input_text('name',  'Full name', escape(Input::get('name')),'full_name', 'placeholder="Full Name"');
+    $html_form .= $form->input_tel('phone', 'Phone Number', escape(Input::get('phone')),'phone_number', 'placeholder="Phone Number"');
+    $html_form .= $form->input_email('email', 'Email Address', escape(Input::get('email')),'email', 'placeholder="Email Address"');
+    $html_form .= $form->input_password('password',  'Password', escape(Input::get('password')),'password', 'placeholder="Create password"');
+    $html_form .= '<p class="text-center text-muted py-2 px-4 small" style="text-align: center;">By signing up, you agree to Nyumba Yanga Terms and  Privacy Policy</p>';
+    $html_form .= $form->input_hidden('token', Session::generateToken());
+    $html_form .= $form->input_submit('submit', '', 'SIGN UP', 'sign_up', 'class="btn-success btn-block font-weight-bold"');
+    $html_form .= '<p class="my-3 text-center" style="text-align: center;"><a href="login.php" class="small text-muted">Already on Nyumba yanga?&nbsp;Log in</a></p>';  
+    $html_form .= $form->form_close();
 
-    <div class="form-group">    
-        <!-- <label for="password" class="sr-only">Password</label> -->
-        <input type="password" name="password" class="form-control" placeholder="Create password"/>
-    </div>
-
-    <p class="text-center text-muted py-2 px-4 small" style="text-align: center;">By signing up, you agree to Nyumba Yanga Terms and  Privacy Policy</p>
-    <div class="form-group mb-2" style="text-align: center;"> 
-        <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold" style="width: 100%;">SIGN UP</button>
-    </div>  
-    <p class="my-3 text-center" style="text-align: center;"><a href="login.php" class="small text-muted">Already on Nyumba yanga?&nbsp;Log in</a></p>  
-</form>
-
-<?php //include_layout_template('footer.php'); ?>
+    // Display the generated Form
+    echo $html_form;
+?>
