@@ -1,9 +1,9 @@
 <?php
 
-class PPhoto extends DBO{
+class Photo extends DBO{
 
-	protected static $table_name = "property_photo";
-    protected static $db_fields  = ['id', 'property_id', 'filename', 'type','size','width','height', 'last_update'];
+	protected static $table_name = "photos";
+    protected static $db_fields  = ['id', 'property_id', 'filename', 'type','size','width','height'];
 
     public $id;
     public $property_id;
@@ -12,29 +12,71 @@ class PPhoto extends DBO{
     public $size;
     public $width;
     public $height;
-    public $last_update;
 
     private $upload_errors = array();
     private static $upload_dir = "uploads";
 
-    public function attachFile($files, $property_id=0){
-        
-        // ---------- MULTIPLE UPLOADS ----------
-
-        // as it is multiple uploads, we will parse the $_FILES array to reorganize it into $files
-        $file_array = array();
-        foreach ($files as $k => $l) {
-            foreach ($l as $i => $v) {
-                if (!array_key_exists($i, $file_array)){
-                    $file_array[$i] = array();
-                }    
-                $file_array[$i][$k] = $v;
+    public function attachFile($files, $property_id=0, $multiple=false){
+        if($multiple) {
+            // ---------- MULTIPLE UPLOADS ----------
+            // as it is multiple uploads, we will parse the $_FILES array to reorganize it into $files
+            $file_array = array();
+            foreach ($files as $k => $l) {
+                foreach ($l as $i => $v) {
+                    if (!array_key_exists($i, $file_array)){
+                        $file_array[$i] = array();
+                    }    
+                    $file_array[$i][$k] = $v;
+                }
             }
-        }
-        // now we can loop through $files, and feed each element to the class
-        foreach ($file_array as $file) {
+            // now we can loop through $files, and feed each element to the class
+            foreach ($file_array as $file) {
 
-            $handle = new upload($file);
+                $handle = new upload($file);
+                // Set variables
+                $handle->allowed = ['image/*'];
+                $handle->file_safe_name = true;
+                $handle->file_auto_rename = false;
+
+                $handle->image_ratio_crop = true;
+                $handle->image_resize     = true;
+                $handle->image_ratio_y    = true;
+                $handle->image_x          = 400;
+                $handle->image_contrast   = 20;
+
+
+                if ($handle->uploaded) {
+                    //Yes, the file is on the server           
+                    $handle->process(self::$upload_dir);
+
+                    // we check if everything went OK
+                    if ($handle->processed) {
+                        // everything was fine  
+                        $this->property_id = $property_id;
+                        $this->filename    = $handle->file_dst_name;
+                        $this->type        = $handle->file_dst_name_ext;
+                        $this->size        = filesize($handle->file_dst_pathname);
+                        $this->width       = $handle->image_dst_x;
+                        $this->height      = $handle->image_dst_y;
+                        $this->create();
+                        //Increment the ID to avoid duplicate IDs
+                        $this->id++;
+                    }
+                    else {
+                        // one error occured
+                        $this->upload_errors[] = $handle->error;
+                    }  
+                }
+                else {
+                   $this->upload_errors[] = $handle->error;
+                }
+                // we delete the Original files
+                $handle->clean();  
+            } 
+        }
+        else{
+            // ---------- SINGLE UPLOADS ----------
+            $handle = new upload($files);
             // Set variables
             $handle->allowed = ['image/*'];
             $handle->file_safe_name = true;
@@ -61,8 +103,6 @@ class PPhoto extends DBO{
                     $this->width       = $handle->image_dst_x;
                     $this->height      = $handle->image_dst_y;
                     $this->create();
-                    //Increment the ID to avoid duplicate IDs
-                    $this->id++;
                 }
                 else {
                     // one error occured
@@ -74,7 +114,7 @@ class PPhoto extends DBO{
             }
             // we delete the Original files
             $handle->clean();  
-        } 
+        }      
     }   
 
     public function uploadSuccess(){

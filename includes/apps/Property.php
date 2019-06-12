@@ -4,7 +4,7 @@ class Property extends DBO{
 
 	protected static $table_name = "property";
     protected static $db_fields = ['id', 'user_id', 'location_id', 'type', 'address',
-    'beds', 'baths', 'terms', 'cphoto', 'contact_number', 'contact_email','reference', 'listed_by', 'size', 'status', 'price', 'price_old', 'negotiable', 'available', 'units','views', 'market', 'owner', 'description', 'added', 'flags'];
+    'beds', 'baths', 'terms', 'photo', 'contact_number', 'contact_email','reference', 'listed_by', 'size', 'status', 'price', 'price_old', 'negotiable', 'available', 'units','views', 'market', 'contact_name', 'description', 'added', 'flags'];
 
 
     public $id;
@@ -15,7 +15,7 @@ class Property extends DBO{
     public $beds;
     public $baths;
     public $terms;
-    public $cphoto;
+    public $photo;
     public $contact_number;
     public $contact_email;
     public $reference;
@@ -29,7 +29,7 @@ class Property extends DBO{
     public $available;
     public $views;
     public $market;
-    public $owner;
+    public $contact_name;
     public $description;
     public $added;
     public $flags;
@@ -39,9 +39,9 @@ class Property extends DBO{
         //These will come from the database
         $property_features = array();
         if($type == "indoor"){
-            $sql = "SELECT id, feature FROM property_feature WHERE type = 'indoor'  ORDER BY id";
+            $sql = "SELECT id, feature FROM features WHERE type = 'indoor'  ORDER BY id";
         }elseif($type == "outdoor"){
-            $sql = "SELECT id, feature FROM property_feature WHERE type = 'outdoor' ORDER BY id";
+            $sql = "SELECT id, feature FROM features WHERE type = 'outdoor' ORDER BY id";
         }    
         DB::getInstance()->direct_query($sql);
         while($row = DB::getInstance()->fetch()){
@@ -51,32 +51,34 @@ class Property extends DBO{
         return $property_features;
     }   
 
-    public function cphoto(){
-        return PPhoto::imagePath($this->id);
+    public function photo(){
+        return Photo::imagePath($this->id);
     }
 
     public function status(){
         switch ($this->status) {                           
             case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
                 $status = "added";
                 break;
-            case 2:
-                $status = "review";
-                break;
-            case 3:
+            case 7:
                 $status = "pending";
                 break;      
-            case 4:
+            case 8:
                 $status = "suspended";
                 break;                
-            case 5:
-                $status = "listed";
-                break;       
-            case 6:
+            case 9:
                 $status = "archieved";
+                break;       
+            case 10:
+                $status = "listed";
                 break;
         }
-         return strtoupper($status);
+        return strtoupper($status);
     }    
 
     public function priceCut(){

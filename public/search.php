@@ -18,7 +18,7 @@
 		$found_location    = ucwords($location->location);
 		$found_location_id = (int) $location->id;
 	}else{
-		Session::flash('invalid_location', "'".$search_query."' not in our database");
+		Session::flash('invalid_location', "'".$search_query."' is not in our database");
 		Redirect::to('index.php');
 	}
 
@@ -62,7 +62,7 @@
 	// Get the total number of property from that Location
 	$sql_count  = "SELECT COUNT(*) AS count FROM property WHERE status >= ? AND location_id = ? ";	
 	$sql_count .= search_filters($filter_price, $filter_beds);
-	DB::getInstance()->query($sql_count, array(1, $found_location_id));
+	DB::getInstance()->query($sql_count, array(2, $found_location_id));
 
 	// Number of property found
 	$property_count = DB::getInstance()->result('count');
@@ -148,45 +148,50 @@
 <button type="button" style="height: 2rem"><i class="mdi mdi-tune"></i>&nbsp;Filters</button>
 
 <?php echo output_message($message, "success"); ?>
-
+<br><br>
 <div class ="properties">
 	<?php foreach ($properties as $property):?>
-		<!-- <div style=" margin: 20px 0 0 0;">
-			<img src="../uploads/property/default.png">
-		</div> -->
 		<div class="listing">
-			<?php
-				echo "<div>";
-				    if(new_listing($property->added)){echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span>";}else{echo "&nbsp;";}
-
-				echo "<span style=\"color:#666;font-size:0.75rem;float:right;line-height:1rem;\">".time_ago($property->added)."</span><div style=\"clear:both;\"></div></div>";   
-				echo "<div style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property->price)."&nbsp;<small>".$property->priceCut()."</small>";
-				echo  ($property->negotiable == true) ? "<small style=\"color:#11cc11;\">NEG</small>" : "";
+			<div style=" margin: 0; position: relative;margin-bottom: 1rem;">
+				<img src="<?php echo $property->photo();?>"/>
+				<?php
+				    echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';
+					 	echo "<div style=\"float:left\">";
+					 		if(new_listing($property->added)){
+					 			echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span><br>";
+							}
+							if(end_post_date($property->added)){
+								echo "<span style=\"color:#fff;font-size:0.75rem;float:left;line-height:1rem;background-color: #333333b0;padding:0 .3rem;\">".time_ago($property->added)."</span>";
+							}
+						echo "</div>";	
+						if(isset($user)){
+						echo ($user->SavedProperty($property->id)) ?
+								"<a href=\"listremove.php?id=$property->id\" style=\"float:right;padding:.5rem;color:#1db954;\"><i class=\"mdi mdi-heart mdi-24px\"></i></a>":
+								"<a href=\"listsave.php?id=$property->id\" style=\"float:right;padding:.5rem;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
+						}else{
+							echo "<a href=\"login.php?redirect=saved\" style=\"float:right;padding:.5rem;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
+						}
+					echo '</div>';
+				?>
+			</div>	
+			<div style="padding: .5rem">		
+			<?php				  
+				echo "<div style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property->price)."&nbsp;<small>".$property->terms()."</small>";
+				echo  ($property->negotiable == true) ? "<small style=\"color:#11cc11;\">NG</small>" : "";
 				echo "<span style=\"float:right;\">".$property->priceCut()."</span></div>";
-				echo "<br>";
+				echo "<div>";
 				echo $property->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
 				echo $property->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
 				echo number_format($property->size)    . " Sqft";
-				if(isset($user)){
-					echo ($user->SavedProperty($property->id)) ?
-						"<a href=\"listremove.php?id=$property->id\" style=\"float:right;\"><i class=\"mdi mdi-heart mdi-24px\"></i></a>":
-						"<a href=\"listsave.php?id=$property->id\" style=\"float:right;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
-				}else{
-					echo "<a href=\"login.php?redirect=saved\" style=\"float:right;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
-				}
-				echo "<br>";
-				echo "<a href=\"property.php?id={$property->id}\">";
-				if(!empty($property->address)){
-					echo $property->address . ", ". $property->Location() ."<br>";
-					echo $property->type    . " for ".ucfirst($property->market);
-				}else{
-					echo $property->type    . " for ".ucfirst($property->market).", ". $property->Location();
-				}
-				echo "</a>";
-			 ?>
+				echo "</div>";
+				echo "<div><a href=\"property.php?id={$property->id}\" style=\"color:#777;font-size:.85rem;\">";
+				echo $property->type    . " for ".ucfirst($property->market)." ".$property->address .", ". $property->Location();
+				echo "</a></div>";
+			?>
+			</div> 
 	 	</div>
 	<?php endforeach; ?>
-	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no,  there is currently no listings at the moment</div><?php } ?>
+	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;">Oohh no, there is currently no listings at the moment</div><?php } ?>
 </div>
 	
 <div style="text-align: center">

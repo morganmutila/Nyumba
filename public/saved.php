@@ -6,9 +6,9 @@
 
 $page_title = "Saved Properties";		 
 
-	$sql  = "SELECT DATE_FORMAT(saved_property.created, '%W, %d %M') AS saved, property.* FROM saved_property";
-	$sql .= " INNER JOIN property ON ('saved_property.property_id' = 'property.id')";
-	$sql .= " WHERE saved_property.user_id = ?";
+	$sql  = "SELECT DATE_FORMAT(saved.saved, '%W, %d %M') AS added, property.* FROM saved";
+	$sql .= " INNER JOIN property ON ('saved.property_id' = 'property.id')";
+	$sql .= " WHERE saved.user_id = ?";
 
 	// Get all the saved properties for the user
 	$properties = Property::findBySql($sql, array($session->user_id));
@@ -17,15 +17,26 @@ $page_title = "Saved Properties";
 
 <?php include_layout_template('header.php'); ?>
 
-	<h2>Saved Properties(<?php echo SavedProperty::total();?>)</h2>
+	<h2>Saved Properties(<?php echo Saved::total();?>)</h2>
 	
 	<?php echo output_message($message); ?>
 
 	<?php 
 	// List all the property that the user saved
 		foreach ($properties as $property): ?>
+			<div style=" margin:0; position: relative;">
+				<img src="<?php echo $property->photo();?>"/>
+				<?php
+				    echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';
+				 		if(new_listing($property->added)){
+							echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.6rem;float:left;line-height:1rem;\">NEW</span>";
+						}
+						else{echo "&nbsp;";}
+						echo "<span style=\"color:#fff;font-size:0.75rem;float:right;line-height:1rem;background-color: #333333b0;padding:0 .3rem;\">".time_ago($property->added)."</span>";
+					echo '</div>';
+				?>
+			</div>
 			<?php
-				echo thumb_image($property->image()) . "<br>";
 				echo "<a href=\"listremove.php?id=$property->id&redirect=saved\">x</a><br>";
 				echo "<p style=\"margin-bottom:1rem;\"><a href=\"property.php?id=$property->id\"><strong>K ".(int)$property->price."&nbsp;<small>".$property->rentTerms()."</small></strong><br>";	
 				echo $property->beds   . " beds <strong>·</strong> "; 

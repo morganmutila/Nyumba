@@ -3,7 +3,7 @@
 }
 
 html { height: 100%; width: 100%; }
-body { width: 320px; margin: 0 auto; padding: 0 .8rem; border: 0;  font-size: .9rem; font-family: helvetica;}
+body { width: 320px; margin: 0 auto; padding: 0 .6rem; border: 0;  font-size: .9rem; font-family: helvetica;}
 
 img { border: none; }
 
@@ -18,7 +18,7 @@ ul{
   list-style-position: inside;
 }
 
-#header { height: auto; text-align: left; clear: both;}
+#header { height: auto; text-align: left; clear: both; background-color: #fff;margin: 0 -1rem .3rem -1rem;padding: .4rem 1rem;}
 #header h3 { padding: .4rem 0; margin: 0;}
 
 .menu{
@@ -33,7 +33,7 @@ ul{
     display: inline;
 } 
 #header .menu li a{
-  margin-right: .5rem;
+  margin-right: 1rem;
 }  
 
 #footer .menu li a{
@@ -53,11 +53,13 @@ input, select{
   height: 2.55rem;
   width: 100%;
   padding: 0.4rem 0.5rem;
+  background-color: #fff;
   border-radius: 3px;
   border: 1px solid #ddd;
   margin: 0.3rem 0 1.1rem 0;
   display: block;
 }
+
 textarea{
 	width: 100%;
 }
@@ -107,10 +109,17 @@ button{
 }
 
 .listing{
-  margin: 0 -1rem 0 -1rem;
-  padding: 1rem 1rem;
-  border-bottom: 3px solid #eee;
-  line-height: 1.4rem;
+  margin: 0 0 1.2rem 0;
+  padding: 0;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  background-color: #fff;
+  line-height: 1.3rem;
+}
+
+.listing img{
+  width: 100%;
+  height: auto;
 }
 .message, .message-info, .message-warning, .message-success, .message-danger{	
   width: 100%;

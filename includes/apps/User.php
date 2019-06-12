@@ -82,7 +82,7 @@ class User extends DBO{
 
     public function savedProperty($property_id=0){
         if(!empty($property_id)){
-            $sql = "SELECT id FROM saved_property WHERE property_id = ?";
+            $sql = "SELECT id FROM saved WHERE property_id = ?";
             DB::getInstance()->query($sql, array($property_id));
             if(DB::getInstance()->count()){
                 return true;

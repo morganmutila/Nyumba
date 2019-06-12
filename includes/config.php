@@ -16,12 +16,13 @@ $GLOBALS['config'] = array(
     //These are the default reference values for the webapp
     'max_file_size'            => 10048576, // 10 MB
     'allow_user_folders'	   => false,
-    'records_per_page'	       => 3,
+    'records_per_page'	       => 5,
     'mysql_date_format'        => "%m/%d/%Y",
     'mysql_date_time_format'   => "%Y-%m-%d %H:%M:%S",
     'php_date_format'		   => "n/j/Y",
     'php_date_time_format'	   => "m/d/Y, h:i a",
-    'new_listing'              => "P2D",  // 2 days before we remove the NEW tag on the listing
+    'new_listing'              => "P5D",  // 5 days before we remove the NEW tag on the listing
+    'end_post_date'            => "P20D", // 20 days before we remove the posted date
     'default_sortby'           => "new",  //Sort Listings by Newest
     'default_srch_filter'      => array('filter_price' => 'anyprice', 'filter_beds' => 'any')
 

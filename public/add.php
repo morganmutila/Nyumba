@@ -2,7 +2,7 @@
 require '../init.php';
 require LIB_PATH.DS.'formr'.DS.'class.formr.php';
 require PACKAGE_PATH;
-if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=listproperty"); } 
+if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=addproperty"); } 
 
 
 $page_title = "List property";
@@ -54,23 +54,25 @@ if(Input::exists()){
         $property->price_old        = 0;
         $property->negotiabe 		= 0;
         $property->description      = "";
-        $property->cphoto           = "";
+        $property->photo            = "";
         $property->contact_number   = $user->phone;
         $property->contact_email    = $user->email;
-        $property->owner     	    = $user->fullName();
+        $property->contact_name	    = $user->fullName();
         $property->available        = "";
         $property->reference        = (string) rand();
-        $property->status           = (int)    1;
         $property->units            = (int)    1;
         $property->views            = (int)    0;
         $property->flags            = (int)    0;
         $property->available    	= "";
         $property->listed_by        = (int)    1;
         $property->market     		= (string) strtolower(Input::get('market_name'));
+        $property->status           = (int)    1;
+
 
     	if($property && $property->create()){
 			// Add the property and re-direct
-            Redirect::to('activate.php?property='.$property->id);
+            $build_url = rawurlencode("list.php")."?property=".urlencode($property->id)."&action=".urlencode('description');
+            Redirect::to($build_url);
         } else{
             $message = "Oops! could not add your property, something went wrong, please try again";
         }
@@ -80,7 +82,7 @@ if(Input::exists()){
 ?>
 <?php include_layout_template('header.php'); ?>
 
-	<h2>Add a property</h2>
+	<h2>Add your property</h2>
 
     <?php
     // Initialise Formr
@@ -88,14 +90,14 @@ if(Input::exists()){
  
     $form->html5   = true; 
     $form->method  = 'POST';
-    $form->action  = "list.php";
+    $form->action  = "add.php";
 
     // Property Type array
     $property_types = [
         "House"                     => "House",
         "Flat"                      => "Flat",
         "Apartment"                 => "Apartment",
-        "Apartment(semi-detached)"  => "Apartment(semi-detached)",
+        "Semi-detached house"       => "Semi-detached",
         "Townhouse"                 => "Townhouse",
         "Condo"                     => "Condo"
     ];

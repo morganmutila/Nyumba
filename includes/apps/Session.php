@@ -9,7 +9,8 @@ class Session {
     public  $location;
     public  $message;
 
-    public function __construct(){        
+    public function __construct(){      
+        session_name("nyumbayanga");  
         session_start();
         $this->checkMessage();
         $this->checkLogin();

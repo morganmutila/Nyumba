@@ -14,14 +14,14 @@ class Remember extends DBO{
 /**
  * The location class
  */
-class SavedProperty extends DBO{	
-	protected static $table_name = "saved_property";
-    protected static $db_fields = ['id', 'user_id', 'property_id', 'created'];
+class Saved extends DBO{	
+	protected static $table_name = "saved";
+    protected static $db_fields = ['id', 'user_id', 'property_id', 'saved'];
 
     public $id;
     public $user_id;
     public $property_id;
-    public $created;
+    public $saved;
 
 }
 
@@ -39,7 +39,7 @@ class Location extends DBO{
 
 	public static function AllLocations(){
 		$locations = array();
-		DB::getInstance()->direct_query("SELECT id, location FROM location ORDER BY location");
+		DB::getInstance()->direct_query("SELECT id, location FROM ".self::$table_name." ORDER BY location");
 		while ($row = DB::getInstance()->fetch()) {
 			$locations[ucwords($row['location'])] = $row['id'];
 		}
@@ -83,16 +83,15 @@ class Location extends DBO{
  */
 class City extends DBO{	
 	protected static $table_name = "city";
-    protected static $db_fields = ['id', 'city', 'last_update', 'description'];
+    protected static $db_fields = ['id', 'city', 'description'];
 
     public $id;
     public $city;    
     public $description;
-    public $last_update;
 
 	public static function AllCities(){
 		$cities = array();
-		DB::getInstance()->direct_query("SELECT id, city FROM city ORDER BY city");
+		DB::getInstance()->direct_query("SELECT id, city FROM ".self::$table_name." ORDER BY city");
 		while ($row = DB::getInstance()->fetch()) {
 			$cities[ucwords($row['city'])] = $row['id'];
 		}

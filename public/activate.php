@@ -166,26 +166,26 @@ $page_title = "Activate listing";
 		<div>Email <input type="email" name="contact_email" value="<?php echo escape($user->email);?>" placeholder="Enter email" /></div>
 		<div>Phone number<input type="tel" name="contact_phone" value="<?php echo escape($user->phone);?>" placeholder="Enter phone" /></div>
 		
-        <h4>Property features</h4>
+        <!-- <h4>Property features</h4>
 		<div class="checkbox-group">
 			<p><strong>Indoor</strong></p>
 			<?php 
 				// These will come from the database
-				$indoor_features = Property::features("indoor");
-				echo generate_form_checkbox("property_feature", $indoor_features);
+				// $indoor_features = Property::features("indoor");
+				// echo generate_form_checkbox("property_feature", $indoor_features);
 			?>
 
 			<p><strong>Outdoor</strong></p>
 			<?php 
 				//These will come from the database
-				$outdoor_features = Property::features("outdoor");
-				echo generate_form_checkbox("property_feature", $outdoor_features);
+				// $outdoor_features = Property::features("outdoor");
+				// echo generate_form_checkbox("property_feature", $outdoor_features);
 			?>		
-		</div>	
+		</div>	 -->
 
 		<h4>Upload Photo</h4>	
     	<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('max_file_size'); ?>" />
-    	<div><input type="file" name="image_upload"  multiple="multiple" /></div>
+    	<div><input type="file" name="image_upload[]"  multiple="multiple" /></div>
 
     	<button type="submit" class="btn btn-primary btn-block font-weight-bold">Finish listing</button>
     </form>

@@ -16,7 +16,7 @@ function NY_SEARCH_ENGINE(){
     global $session, $found_location;
 
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
-    $html .= "    <i class=\" mdi mdi-magnify mdi-24px\" style=\"position:absolute;left:0;top:0;padding:0 .5rem;color: #aaa;height:65%;line-height:1.6rem;margin:2% 0;\"></i><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding:0 35% 0 12%;border-radius: 4px;margin-bottom:.4rem;background-color:#F8F8F8;font-size:.9rem;\" value=";
+    $html .= "    <i class=\" mdi mdi-magnify mdi-24px\" style=\"position:absolute;left:0;top:0;padding:0 .5rem;color: #aaa;height:65%;line-height:1.6rem;margin:2% 0;\"></i><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding:0 35% 0 12%;border-radius: 4px;border-width:2px;margin-bottom:.4rem;background-color:#F8F8F8;font-size:.9rem;\" value=";
         if(Input::get('q')){
             $html .= $found_location;
         }
@@ -170,6 +170,18 @@ function new_listing($datetime){
     return $now < $expiry_date;
 }
 
+function end_post_date($datetime){
+    $datetime = new DateTime($datetime);
+    $valid_for = new DateInterval(Config::get('end_post_date'));
+
+    $now = new DateTime();
+
+    $expiry_date = clone $datetime;
+    $expiry_date->add($valid_for);
+
+    return $now < $expiry_date;
+}
+
 //********************************************************************
 //Time functions
 //********************************************************************
@@ -177,23 +189,26 @@ function time_ago($time){
     $formated_time = strtotime($time);
     $time_difference = time() - $formated_time;
  
-    if( $time_difference < 1 ) { return strtoupper('less than 1 second ago'); }
+    if($time_difference < 1 ) { return strtoupper('less than 1 second ago'); }
+    
     $condition = array( 
-                12 * 30 * 24 * 60 * 60 =>  'year',
-                30 * 24 * 60 * 60       =>  'month',
-                24 * 60 * 60            =>  'day',
-                60 * 60                 =>  'hour',
-                60                      =>  'minute',
-                1                       =>  'second'
+            12 * 30 * 24 * 60 * 60  =>  'year',
+            30 * 24 * 60 * 60       =>  'month',
+            24 * 60 * 60            =>  'day',
+            60 * 60                 =>  'hour',
+            60                      =>  'minute',
+            1                       =>  'second'
     );
  
     foreach( $condition as $secs => $str ){
+
         $d = $time_difference / $secs;
- 
+
         if( $d >= 1 ){
             $t = round( $d );
             return strtoupper($t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago');
         }
+
     }
 }
 
@@ -318,6 +333,22 @@ function create_form_select($name="", $count=null, $accept=""){
     return "";
 }
 
+function generate_form_select($name="", $empty_select=true, $key_values=array()){
+    if(count($key_values)){
+        $output = "<select name=\"{$name}\">";
+            if ($empty_select) {
+                $output .= "<option>Please select --</option>";
+            }
+            foreach ($key_values as $key => $value) {
+                $output .= "<option value=\"$value\" ";
+                    if(Input::get($name) == $value){ $output .= "selected"; }
+                $output .= ">".$key."</option>";
+            }            
+        $output .= "</select>";
+        return $output;
+    }
+    return "";
+}
 
 function generate_form_checkbox($name="", $key_values=array()){
     $output = "";
