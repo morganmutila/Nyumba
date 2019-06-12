@@ -81,7 +81,7 @@
 
 	// Build the query for found property
 	$sql  = "SELECT * FROM property WHERE status >= ? AND location_id = ? ";	
-	$sql .= search_filters($filter_price, $filter_beds);
+	$sql .=   search_filters($filter_price, $filter_beds);
 	$sql .= " ORDER BY ". sortby_filters(Session::get('SORT_BY'));
 	$sql .= " LIMIT {$per_page} ";
 	$sql .= " OFFSET {$pagination->offset()}";
@@ -94,19 +94,19 @@
 <?php include_layout_template('header.php'); ?>
 <?php echo NY_SEARCH_ENGINE(); ?>
 
-<h2 style="font-size: 1.15rem;"><?php echo $found_location; ?>&nbsp;homes</h2>
+<h2 style="font-size: 1.15rem;"><?php echo Location::cityLocation($found_location_id); ?></h2>
 <p style="color: #555;margin-top: -0.6rem"><?php echo number_format($property_count);?>&nbsp;properties found on market</p>
 
 <form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" style="display: inline;">
 	<?php
 	  	$price_filters = array(
-	  		"Any Price"			 => "anyprice",
-	  		"Below K2k"       => "below2k",
-   			"K2k - K5k"    => "between2kto5k",
+	  		"Any Price"		 => "anyprice",
+	  		"Below K2k"      => "below2k",
+   			"K2k - K5k"      => "between2kto5k",
   			"K5k - K10k"	 => "between5kto10k",
   			"K10k - K15k"	 => "between10kto15k",
   			"K15k - K20k"	 => "between15kto20k",
-  			"Above K20k"		 => "above20k",
+  			"Above K20k"	 => "above20k",
 	  	);
 
         $price_select = "<select onchange=\"this.form.submit()\" name=\"price\" style=\"width: auto;display:inline;background-color:transparent;margin:0;border:1px solid #ccc; padding:.5rem .8rem;font-size:.8rem;border-radius:4px;height:2rem;\">";
@@ -149,8 +149,6 @@
 
 <?php echo output_message($message, "success"); ?>
 
-
-
 <div class ="properties">
 	<?php foreach ($properties as $property):?>
 		<!-- <div style=" margin: 20px 0 0 0;">
@@ -179,10 +177,10 @@
 				echo "<br>";
 				echo "<a href=\"property.php?id={$property->id}\">";
 				if(!empty($property->address)){
-					echo "<strong>".$property->address . ", ". $property->Location() ."<br>";
-					echo $property->type    . " for ".ucfirst($property->market)."</strong>";
+					echo $property->address . ", ". $property->Location() ."<br>";
+					echo $property->type    . " for ".ucfirst($property->market);
 				}else{
-					echo "<strong>".$property->type    . " for ".ucfirst($property->market).", ". $property->Location() ."</strong>";
+					echo $property->type    . " for ".ucfirst($property->market).", ". $property->Location();
 				}
 				echo "</a>";
 			 ?>
@@ -193,13 +191,14 @@
 	
 <div style="text-align: center">
 	<?php echo NY_PAGINATION(); ?>
+	<h4 style="margin:0 0 2.5rem 0;"><?php echo Location::cityLocation($found_location_id, true); ?></h4>
 </div>
 
 <div>
 	<h4>About&nbsp;<?php echo $found_location; ?></h4>
-	<span>Properties on market:..........<?php echo number_format($number_of_homes);?> </span><br>
-	<span>Average rent pricet:..............<?php echo $number_of_homes;?> </span><br>
-	<span>Average sale price:...............<?php echo $number_of_homes;?> </span><br>
+	<span>Properties on market:...............................<?php echo number_format($number_of_homes);?> </span><br>
+	<span>Average rent pricet:..................................<?php echo $number_of_homes;?> </span><br>
+	<span>Average sale price:...................................<?php echo $number_of_homes;?> </span><br>
 </div>	
 <hr>
 <div>

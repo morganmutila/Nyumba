@@ -23,7 +23,7 @@ class User extends DBO{
 
 
     // Class methods
-    public static function authenticate($username = "", $password = "", $email="", $phone=""){
+    public static function authenticate($username = "", $password = "", $email="", $phone="", $remember_me=false){
         if($username){            
             $sql  = "SELECT * FROM ".self::$table_name;
             $sql .= " WHERE username = ? OR email= ? OR phone = ? LIMIT 1";

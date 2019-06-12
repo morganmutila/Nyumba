@@ -18,18 +18,29 @@ class Session {
 
     private function checkMessage(){
         // Is there a session message stored
-        if (self::exists('message')) {
-            $this->message = self::get('message');
-            self::delete('message');
+        if (self::exists('MESSAGE')) {
+            $this->message = self::get('MESSAGE');
+            self::delete('MESSAGE');
         }else{
             $this->message = "";
         }
     }
 
     private function checkLogin(){
-        if(self::exists('user_id')){
-            $this->user_id = self::get('user_id');
+        if(self::exists('USER_ID')){
+            $this->user_id = self::get('USER_ID');
             $this->logged_in = true;
+        }
+        elseif(Cookie::exists(Config::get('remember/cookie_name')) && !self::exists('USER_ID')){
+
+            $hashkey = Cookie::get(Config::get('remember/cookie_name'));
+
+            $sql = "SELECT * FROM remember WHERE hashkey = ? LIMIT 1";
+            $found_user = Remember::findFirst($sql, [$hashkey]);
+            if($found_user){
+                $user = User::findById($found_user->user_id);
+                $this->login($user);
+            }
         }
         else{
             unset($this->user_id);
@@ -47,7 +58,7 @@ class Session {
 
     public function message($msg=""){
         if(!empty($msg)){
-            self::put('message', $msg);
+            self::put('MESSAGE', $msg);
         }else{
             return htmlentities($this->message);
         }
@@ -67,14 +78,16 @@ class Session {
         return $this->logged_in;
     }
 
-    public function login($user){
+    public function login($user, $remember_me = false){
         // The database will take care of finding user based on the username/password
         if($user){
-           // $this->user_id = $_SESSION['user_id'] = $user->id;
-            self::put('user_id', $user->id);
-            $this->user_id = self::get('user_id');
+            self::put('USER_ID', $user->id);
+            $this->user_id = self::get('USER_ID');
             // Put the user ID in the cookie as well
-            //Cookie::put();
+            if($remember_me){
+                Cookie::rememberMe($user->id);
+            }
+
             $user->last_login = text_to_datetime(Config::get('mysql_date_time_format'));
             $user->save();
             $this->logged_in = true;
@@ -82,25 +95,26 @@ class Session {
     }
 
     public function logout(){
-        unset($_SESSION['user_id']);
+        self::delete('USER_ID');
         unset($this->user_id);
+        Cookie::delete(Config::get('remember/cookie_name'));
         $this->logged_in = false;
     }
 
     public static function generateToken(){
-        return $_SESSION['token'] = md5(uniqid());
+        return $_SESSION['TOKEN'] = md5(uniqid());
     }
 
     public static function checkToken($token){
-        if(isset($_SESSION['token']) && $token === $_SESSION['token']){
-            unset($_SESSION['token']);
+        if(isset($_SESSION['TOKEN']) && $token === $_SESSION['TOKEN']){
+            unset($_SESSION['TOKEN']);
             return true;
         }else{
             return false;
         }
     }
 
-    // Helper functions for Sessions
+    // Helper Static functions for Sessions
     public static function exists($name){
         return (isset($_SESSION[$name])) ? true : false;
     }

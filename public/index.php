@@ -1,4 +1,6 @@
-<?php require '../init.php';
+<?php
+require '../init.php';
+require LIB_PATH.DS.'formr'.DS.'class.formr.php';
 
 // 1. the current page number ($current_page)
 $page = Input::get('page') ? (int) Input::get('page') : 1;
@@ -27,11 +29,11 @@ else{
 }
 
 
-$sql  = "SELECT * FROM property WHERE status >= ? ";
-$sql .= "ORDER BY ";
-$sql .=  sortby_filters($sortby);	
+$sql  = " SELECT * FROM property WHERE status >= ? ";
+$sql .= " ORDER BY ";
+$sql .=   sortby_filters($sortby);	
 $sql .= " LIMIT {$per_page} ";
-$sql .= "OFFSET {$pagination->offset()}";
+$sql .= " OFFSET {$pagination->offset()}";
 
 $properties = Property::findBySql($sql, array(1));
 
@@ -59,36 +61,36 @@ endif; // End if($session->location)
 <?php include_layout_template('header.php'); ?>
 <?php echo NY_SEARCH_ENGINE(); ?>
 
-<form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" style="border:1px solid #ccc; padding: .5rem;width: auto;display:inline;border-radius:4px;">
-	<?php
-	  	$sortby_types = array(	  		
-  			"Newest"		=> "new",  			
-  			"Best match"	=> "best",
-  			"Price (L-H)"   => "price_asc",
-  			"Price (H-L)"	=> "price_desc",
-  			"Bedrooms"		=> "beds"
-	  	);
+<?php
+    $form = new Formr();
 
-        $select_sortby = "<span>Sort:</span><select onchange=\"this.form.submit()\" name=\"sortby\" style=\"width: auto;height:35px;display:inline;border:0;padding: 0;background-color:transparent;margin:0;font-size:.9rem;\">";
-            foreach ($sortby_types as $type => $value) {
-                $select_sortby .= "<option value=\"$value\" ";
-                    if(Session::get('SORT_BY') == $value || Config::get('default_sortby') == $value){
-                        $select_sortby .= "selected";
-                    }
-                $select_sortby .= ">".$type."</option>";
-            }
-        $select_sortby .= "</select>";
-        echo $select_sortby;
-	?>
-</form>
-<button type="button" style="float: right;"><i class="mdi mdi-tune"></i>&nbsp;Filters</button>
+    $form->html5 = true; 
+    $form->method = 'GET';
+
+	$sortby_types = [	  		
+		"new"        => "Newest", 			
+		"best"	     => "Best match",
+		"price_asc"  => "Lowest Price",
+		"price_desc" => "Highest Price",
+		"beds"		 => "Bedrooms"
+  	];
+
+    $html_form  = $form->form_open('sortby');
+    $html_form .= '<i class="mdi mdi-swap-vertical mdi-18px"></i>';
+    $html_form .= $form->input_select('sortby','','','','onchange="this.form.submit()" style="width:auto;height: 2rem;display:inline;border:0;padding:0;margin:0;font-size:.9rem;"', '','', $sortby_types);
+ 	$html_form .= '<a type="button" style="float: right;padding:0.6rem 0"><i class="mdi mdi-tune-vertical"></i>&nbsp;Filter</a>';
+    $html_form .= $form->form_close();
+
+    // Display the generated Form
+    echo $html_form;
+?>
 
 
 <?php echo output_message($message, "success"); ?>
 <?php echo flash("invalid_location", "warning"); ?>
 
 <?php if($session->location):?>
-<h4><?php echo Location::findLocationOn($session->location);//The Location name?>&nbsp;homes&nbsp;&nbsp;·&nbsp;&nbsp;<small style="color: #555;"><?php echo $number_of_homes;?>&nbsp; homes found</small></h4>
+<h3>Houses in <?php echo Location::findLocationOn($session->location);//The Location name?>&nbsp;·&nbsp;<small style="color: #666;"><?php echo $number_of_homes;?>&nbsp; found</small></h3>
 <div class ="properties">
 	<?php foreach ($properties_2 as $property_2):?>
 		<div style=" margin: 20px 0 0 0;">
@@ -117,21 +119,21 @@ endif; // End if($session->location)
 				echo "<br>";
 				echo "<a href=\"property.php?id={$property_2->id}\">";
 				if(!empty($property_2->address)){
-					echo "<strong>".$property_2->address . ", ". $property_2->Location() ."<br>";
-					echo $property_2->type    . " for ".ucfirst($property_2->market)."</strong>";
+					echo $property_2->address . ", ". $property_2->Location() ."<br>";
+					echo $property_2->type    . " for ".ucfirst($property_2->market);
 				}else{
-					echo "<strong>".$property_2->type    . " for ".ucfirst($property_2->market).", ". $property_2->Location() ."</strong>";
+					echo $property_2->type    . " for ".ucfirst($property_2->market).", ". $property_2->Location();
 				}
 				echo "</a>";
 			 ?>
 	 	</div>
 	<?php endforeach; ?>
-	<?php if(empty($properties_2)){ ?><div style="text-align: center;color:#777;"><p><i class="mdi mdi-home-map-marker mdi-48px"></i></p><div>Oohh no,  there is currently no listings at the moment</div><?php } ?>
+	<?php if(empty($properties_2)){ ?><div style="text-align: center;color:#777;"><div>Oohh no,  there is currently no listings at the moment</div><?php } ?>
 </div>
 <?php endif; ?>
 
 
-<h4>Featured Houses</h4>
+<h3>Properties on Nyumba Yanga</h3>
 <div class ="properties">
 	<?php foreach ($properties as $property):?>
 		<div style=" margin: 20px 0 0 0;">
@@ -161,10 +163,10 @@ endif; // End if($session->location)
 				echo "<br>";
 				echo "<a href=\"property.php?id={$property->id}\">";
 				if(!empty($property->address)){
-					echo "<strong>".$property->address . ", ". $property->Location() ."<br>";
-					echo $property->type    . " for ".ucfirst($property->market)."</strong>";
+					echo $property->address . ", ". $property->Location() ."<br>";
+					echo $property->type    . " for ".ucfirst($property->market);
 				}else{
-					echo "<strong>".$property->type    . " for ".ucfirst($property->market).", ". $property->Location() ."</strong>";
+					echo $property->type    . " for ".ucfirst($property->market).", ". $property->Location();
 				}
 				echo "</a>";
 			 ?>

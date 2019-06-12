@@ -2,20 +2,23 @@
 require '../init.php';
 require PACKAGE_PATH;
 require LIB_PATH.DS.'class.upload'.DS.'class.upload.php';
-if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=listproperty"); } 
-
-
-use Rakit\Validation\Validator;
-$validator = new Validator;
+if(!$session->isLoggedIn()){ Redirect::to("login.php?redirect=listproperty");} 
 
 if(!Input::get('property')){
     $session->message("Could not find that property");
     Redirect::to("properties.php");
 }  
 
+
 // Find the previously inserted property
 $property_id = (int) Input::get('property');
 $property = Property::findById($property_id);
+
+// Always get the action
+$action = Input::get('action') ? (string) Input::get('action') : "details";
+
+use Rakit\Validation\Validator;
+$validator = new Validator;
 
 if(Input::exists()){
 
@@ -51,10 +54,10 @@ if(Input::exists()){
     // run the validation method
     $validation->validate();
 
-    if($validation->fails()) {
+    if($validation->fails()){
         // handling errors
         $errors  = $validation->errors();
-        $message = implode(", ", $errors->firstOfAll());
+        $message = pre($errors->firstOfAll());
     }
 	else{
         // Upload the Photo(s) first
@@ -97,18 +100,18 @@ if(Input::exists()){
 $page_title = "Activate listing";
 ?>
 
-
 <?php include_layout_template('header.php'); ?>
 
-	<?php 
-        if (empty($property->address)) {
-            echo "<h2>".strtoupper($property->type)." FOR ".strtoupper($property->market)."<br>";
-            echo "in ".Location::findLocationOn($property->location_id)."&nbsp<small><a href=\"list.php?property=$property->id\">&nbsp;&nbsp;¶</a></small></h2>"; 
-        }else{
-            echo "<h2>FOR ".strtoupper($property->market)."<br>";
-            echo $property->address.", ".Location::findLocationOn($property->location_id)."&nbsp<small><a href= \"list.php?property=$property->id\">&nbsp;&nbsp;¶</a></small></h2>";
-        }
-	?>
+	<h2>
+        <?php 
+        if (empty($property->address)):
+            echo strtoupper($property->type)." FOR ".strtoupper($property->market)."<br>";
+            echo "in ".Location::findLocationOn($property->location_id);
+        else :
+            echo "FOR ".strtoupper($property->market)."<br>";
+            echo $property->address.", ".Location::findLocationOn($property->location_id);
+        endif; ?>        
+    </h2>
     
     <?php echo output_message($message, "danger"); ?>
 
@@ -116,12 +119,10 @@ $page_title = "Activate listing";
 
   		<h4>Details and Description</h4>
 
-  		<?php
-  			echo ($property->market == "rent") ?
-	  			"<div>Rent Price</div>":
-		  		"<div>Sale Price</div>";
-	  	?>
+        <div><?php echo ($property->market == "rent") ? "Rent Price":"Sale Price";?></div>
+
 	  	<input type="text" name="price" value="<?php echo escape(Input::get('price'));?>" placeholder="Enter amount" />
+
         <?php if($property->market == "sale"):?>
             <p style="margin-top: -10px;">
                 <label><input type="checkbox" name="nego" value="yes" <?php if((isset($property) && $property->negotiable === 1) || Input::get('nego') === "yes"){echo "checked";} ?>> <span style="color:#11cc11;">Negotiable</span>
@@ -165,27 +166,26 @@ $page_title = "Activate listing";
 		<div>Email <input type="email" name="contact_email" value="<?php echo escape($user->email);?>" placeholder="Enter email" /></div>
 		<div>Phone number<input type="tel" name="contact_phone" value="<?php echo escape($user->phone);?>" placeholder="Enter phone" /></div>
 		
-        <!-- <h4>Property features</h4>
+        <h4>Property features</h4>
 		<div class="checkbox-group">
 			<p><strong>Indoor</strong></p>
 			<?php 
 				// These will come from the database
-				//$indoor_features = Property::features("indoor");
-				//echo generate_form_checkbox("property_feature", $indoor_features);
+				$indoor_features = Property::features("indoor");
+				echo generate_form_checkbox("property_feature", $indoor_features);
 			?>
-
 
 			<p><strong>Outdoor</strong></p>
 			<?php 
-				// These will come from the database
-				//$outdoor_features = Property::features("outdoor");
-				//echo generate_form_checkbox("property_feature", $outdoor_features);
+				//These will come from the database
+				$outdoor_features = Property::features("outdoor");
+				echo generate_form_checkbox("property_feature", $outdoor_features);
 			?>		
-		</div>	 -->
+		</div>	
 
 		<h4>Upload Photo</h4>	
     	<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('max_file_size'); ?>" />
-    	<div><input type="file" name="image_upload[]"  multiple="multiple" /></div>
+    	<div><input type="file" name="image_upload"  multiple="multiple" /></div>
 
     	<button type="submit" class="btn btn-primary btn-block font-weight-bold">Finish listing</button>
     </form>

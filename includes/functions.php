@@ -16,7 +16,7 @@ function NY_SEARCH_ENGINE(){
     global $session, $found_location;
 
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
-    $html .= "    <i class=\" mdi mdi-magnify mdi-24px\" style=\"position:absolute;left:0;top:0;padding:0 .5rem;color: #aaa;height:65%;line-height:1.6rem;margin:2% 0;\"></i><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding:0 35% 0 12%;border-radius: 4px;margin-bottom:.7rem;background-color: #F8F8F8;font-size:.9rem;\" value=";
+    $html .= "    <i class=\" mdi mdi-magnify mdi-24px\" style=\"position:absolute;left:0;top:0;padding:0 .5rem;color: #aaa;height:65%;line-height:1.6rem;margin:2% 0;\"></i><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding:0 35% 0 12%;border-radius: 4px;margin-bottom:.4rem;background-color:#F8F8F8;font-size:.9rem;\" value=";
         if(Input::get('q')){
             $html .= $found_location;
         }
@@ -240,6 +240,10 @@ function output_message($message="",  $type="info") {
 
             case $type == 'danger':
             $output .= "<p class=\"message-danger\"><i class=\"mdi mdi-alert-circle-outline mdi-18px\"></i><span>".$message."</span></p>";
+            break;
+
+            case $type == 'text-danger':
+            $output .= "<p class=\"text-danger\">".$message."</span></p>";
             break;   
         }
     }    
@@ -314,22 +318,6 @@ function create_form_select($name="", $count=null, $accept=""){
     return "";
 }
 
-function generate_form_select($name="", $empty_select=true, $key_values=array()){
-    if(count($key_values)){
-        $output = "<select name=\"{$name}\">";
-            if ($empty_select) {
-                $output .= "<option>Please select --</option>";
-            }
-            foreach ($key_values as $key => $value) {
-                $output .= "<option value=\"$value\" ";
-                    if(Input::get($name) == $value){ $output .= "selected"; }
-                $output .= ">".$key."</option>";
-            }            
-        $output .= "</select>";
-        return $output;
-    }
-    return "";
-}
 
 function generate_form_checkbox($name="", $key_values=array()){
     $output = "";

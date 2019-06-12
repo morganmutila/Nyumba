@@ -2,7 +2,7 @@
 
 class PPhoto extends DBO{
 
-	protected static $table_name = "property_image";
+	protected static $table_name = "property_photo";
     protected static $db_fields  = ['id', 'property_id', 'filename', 'type','size','width','height', 'last_update'];
 
     public $id;

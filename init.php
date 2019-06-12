@@ -27,8 +27,9 @@ error_reporting(E_ALL);
 // DIRECTORY_SEPARATOR is a PHP pre-defined constant (\ for Windows, / for Unix)
 define('DS', DIRECTORY_SEPARATOR);
 // Set the full path to the docroot
-// define('SITE_ROOT', DS.'xampp'.DS.'htdocs'.DS.'ny');
-define('SITE_ROOT',     realpath(dirname(__FILE__)));
+define('SITE_ROOT', DS.'xampp'.DS.'htdocs'.DS.'ny');
+
+//define('SITE_ROOT',     realpath(dirname(__FILE__)));
 define('INCLUDE_PATH',  SITE_ROOT.DS.'includes');
 define('CLASS_PATH',    INCLUDE_PATH.DS.'apps');
 define('UPLOAD_FOLDER', SITE_ROOT.DS.'uploads');
@@ -55,13 +56,23 @@ require CLASS_PATH   .DS. "Common.php";
 require CLASS_PATH   .DS. "Nyumbayanga.php";
 
 
-// Start the session and initialise $message
+// Start the session, checks Loggin through COOKIE and SESSION values and initialise $message
 $session = new Session();
 $message = $session->message();
 
-//Get the currently logged in user
+
+// Get the currently logged in user
 if($session->isLoggedIn()){
 	$user = User::findById($session->user_id);
 	Session::put("LOCATION", $user->location_id);
-	$session->location = isset($user->location_id) ? $user->location_id : null;
+
+	if(isset($user->location_id) && is_numeric($user->location_id)){
+		$session->location = (int) $user->location_id;
+	}
+	elseif(Session::exists('LOCATION')){
+		$session->location = (int) Session::get('LOCATION');
+	}
+	else{
+		$session->location = null;
+	}
 }

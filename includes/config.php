@@ -9,14 +9,14 @@ define('DB_CHARSET', 'utf8mb4');
 $GLOBALS['config'] = array(
     // This config will remember user in a cookie file
     'remember' => array(
-        'cookie_name'   => 'REMEMBER_ME',
+        'cookie_name'   => 'rmbr',
         'cookie_expiry' => 604800 //60x60x24x7 expires in a week
     ),
 
     //These are the default reference values for the webapp
     'max_file_size'            => 10048576, // 10 MB
     'allow_user_folders'	   => false,
-    'records_per_page'	       => 5,
+    'records_per_page'	       => 3,
     'mysql_date_format'        => "%m/%d/%Y",
     'mysql_date_time_format'   => "%Y-%m-%d %H:%M:%S",
     'php_date_format'		   => "n/j/Y",
