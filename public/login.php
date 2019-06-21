@@ -46,7 +46,7 @@ $page_title = "Login - Nyumba Yanga";
 
 <?php include_layout_template('header.php'); ?>
 
-<?php if(Input::get('redirect') == "listproperty"){?>
+<?php if(Input::get('redirect') == "addproperty"){?>
     <h2 class="text-center mb-4 font-weight-bold" style="text-align: center"><!-- First thing first. Join Nyumba yanga and list your property --> Start by Joining Nyumba yanga</h2>
     <p style="text-align: center;">-----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Already have an account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----</p>
     <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in to Nyumba yanga</h2>

@@ -18,7 +18,7 @@ if(Input::get('id') && is_numeric(Input::get('id'))){
 		if(Input::get('redirect') == "saved"){
 			Redirect::to('saved.php');
 		}else{
-       		Redirect::to('index.php');
+       		Redirect::to($_SERVER['HTTP_REFERER']);
 		}
     }
     else{
@@ -26,7 +26,7 @@ if(Input::get('id') && is_numeric(Input::get('id'))){
         if(Input::get('redirect') == "saved"){
 			Redirect::to('saved.php');
 		}else{
-       		Redirect::to('index.php');
+       		Redirect::to($_SERVER['HTTP_REFERER']);
 		}
     }
 }

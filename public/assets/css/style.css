@@ -69,12 +69,25 @@ input[type=radio], input[type=checkbox]{
   width: auto;
   vertical-align: middle;
 }
+.checkbox-group{
+  height: auto;
+}
 .checkbox-group label{
-	border: 1px solid #ccc;
-	padding:  .3rem 0 .3rem 0.3rem;
-	/*width: 20%;*/
-	display: block;
-	margin-bottom: .3rem;
+  padding: .3rem;
+  display: block;
+  margin: 0 .3rem .3rem 0;
+  width: 48%;
+  float: left;
+  height: 2rem;
+}
+
+.checkbox-group label:last-child{
+  margin-bottom: 2rem;
+}
+
+.checkbox-group strong{
+  clear: both;
+  display: block;
 }
 
 .radio-group {
@@ -111,10 +124,17 @@ button{
 .listing{
   margin: 0 0 1.2rem 0;
   padding: 0;
-  border: 1px solid #eee;
+  /*border: 1px solid #eee;*/
+  box-shadow: 1px 2px #eee;
   border-radius: 3px;
   background-color: #fff;
   line-height: 1.3rem;
+}
+.listing:after{
+  clear: both;
+}
+.listing:before{
+  clear: both;
 }
 
 .listing img{

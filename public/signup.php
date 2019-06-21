@@ -30,7 +30,7 @@ if(Input::exists()):
         $validation->setMessages([
             'name:required' => ':attribute can not be blank',
             'email:required' => 'Please provide a valid :attribute',
-            'unique'        => ':attribute already exists'
+            'unique'        => ':attribute has already been taken'
         ]);
 
         // run the validation method

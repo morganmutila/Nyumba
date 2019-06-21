@@ -12,7 +12,7 @@ class Remember extends DBO{
 }
 
 /**
- * The location class
+ * The Saved property class
  */
 class Saved extends DBO{	
 	protected static $table_name = "saved";
@@ -26,7 +26,32 @@ class Saved extends DBO{
 }
 
 /**
- * The location class
+ * The Amenities class
+ */
+class Amenities extends DBO{	
+	protected static $table_name = "amenities";
+    protected static $db_fields = ['property_id', 'feature_id'];
+
+    public $feature_id;
+    public $property_id;
+
+    public function add(array $features_array = [], int $property_id){
+    	if (!empty($features_array)) {
+		    foreach ($features_array as $key => $value) {
+        		$this->property_id = $property_id;
+        		$this->feature_id  = $value;
+        		$this->create();
+        	}
+        	return true;	
+        }else{
+        	return false;
+        }	
+    }
+
+}
+
+/**
+ * The Location class
  */
 class Location extends DBO{	
 	protected static $table_name = "location";
@@ -79,7 +104,7 @@ class Location extends DBO{
 }
 
 /**
- * The city class
+ * The City class
  */
 class City extends DBO{	
 	protected static $table_name = "city";

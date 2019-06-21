@@ -6,6 +6,14 @@ class Property extends DBO{
     protected static $db_fields = ['id', 'user_id', 'location_id', 'type', 'address',
     'beds', 'baths', 'terms', 'photo', 'contact_number', 'contact_email','reference', 'listed_by', 'size', 'status', 'price', 'price_old', 'negotiable', 'available', 'units','views', 'market', 'contact_name', 'description', 'added', 'flags'];
 
+    private const PROPERTY_TYPE = [
+        1   => "House",
+        2   => "Flat",
+        3   => "Apartment",
+        4   => "Semi-detached",
+        5   => "Townhouse",
+        6   => "Condo"
+    ];
 
     public $id;
     public $user_id;
@@ -81,8 +89,16 @@ class Property extends DBO{
         return strtoupper($status);
     }    
 
+    public function type(){
+        if($this->type > 0){
+            return self::PROPERTY_TYPE[$this->type];
+        } else {
+            return "";
+        }
+    }
+
     public function priceCut(){
-        if((int) $this->price_old == true /*&& $this->market == "sale"*/){
+        if((int) $this->price_old == true){
             if($this->price > $this->price_old){
                 $price_diff = $this->price - $this->price_old;
                 $price_diff = "<span style=\"color:#1db954;font-size:.85rem;\"><i class=\"mdi mdi-arrow-up\"></i>&nbsp;".amount_format($price_diff)."</span>";
@@ -131,7 +147,7 @@ class Property extends DBO{
 
     public function manager(){ 
         $user = User::findbyId($this->user_id);
-        return !empty($user) ? $user->fullname() : false;
+        return !empty($user) ? $user->fullname() : "Unknown";
     }
 
 

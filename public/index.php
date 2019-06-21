@@ -20,10 +20,9 @@ $pagination = new Pagination($page, $per_page, $total_count);
 if(Input::get('sortby')) {
 	Session::put('SORT_BY', escape(Input::get('sortby')));
 	$sortby = Session::get('SORT_BY');
-}elseif(Session::exists('SORT_BY') == true){
+} elseif(Session::exists('SORT_BY') == true){
 	$sortby = Session::get('SORT_BY');
-}
-else{
+} else{
 	Session::put('SORT_BY', Config::get('default_sortby'));
 	$sortby = Config::get('default_sortby');
 }
@@ -94,7 +93,7 @@ endif; // End if($session->location)
 <div class ="properties">
 	<?php foreach ($properties_2 as $property_2):?>
 		<div class="listing">
-			<div style="margin:0;position:relative;margin-bottom:1rem;">
+			<div style="margin:0;position:relative;">
 				<img src="<?php echo $property_2->photo();?>"/>
 				<?php
 				    echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';
@@ -142,7 +141,7 @@ endif; // End if($session->location)
 <div class ="properties">
 	<?php foreach ($properties as $property):?>
 		<div class="listing">
-			<div style=" margin: 0; position: relative;margin-bottom: 1rem;">
+			<div style=" margin: 0; position: relative;">
 				<img src="<?php echo $property->photo();?>"/>
 				<?php
 				    echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';

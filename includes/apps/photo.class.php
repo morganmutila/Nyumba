@@ -14,10 +14,10 @@ class Photo extends DBO{
     public $height;
 
     private $upload_errors = array();
-    private static $upload_dir = "uploads";
+    private static $upload_dir = UPLOAD_FOLDER;
 
     public function attachFile($files, $property_id=0, $multiple=false){
-        if($multiple) {
+        if($multiple == true) {
             // ---------- MULTIPLE UPLOADS ----------
             // as it is multiple uploads, we will parse the $_FILES array to reorganize it into $files
             $file_array = array();
@@ -134,8 +134,7 @@ class Photo extends DBO{
         $result = DB::getInstance()->result();
         $path = !empty($result) ? array_shift($result) : "";
         if($path == ""){
-            //return self::$upload_dir.DS.'default.png';
-            return null;
+            return self::$upload_dir.DS.'default.png';
         }
         else{
             return self::$upload_dir.DS.$path;

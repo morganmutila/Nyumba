@@ -27,12 +27,12 @@ error_reporting(E_ALL);
 // DIRECTORY_SEPARATOR is a PHP pre-defined constant (\ for Windows, / for Unix)
 define('DS', DIRECTORY_SEPARATOR);
 // Set the full path to the docroot
-define('SITE_ROOT', DS.'xampp'.DS.'htdocs'.DS.'ny');
+// define('SITE_ROOT', DS.'xampp'.DS.'htdocs'.DS.'ny');
 
-//define('SITE_ROOT',     realpath(dirname(__FILE__)));
+define('SITE_ROOT',     realpath(dirname(__FILE__)));
 define('INCLUDE_PATH',  SITE_ROOT.DS.'includes');
 define('CLASS_PATH',    INCLUDE_PATH.DS.'apps');
-define('UPLOAD_FOLDER', SITE_ROOT.DS.'uploads');
+define('UPLOAD_FOLDER', "..".DS.'uploads');
 
 // Path for loading external Libraries
 define('LIB_PATH', INCLUDE_PATH.DS.'apps'.DS.'library');
@@ -50,10 +50,10 @@ require INCLUDE_PATH .DS. 'functions.php';
 require INCLUDE_PATH .DS. 'messages.php';
 
 //Include the common classes
-require CLASS_PATH   .DS. "Common.php";
+require CLASS_PATH   .DS. "common.class.php";
 
 //Include Nyumba yanga small classes
-require CLASS_PATH   .DS. "Nyumbayanga.php";
+require CLASS_PATH   .DS. "ny.class.php";
 
 
 // Start the session, checks Loggin through COOKIE and SESSION values and initialise $message

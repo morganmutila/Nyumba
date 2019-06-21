@@ -1,22 +1,26 @@
 <?php
 
+// For loading un declared classes
+function my_autoload ($class_name){
+    if(preg_match("/\A\w+\Z/", $class_name)){
+        $path = CLASS_PATH .DS. strtolower($class_name) . ".class.php";
+        if (file_exists($path)) {
+            include($path);
+        }
+        else{
+            die("The file {$class_name}.class.php can not be found");
+        }   
+    }    
+}
+
 // Auto load classes in case they have not been required
-spl_autoload_register(function($class_name){
-    $class_name = ucfirst($class_name);
-    $path = CLASS_PATH .DS. $class_name . ".php";
-    if (file_exists($path)) {
-        require($path);
-    }
-    else{
-        die("The file {$class_name}.php can not be found");
-    }   
-});
+spl_autoload_register("my_autoload");
 
 function NY_SEARCH_ENGINE(){
     global $session, $found_location;
 
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
-    $html .= "    <i class=\" mdi mdi-magnify mdi-24px\" style=\"position:absolute;left:0;top:0;padding:0 .5rem;color: #aaa;height:65%;line-height:1.6rem;margin:2% 0;\"></i><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding:0 35% 0 12%;border-radius: 4px;border-width:2px;margin-bottom:.4rem;background-color:#F8F8F8;font-size:.9rem;\" value=";
+    $html .= "    <i class=\" mdi mdi-magnify mdi-24px\" style=\"position:absolute;left:0;top:0;padding:0 .5rem;color: #1db954;height:65%;line-height:1.6rem;margin:2% 0;\"></i><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding:0 35% 0 12%;border-radius: 4px;box-shadow: 1px 2px 2px #eee;border-color:#eee;margin-bottom:.4rem;font-size:.9rem;\" value=";
         if(Input::get('q')){
             $html .= $found_location;
         }
@@ -88,7 +92,6 @@ function sortby_filters($sortby){
         return "added DESC";   
     endif;
 }
-
 
 function search_filters($price_filters, $beds_filters){
     //if(isset($price_filters) AND isset($beds_filter)):
@@ -182,9 +185,7 @@ function end_post_date($datetime){
     return $now < $expiry_date;
 }
 
-//********************************************************************
-//Time functions
-//********************************************************************
+// Time functions
 function time_ago($time){
     $formated_time = strtotime($time);
     $time_difference = time() - $formated_time;
@@ -220,7 +221,7 @@ function datetime_to_text($datetime="") {
   $unixdatetime = strtotime($datetime);
   return strftime("%B %d, %Y at %I:%M %p", $unixdatetime);
 }
-//***********************************End Time functions
+// End Time functions
 
 function page_title($page_title=""){
     if(empty($page_title)  && !isset($page_title)){
@@ -380,4 +381,3 @@ function amount_format($amount = '0', $symbol = 'K') {
     }
     return $amount;
 }
-
