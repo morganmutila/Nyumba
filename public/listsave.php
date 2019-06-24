@@ -1,4 +1,4 @@
-<?php require_once("../init.php"); ?>
+<?php require "../init.php"; ?>
 <?php if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=savedproperty"); } ?>
 
 <?php
@@ -6,17 +6,17 @@
 	if(Input::get('id') && is_numeric(Input::get('id'))){
 		
 		$property_id = Input::get('id');
-		$savedproperty = new SavedProperty();
+		$savedproperty = new Saved();
 		$savedproperty->user_id     = $session->user_id;
 		$savedproperty->property_id = $property_id;
 		
 		// Save the listing to the save list
 		if ($savedproperty->create()) {
-			$session->message('Listing saved successfully');
+			$session->message('Added to saved properties', 'success');
             Redirect::to('index.php');
         }
         else{
-        	$session->message('Could not save the listing');
+        	$session->message('Could not save the listing', 'warning');
             Redirect::to('index.php');
         }
 	}

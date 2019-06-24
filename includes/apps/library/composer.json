@@ -1,0 +1,6 @@
+{
+    "require": {
+        "rakit/validation": "^1.1",
+        "jasongrimes/paginator": "~1.0"
+    }
+}

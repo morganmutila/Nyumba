@@ -3,17 +3,32 @@
 }
 
 html { height: 100%; width: 100%; }
+<<<<<<< HEAD
 body {width: 320px; margin: 0 auto; padding: .8rem; border: 0;  font-size: .9rem; font-family: "Times New Roman";}
+=======
+body { width: 320px; margin: 0 auto; padding: 0 .6rem; border: 0;  font-size: .9rem; font-family: helvetica;}
+>>>>>>> morgan
 
 img { border: none; }
+
+a{
+  color: #1db954;   /*Green from Spotify*/
+  /*color: #15c39a;*/  /*Light green from Grammarly*/
+  text-decoration: none;
+}
 
 ul{
   padding: 0;
   list-style-position: inside;
 }
 
+<<<<<<< HEAD
 #header { height: auto; text-align: left; clear: both;}
 #header h2 { padding: .4rem 0; margin: 0;}
+=======
+#header { height: auto; text-align: left; clear: both; background-color: #fff;margin: 0 -1rem .3rem -1rem;padding: .4rem 1rem;}
+#header h3 { padding: .4rem 0; margin: 0;}
+>>>>>>> morgan
 
 .menu{
   list-style: none;
@@ -24,22 +39,44 @@ ul{
   width: 100%;
 }
 .menu li{
-    display: inline-block;
-    float: left;
-    padding-right: 1rem;
+    display: inline;
+} 
+#header .menu li a{
+  margin-right: 1rem;
+}  
+
+#footer .menu li a{
+  margin: 0 .5rem;
 }    
 
+<<<<<<< HEAD
+=======
+#footer .menu{
+  text-transform: uppercase;
+  font-size: .75rem;  
+  text-align: center;
+}
+
+>>>>>>> morgan
 #main {padding: 0  0 1rem 0; width: 100%;}
 
 input, select{
   font-size: .95rem;
+  height: 2.55rem;
   width: 100%;
   padding: 0.4rem 0.5rem;
+<<<<<<< HEAD
   border-radius: 2px;
   border: 1px solid #ccc;
+=======
+  background-color: #fff;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+>>>>>>> morgan
   margin: 0.3rem 0 1.1rem 0;
   display: block;
 }
+
 textarea{
 	width: 100%;
 }
@@ -49,12 +86,25 @@ input[type=radio], input[type=checkbox]{
   width: auto;
   vertical-align: middle;
 }
+.checkbox-group{
+  height: auto;
+}
 .checkbox-group label{
-	border: 1px solid #ccc;
-	padding:  .3rem 0 .3rem 0.3rem;
-	/*width: 20%;*/
-	display: block;
-	margin-bottom: .3rem;
+  padding: .3rem;
+  display: block;
+  margin: 0 .3rem .3rem 0;
+  width: 48%;
+  float: left;
+  height: 2rem;
+}
+
+.checkbox-group label:last-child{
+  margin-bottom: 2rem;
+}
+
+.checkbox-group strong{
+  clear: both;
+  display: block;
 }
 
 .radio-group {
@@ -72,39 +122,66 @@ input[type=radio], input[type=checkbox]{
 
 button{
 	padding: 0.5rem;
+  height: 2.55rem;
 	font-size: 0.92rem; 
 	color: #000;
 	background-color: #fff;
-  border-radius: 2px;
+  border-radius: 3px;
   border: 1px solid #ccc;
 }
 
-a{
-    color: blue;
-    text-decoration: none;
-}
-
-#main a{
+.properties a{
 	color: #000;
 	text-decoration: none;
 }
-
-
-#main a:hover{
-	color: blue;
+.properties a:hover{
+	color: #1db954;
 }
 
+.listing{
+  margin: 0 0 1.2rem 0;
+  padding: 0;
+  /*border: 1px solid #eee;*/
+  box-shadow: 1px 2px #eee;
+  border-radius: 3px;
+  background-color: #fff;
+  line-height: 1.3rem;
+}
+.listing:after{
+  clear: both;
+}
+.listing:before{
+  clear: both;
+}
+
+.listing img{
+  width: 100%;
+  height: auto;
+}
 .message, .message-info, .message-warning, .message-success, .message-danger{	
+  width: 100%;
   background-color: #f1f1f1;
   color: #333;
-  padding: 0.6rem 1rem;
+  display: table;
+  padding: 0.5rem 0.7rem;
   border-radius: 3px; 
-  font-size: 0.85rem; 
+  font-size: 0.8rem; 
   line-height: 1.5;
+}
+.message > i, .message-info > i, .message-warning > i, .message-success > i, .message-danger > i{ 
+  display: table-cell;
+  width: 10%;
+  vertical-align: text-bottom;
+  padding-right: .2rem;
+}
+
+.message > span, .message-info > span, .message-warning > span, .message-success > span, .message-danger > span{ 
+  display: table-cell;
+  width: 90%;
 }
 
 .message-warning{
-  background-color: #ffe57e;
+  background-color: #fff4ca; /* #ffe57e*/
 }
 
 .message-success{
@@ -112,12 +189,91 @@ a{
 }  
 
 .message-danger{
-  background-color: #ffe8ed;
+  background-color: #fff2f5;
+  color: #f35d5d;
 }
-#pagination{
+
+.text-danger{
+  background-color: transparent;
+  padding: 0;
+  margin: 1.5rem 0;
   text-align: center;
+<<<<<<< HEAD
 }
 
 table td{
   padding: 0;
+=======
+  display: block;
+  color: #f35d5d;
+  width: 100%;
+  font-size: 0.8rem; 
+  line-height: 1.5;
+}
+
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+.pagination > li {
+  display: inline;
+}
+.pagination > li > a,
+.pagination > li > span {
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #333;
+  text-decoration: none;
+  background-color: #fff;
+/*  border: 1px solid #ddd;
+*/}
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+  margin-left: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus {
+  z-index: 2;
+  color: #1db954;
+  /*background-color: #eee;*/
+  /*border-color: #ddd;*/
+}
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  z-index: 3;
+  color: #1db954;
+  cursor: default;
+  font-weight: bold;
+  background-color: #eee;
+  /*border-color: #ddd;*/
+}
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+  color: #777;
+  cursor: not-allowed;
+  background-color: #fff;
+  border-color: #ddd;
+>>>>>>> morgan
 }

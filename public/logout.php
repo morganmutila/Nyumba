@@ -1,6 +1,6 @@
 <?php
 require '../init.php';
-if(!$session->isLoggedIn()){ Redirect::to("login.php");}
+if(!$session->isLoggedIn()){ Redirect::to("index.php");}
 	$session->logout();
-	Redirect::to('index.php');
+	Redirect::to($_SERVER['HTTP_REFERER']);
 ?>

@@ -17,8 +17,7 @@ date_default_timezone_set("Africa/Lusaka");
 
 // Toggle PHP errors with error reporting using the custom error handler function
 ini_set("error_reporting", true);
-$error_reporting  = E_ALL;
-error_reporting($error_reporting);
+error_reporting(E_ALL);
 
 // Flag variable for web site status:
 //Displays the full error stack instead of friendly page
@@ -29,10 +28,17 @@ error_reporting($error_reporting);
 define('DS', DIRECTORY_SEPARATOR);
 // Set the full path to the docroot
 // define('SITE_ROOT', DS.'xampp'.DS.'htdocs'.DS.'ny');
+
 define('SITE_ROOT',     realpath(dirname(__FILE__)));
 define('INCLUDE_PATH',  SITE_ROOT.DS.'includes');
 define('CLASS_PATH',    INCLUDE_PATH.DS.'apps');
-define('UPLOAD_FOLDER', SITE_ROOT.DS.'uploads'.DS.'property');
+define('UPLOAD_FOLDER', "..".DS.'uploads');
+
+// Path for loading external Libraries
+define('LIB_PATH', INCLUDE_PATH.DS.'apps'.DS.'library');
+
+// Path for loading external Packages using Composer
+define('PACKAGE_PATH', LIB_PATH.DS.'vendor'.DS.'autoload.php');
 
 // Include Application configuration script
 require INCLUDE_PATH .DS. 'config.php';
@@ -44,19 +50,29 @@ require INCLUDE_PATH .DS. 'functions.php';
 require INCLUDE_PATH .DS. 'messages.php';
 
 //Include the common classes
-require CLASS_PATH   .DS. "Common.php";
+require CLASS_PATH   .DS. "common.class.php";
 
 //Include Nyumba yanga small classes
-require CLASS_PATH   .DS. "NY.php";
+require CLASS_PATH   .DS. "ny.class.php";
 
 
-// Start the session and initialise $message
+// Start the session, checks Loggin through COOKIE and SESSION values and initialise $message
 $session = new Session();
 $message = $session->message();
 
-//Get the currently logged in user
+
+// Get the currently logged in user
 if($session->isLoggedIn()){
 	$user = User::findById($session->user_id);
 	Session::put("LOCATION", $user->location_id);
-	$session->location = isset($user->location_id) ? $user->location_id : null;
+
+	if(isset($user->location_id) && is_numeric($user->location_id)){
+		$session->location = (int) $user->location_id;
+	}
+	elseif(Session::exists('LOCATION')){
+		$session->location = (int) Session::get('LOCATION');
+	}
+	else{
+		$session->location = null;
+	}
 }
