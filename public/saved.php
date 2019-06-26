@@ -6,8 +6,6 @@ if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=savedproperty");
 	$saved_sql  = "SELECT DATE_FORMAT(saved, '%W, %D %M') AS saved, property_id FROM saved";
 	$saved_sql .= " WHERE user_id = ? ORDER BY saved DESC";
 
-	// $saved_sql = "select * from saved where user_id = ".$user->id;
-
 	// Get all the saved properties for the user
 	$favourites = Saved::findBySql($saved_sql, array($user->id));
 
@@ -50,7 +48,7 @@ if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=savedproperty");
 						echo number_format($property->size)    . " Sqft";
 						echo "</div>";
 						echo "<div><a href=\"property.php?id={$property->id}\" style=\"color:#777;font-size:.85rem;\">";
-						echo "For ".ucfirst($property->market).", ". $property->Location();
+						echo "For ".ucfirst($property->market)." in ". $property->Location();
 						echo "</a><br>";
 						echo "<small>Saved on ".$fav->saved."</small></div>";
 					?>

@@ -284,7 +284,6 @@ CREATE TABLE IF NOT EXISTS `nyumba_yanga`.`saved` (
   PRIMARY KEY (`id`),
   INDEX `user_property_id` USING BTREE (`property_id`, `user_id`) ,
   INDEX `user_id_idx` (`user_id` ASC) ,
-  UNIQUE INDEX `property_id_UNIQUE` (`property_id` ASC) ,
   CONSTRAINT `fk_user_id_3`
     FOREIGN KEY (`user_id`)
     REFERENCES `nyumba_yanga`.`users` (`id`)
