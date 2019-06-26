@@ -94,48 +94,6 @@ $page_title = "Sign up - Nyumba Yanga";
 <?php include_layout_template('header.php'); ?>
 
 <h2 class="text-center mb-4 font-weight-bold" style="text-align: center;margin-bottom: 0;">Join Nyumba Yanga</h2>
-<<<<<<< HEAD
-<p style="text-align: center;">Nyumba yanga is home to over&nbsp;<?php echo Property::total();?>,000 Houses, Apartments, Flats and Town House's. We are working together to host property listings with owners, renters and buyers.</p>
-<form action="signup.php" method="post" autocomplete="off">
-
-
-    <!-- <p style="text-align: center;"><button type="button">Sign up with Facebook</button></p>
-    <p style="text-align: center;">--------------- OR --------------</p> -->
-    <?php echo output_message($message, "danger"); ?>
-    <div class="form-group col-6">    
-        <label for="first_name" class="sr-only">First Name</label>
-        <input type="text" name="first_name" class="form-control" value="<?php echo escape(Input::get('first_name')); ?>" placeholder="First name"/>
-    </div>
-
-    <div class="form-group col-6">    
-        <label for="last_name" class="sr-only">Last Name</label>
-        <input type="text" name="last_name" class="form-control" value="<?php echo escape(Input::get('last_name')); ?>" placeholder="Last name"/>
-    </div>
-
-    <div class="form-group">
-        <label for="phone" class="sr-only">Phone Number</label>                
-        <input type="text" name="phone" class="form-control" value="<?php echo escape(Input::get("phone")); ?>" placeholder="Phone Number"/>
-    </div>
-
-    <div class="form-group">
-        <label for="email" class="sr-only">Email Address</label>                
-        <input type="text" name="email" class="form-control" value="<?php echo escape(Input::get("email")); ?>" placeholder="Email"/>
-    </div>
-
-    <div class="form-group">    
-        <label for="password" class="sr-only">Password</label>
-        <input type="password" name="password" class="form-control" placeholder="Create password"/>
-    </div>
-<p class="text-center text-muted py-2 px-4 small">By clicking Sign up, you agree to Nyumba Yanga terms of service and privacy policy</p>
-    <div class="form-group mb-2"> 
-        <input type="hidden" name="token" value="<?php echo Session::generateToken(); ?>">
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold">Sign up</button>
-    </div>  
-    <p class="my-3 text-center">Already have an account?<a href="login.php" class="small text-muted">&nbsp;Log in</a></p>  
-</form>
-
-<?php include_layout_template('footer.php'); ?>
-=======
 
 <p style="text-align: center;">Join Nyumba yanga and see Houses, Apartments, Flats and Town House's on rent and sale by property owners.</p>
 
@@ -160,4 +118,3 @@ $page_title = "Sign up - Nyumba Yanga";
     // Display the generated Form
     echo $html_form;
 ?>
->>>>>>> morgan

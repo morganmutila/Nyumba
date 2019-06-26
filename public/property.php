@@ -30,14 +30,8 @@ if(!$property) {
 	echo $property->baths . " bathrooms<br>"; 
 	echo $property->address . " ". $property->location() ."<br>";
 	echo $property->type. " for ".$property->market."<br>";
-<<<<<<< HEAD
-	echo "Listed by: ".$property->propertyUser()."<br>";
-	echo "<p>Views: ".$property->views."&nbsp;&nbsp; Status: <strong>".$property->propertyStatus()."</strong></p>";
-=======
 	echo "Listed by: ".$property->manager()."<br>";
 	echo "<p>Views: ".$property->views."&nbsp;&nbsp; Status: <strong>".$property->status()."</strong></p>";
->>>>>>> morgan
-
 	echo "<h4 style=\"margin-bottom: 0;\">Description</h4>";
 	echo"<p>".ucfirst($property->description)."</p>";
  ?>
