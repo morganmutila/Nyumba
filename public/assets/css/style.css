@@ -3,11 +3,7 @@
 }
 
 html { height: 100%; width: 100%; }
-<<<<<<< HEAD
-body {width: 320px; margin: 0 auto; padding: .8rem; border: 0;  font-size: .9rem; font-family: "Times New Roman";}
-=======
 body { width: 320px; margin: 0 auto; padding: 0 .6rem; border: 0;  font-size: .9rem; font-family: helvetica;}
->>>>>>> morgan
 
 img { border: none; }
 
@@ -21,14 +17,8 @@ ul{
   padding: 0;
   list-style-position: inside;
 }
-
-<<<<<<< HEAD
-#header { height: auto; text-align: left; clear: both;}
-#header h2 { padding: .4rem 0; margin: 0;}
-=======
 #header { height: auto; text-align: left; clear: both; background-color: #fff;margin: 0 -1rem .3rem -1rem;padding: .4rem 1rem;}
 #header h3 { padding: .4rem 0; margin: 0;}
->>>>>>> morgan
 
 .menu{
   list-style: none;
@@ -49,15 +39,12 @@ ul{
   margin: 0 .5rem;
 }    
 
-<<<<<<< HEAD
-=======
 #footer .menu{
   text-transform: uppercase;
   font-size: .75rem;  
   text-align: center;
 }
 
->>>>>>> morgan
 #main {padding: 0  0 1rem 0; width: 100%;}
 
 input, select{
@@ -65,14 +52,9 @@ input, select{
   height: 2.55rem;
   width: 100%;
   padding: 0.4rem 0.5rem;
-<<<<<<< HEAD
-  border-radius: 2px;
-  border: 1px solid #ccc;
-=======
   background-color: #fff;
   border-radius: 3px;
   border: 1px solid #ddd;
->>>>>>> morgan
   margin: 0.3rem 0 1.1rem 0;
   display: block;
 }
@@ -198,12 +180,6 @@ button{
   padding: 0;
   margin: 1.5rem 0;
   text-align: center;
-<<<<<<< HEAD
-}
-
-table td{
-  padding: 0;
-=======
   display: block;
   color: #f35d5d;
   width: 100%;
@@ -275,5 +251,4 @@ table td{
   cursor: not-allowed;
   background-color: #fff;
   border-color: #ddd;
->>>>>>> morgan
 }

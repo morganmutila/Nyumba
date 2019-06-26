@@ -145,17 +145,6 @@ function search_filters($price_filters, $beds_filters){
     // endif;
 }
 
-function NY_SEARCH_ENGINE(){
-    $html  = "<form action=\"search.php\" method=\"GET\" style=\"width:100%;margin:0;\">";
-    $html .= "    <table style=\"width: 100%;\">";
-    $html .= "        <tr>";
-    $html .= "            <td><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"width:100%;margin:0;\"></td>";
-    $html .= "            <td><button type=\"submit\" style=\"width: 100%;\">Search</button></td>";
-    $html .= "        </tr>";
-    $html .= "    </table>";
-    $html .= "</form>";
-    return $html;
-}
 
 function pre($value){
     echo '<pre>';
@@ -393,3 +382,26 @@ function amount_format($amount = '0', $symbol = 'K') {
     }
     return $amount;
 }
+
+function fav_add($property_id=0){
+    global $session;
+
+    if ($session->isLoggedIn()){
+        return '<a href="'.$_SERVER['PHP_SELF'].'?id=property_id" style="float:right;padding:.5rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
+    }
+    else{
+        return '<a href="login.php?redirect=saved" style="float:right;padding:.5rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
+    }
+}
+
+function fav_remove($property_id=0){
+    global $session;
+
+    if ($session->isLoggedIn()){
+        return '<a href="'.$_SERVER['PHP_SELF'].'?id=property_id" style="float:right;padding:.5rem;color:#1db954;\"><i class=\"mdi mdi-heart mdi-24px\"></i></a>';
+    }
+    else{
+        return '<a href="login.php?redirect=saved" style="float:right;padding:.5rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
+    }
+}
+
