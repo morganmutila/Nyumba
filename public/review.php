@@ -1,5 +1,6 @@
 <?php 
-require '../init.php';
+include '../init.php';
+$session->comfirm_logged_in("login.php");
 
 if(!Input::get('id')) {
   Redirect::to('index.php');

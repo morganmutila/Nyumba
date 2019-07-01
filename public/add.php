@@ -1,22 +1,27 @@
 <?php 
 require '../init.php';
-require LIB_PATH.DS.'formr'.DS.'class.formr.php';
-require PACKAGE_PATH;
-if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=addproperty"); } 
-
-
-$page_title = "List property";
+include PACKAGE_PATH;
+$session->comfirm_logged_in("login.php?redirect=addproperty");
 
 use Rakit\Validation\Validator;
 $validator = new Validator;
 
+$sql = "SELECT * FROM property WHERE status = ? AND user_id = ? LIMIT 1";
+
+$pending_listing = Property::findBySql($sql, [1, $user->id]);
+
+if(count($pending_listing) > 0){
+    $session->message("You have an unfinished listing, complete the listing to continue");
+    Redirect::to("properties.php");   
+}
 
 if(Input::exists()){
 
     $validation = $validator->make($_POST, [
         'property_type'     => 'required',
         'location'          => 'required',
-        'market_name'       => 'required'
+        'market_name'       => 'required',
+        'property_address'  => 'min:3'
     ]);
 
     $validation->setAliases([
@@ -26,22 +31,21 @@ if(Input::exists()){
     ]);
 
     $validation->setMessages([
-        'property_type:required' => 'Please tell us the type of property you are listing',
-        'location:required'      => 'Specify where your property is located',
-        'required'               => ':attribute can not be blank'
+        'property_type:required' => 'Please tell us the type of property you are listing.',
+        'location:required'      => 'Specify where your property is located.',
+        'market_name:required'   => 'Tell us the type of market you are listing.',
+        'property_address:min'   => 'The minimum characters in the :attribute or name is 3'
     ]);
 
-    // Run the validation method
+    // run the validation method
     $validation->validate();
 
     if($validation->fails()) {
         // handling errors
         $errors  = $validation->errors();
-        $message = implode(", ", $errors->firstOfAll());
     }
     else{
         $property = new Property;
-
         $property->user_id 			= (int)    $session->user_id;
         $property->location_id  	= (int)    Input::get('location');
         $property->address     		= (string) Input::get('property_address');
@@ -57,88 +61,115 @@ if(Input::exists()){
         $property->photo            = "";
         $property->contact_number   = $user->phone;
         $property->contact_email    = $user->email;
-        $property->contact_name	    = $user->fullName();
+        $property->contact_name     = $user->fullName();
         $property->available        = "";
         $property->reference        = (string) rand();
+        $property->status           = (int)    1;
         $property->units            = (int)    1;
         $property->views            = (int)    0;
         $property->flags            = (int)    0;
         $property->available    	= "";
         $property->listed_by        = (int)    1;
         $property->market     		= (string) strtolower(Input::get('market_name'));
+        $property->added            = "";
         $property->status           = (int)    1;
-
-
-    	if($property && $property->create()){
-			// Add the property and re-direct
-            $build_url = rawurlencode("list.php")."?property=".urlencode($property->id)."&action=".urlencode('description');
+    	
+        if($property->create()){
+            // Add the property and re-direct            
+            Session::put('LIST_PROPERTY_ID', $property->id);
+            $build_url = rawurlencode("list.php");
             Redirect::to($build_url);
-        } else{
+        }
+        else{
             $message = "Oops! could not add your property, something went wrong, please try again";
         }
-    }
+    }    
 }
 
+$page_title = "Add your property";
 ?>
 <?php include_layout_template('header.php'); ?>
 
 	<h2>Add your property</h2>
 
-    <?php
-    // Initialise Formr
-    $form = new Formr('bootstrap');
- 
-    $form->html5   = true; 
-    $form->method  = 'POST';
-    $form->action  = "add.php";
+    <?php echo output_message($message); ?>
 
-    // Property Type array
-    $property_types = [
-        "House"                     => "House",
-        "Flat"                      => "Flat",
-        "Apartment"                 => "Apartment",
-        "Semi-detached house"       => "Semi-detached",
-        "Townhouse"                 => "Townhouse",
-        "Condo"                     => "Condo"
-    ];
+  	<form action="add.php" method="POST" accept-charset="utf-8">
+  		<label class="control-label" for="property_type">Property Type</label>
+		<?php
 
-    // Property Type Dynamic Select
-    $property_type_data = [
-        'type'      => 'select',
-        'name'      => 'property_type',
-        'label'     => 'Property Type',
-        'value'     =>  Input::get('property_type'),
-        'id'        => 'property_type',
-        'string'    =>  '',
-        'selected'  => 'Please select --',
-        'options'   => $property_types
-    ];
+            // Property Type array
+            $property_types = [
+                "House"                     => "House",
+                "Flat"                      => "Flat",
+                "Apartment"                 => "Apartment",
+                "Semi-detached house"       => "Semi-detached house",
+                "Townhouse"                 => "Townhouse",
+                "Condo"                     => "Condo"
+            ];
 
-    // Location Dynamic Select
-    $location_data = [
-        'type'      => 'select',
-        'name'      => 'location',
-        'label'     => 'Location',
-        'value'     =>  Input::get('location'),
-        'id'        => 'location',
-        'string'    =>  '',
-        'selected'  => 'Please select --',
-        'options'   => array_flip(Location::AllLocations())
-    ];
+            $select_property_type = "<select name=\"property_type\" id=\"property_type\">";
+                $select_property_type .= "<option value=\"\">Please select --</option>";
+                foreach ($property_types as $type => $value) {
+                    $select_property_type .= "<option value=\"$value\" ";
+                        if(Input::get('property_type') == $value){
+                            $select_property_type .= "selected";
+                        }
+                    $select_property_type .= ">".$type."</option>";
+                }
+            $select_property_type .= "</select>";
+            echo $select_property_type;
+		?>
+        <?php 
+            if(isset($validation) && $errors->has('property_type'))
+            echo "<div class=\"text-danger\" style=\"margin-top:-.8rem;\">". $errors->first('property_type') ."</div>";
+        ?>
 
-    $html_form  = output_message($message, "danger");  
+        <label class="control-label" for="location">Location</label>
+		<?php
+	        $select_location = "<select name=\"location\" id=\"location\">";
+	            $select_location .= "<option value=\"\">Please select --</option>";
+	            foreach (Location::AllLocations() as $key => $value) {
+	                $select_location .= "<option value=\"$value\" ";
+	                    if(Input::get('location') == $value || $session->location == $value){
+	                        $select_location .= "selected";
+	                    }
+	                $select_location .= ">".$key."</option>";
+	            }
+	        $select_location .= "</select>";
+	        echo $select_location;
+		?>
+        <?php 
+            if(isset($validation) && $errors->has('location'))
+            echo "<div class=\"text-danger\" style=\"margin-top:-.8rem;\">". $errors->first('location') ."</div>";
+        ?>
+        
+        <label class="control-label" for="property_address">Property Name / Address</label>
+        <input type="text" id="property_address" name="property_address" value="<?php echo Input::get('address');?>" placeholder="Address or name"/>
+        <?php 
+            if(isset($validation) && $errors->has('property_address'))
+            echo "<div class=\"text-danger\" style=\"margin-top:-.8rem;\">". $errors->first('property_address') ."</div>";
+        ?>
 
-    $html_form .= $form->form_open();
-    $html_form .= $form->input_select($property_type_data);
-    $html_form .= $form->input_select($location_data);
-    $html_form .= $form->input_text('property_address', 'Property Name / Address', escape(Input::get('address')),'property_address', 'placeholder="Address or name"');
-    $html_form .= $form->input_radio_inline('market_name', 'For Rent', 'rent', 'rent', '','', 'checked');
-    $html_form .= $form->input_radio_inline('market_name', 'For Sale', 'sale', 'sale');
-    $html_form .= $form->input_submit('submit', '', 'Add property', '', 'class="btn-success btn-block font-weight-bold"');
-    $html_form .= $form->form_close();
 
-    // Display the generated Form
-    echo $html_form;
-?>
+        <div id="_rent" class="radioradio">
+            <label class="control-label" for="rent">
+                <input type="radio" name="market_name" id="rent" value="rent" checkbox-inline="inline" <?php if(Input::get('market_name') == "rent") echo "checked";?> > For Rent
+            </label>
+            &nbsp;&nbsp;&nbsp;
+            <label class="control-label" for="sale">
+                <input type="radio" name="market_name" id="sale" value="sale" checkbox-inline="inline" <?php if(Input::get('market_name') == "sale") echo "checked";?> > For Sale
+            </label>
+        </div>
+        <?php 
+            if(isset($validation) && $errors->has('market_name'))
+            echo "<div class=\"text-danger\" style=\"margin-top:-.3rem;\">". $errors->first('market_name') ."</div>";
+        ?>
+
+        <div class="form-group">
+            <label class="sr-only" for="submit"></label>
+            <button type="submit" id="submit" class="btn btn-success btn-block font-weight-bold">Add property</button>
+        </div>
+  	</form>
 
 <?php include_layout_template('footer.php'); ?>

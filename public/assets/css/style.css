@@ -3,13 +3,12 @@
 }
 
 html { height: 100%; width: 100%; }
-body { width: 320px; margin: 0 auto; padding: 0 .6rem; border: 0;  font-size: .9rem; font-family: helvetica;}
+body { /*width: 320px;*/width: 350px; margin: 0 auto; padding: 0 .6rem; border: 0;  font-size: .9rem; font-family: helvetica;}
 
 img { border: none; }
 
 a{
   color: #1db954;   /*Green from Spotify*/
-  /*color: #15c39a;*/  /*Light green from Grammarly*/
   text-decoration: none;
 }
 
@@ -47,7 +46,7 @@ ul{
 
 #main {padding: 0  0 1rem 0; width: 100%;}
 
-input, select{
+input, select, form button{
   font-size: .95rem;
   height: 2.55rem;
   width: 100%;
@@ -123,10 +122,11 @@ button{
 .listing{
   margin: 0 0 1.2rem 0;
   padding: 0;
-  /*border: 1px solid #eee;*/
-  box-shadow: 1px 2px #eee;
+  /*box-shadow: 1px 2px #eee;*/
+  background: #FFF;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  cursor: pointer;
   border-radius: 3px;
-  background-color: #fff;
   line-height: 1.3rem;
 }
 .listing:after{
@@ -179,7 +179,7 @@ button{
   background-color: transparent;
   padding: 0;
   margin: 1.5rem 0;
-  text-align: center;
+  text-align: left;
   display: block;
   color: #f35d5d;
   width: 100%;

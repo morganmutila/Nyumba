@@ -1,10 +1,9 @@
 <?php 
-require '../init.php';
-require LIB_PATH.DS.'formr'.DS.'class.formr.php';
-require PACKAGE_PATH;
+include '../init.php';
+include LIB_PATH.DS.'formr'.DS.'class.formr.php';
+include PACKAGE_PATH;
 
-if($session->isLoggedIn()){ Redirect::home();}
-
+if($session->isLoggedIn()) Redirect::to("index.php");
 
 use Rakit\Validation\Validator;
 $validator = new Validator;
@@ -48,13 +47,13 @@ $page_title = "Login - Nyumba Yanga";
 <?php if(Input::get('redirect') == "addproperty"){?>
     <h2 class="text-center mb-4 font-weight-bold" style="text-align: center"><!-- First thing first. Join Nyumba yanga and list your property --> Start by Joining Nyumba yanga</h2>
     <p style="text-align: center;">-----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Already have an account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----</p>
-    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in to Nyumba yanga</h2>
+    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in to NyumbaYanga</h2>
 <?php } 
 elseif(Input::get('redirect') == "savedproperty" || Input::get('redirect') == "saved"){?>
     <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in or Sign up to save a listing</h2>  
 <?php }
 else {?>
-    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in to Nyumba yanga</h2>
+    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in to NyumbaYanga</h2>
 <?php } ?>
 
 
@@ -71,7 +70,7 @@ else {?>
     $html_form .= $form->input_checkbox('rememberme',  'Remember me', 'on','rememberme');
     $html_form .= $form->input_hidden('token', Session::generateToken());
     $html_form .= $form->input_submit('submit', '', 'LOG IN', 'sign_up', 'class="btn-success btn-block font-weight-bold"');
-        $html_form .= '<p class="my-3 text-center" style="text-align: center;">By logging in you agree to our<br>Terms and Privacy Policy</p>'; 
+    $html_form .= '<p class="my-3 text-center" style="text-align: center;">By logging in you agree to our<br>Terms and Privacy Policy</p>'; 
     $html_form .= ' <ul class="menu" style="text-align: center;">
                         <li><a href="#" class="small text-muted">Forgot password?</a></li>
                         <li><strong>·</strong></li>

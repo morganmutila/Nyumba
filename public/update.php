@@ -1,7 +1,6 @@
-<?php require '../init.php';
-if($session->isLoggedIn()){ Redirect::to("index.php");}
-
-$page_title = "Update";
+<?php
+include '../init.php';
+$session->comfirm_logged_in("index.php");
 
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))){
@@ -38,6 +37,8 @@ if(Input::exists()){
         }
     }
 }
+
+$page_title = "Update";
 
 ?>
 

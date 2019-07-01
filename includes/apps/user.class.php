@@ -42,6 +42,7 @@ class User extends DBO{
         }
     }
 
+
     public function fullName(){
         if(isset($this->first_name) && isset($this->last_name)){
             return $this->first_name . " " . $this->last_name;

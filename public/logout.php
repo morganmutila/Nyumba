@@ -1,6 +1,9 @@
 <?php
-require '../init.php';
-if(!$session->isLoggedIn()){ Redirect::to("index.php");}
-	$session->logout();
-	Redirect::to($_SERVER['HTTP_REFERER']);
+include '../init.php';
+$session->comfirm_logged_in("index.php");
+
+$session->logout();
+Redirect::prevPage();
+
+
 ?>

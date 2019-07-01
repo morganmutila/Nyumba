@@ -16,8 +16,8 @@
             <ul class="menu">
                 <li><a href="index.php" style="margin-left: 0">Home</a></li>
                 <li><a href="add.php">List Property</a></li>
-                <li><a href="login.php">Log In</a></li>
                 <li><a href="signup.php">Sign Up</a></li>
+                <li><a href="login.php">Log In</a></li>
             </ul>
         <?php else: ?>
             <ul class="menu">

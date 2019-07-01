@@ -1,21 +1,23 @@
-<?php
-require_once("../init.php");
-if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=savedproperty"); }
+<?php 
+include '../init.php';
+$session->comfirm_logged_in("login.php?redirect=savedproperty");
 
+$saved_sql  = "SELECT DATE_FORMAT(saved, '%W, %D %M') AS saved, property_id FROM saved";
+$saved_sql .= " WHERE user_id = ? ORDER BY id DESC";
 
-	$saved_sql  = "SELECT DATE_FORMAT(saved, '%W, %D %M') AS saved, property_id FROM saved";
-	$saved_sql .= " WHERE user_id = ? ORDER BY saved DESC";
+// Get all the saved properties for the user
+$favourites = Saved::findBySql($saved_sql, array($user->id));
 
-	// Get all the saved properties for the user
-	$favourites = Saved::findBySql($saved_sql, array($user->id));
+$page_title = "Saved Properties";	
 
-	$page_title = "Saved Properties";	
 ?>
 
-
 <?php include_layout_template('header.php'); ?>
-	<?php echo output_message($message); ?>
+
 	<h2>Saved Properties</h2>
+
+	<?php echo output_message($message); ?>
+	
 	<div class="properties">
 		<?php 
 		// List all the property that the user saved
@@ -24,7 +26,7 @@ if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=savedproperty");
 				$sql = "SELECT * FROM property WHERE id = ?";
 				$properties = Property::findBySql($sql, array($fav->property_id));
 				foreach ($properties as $property): ?>
-				<div class="listing" style="border: none;">
+				<div class="listing" style="border:none;padding:.5rem">
 					<div style=" margin:.5rem .7rem 0 0;position:relative;margin-bottom:1rem;float:left;">
 						<img src="<?php echo $property->photo();?>", style="width:100px;"/>
 						<?php
@@ -32,7 +34,7 @@ if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=savedproperty");
 							 	echo "<div style=\"float:left\">";
 								echo "</div>";	
 								if(isset($user)){
-								echo "<a href=\"listremove.php?id=$property->id\" style=\"float:left;padding:.3rem;color:#1db954;\"><i class=\"mdi mdi-heart mdi-24px\"></i></a>";
+								echo "<a href=\"list_unsave.php?id=$property->id\" style=\"float:left;padding:.3rem;color:#1db954;\"><i class=\"mdi mdi-heart mdi-24px\"></i></a>";
 								}
 							echo '</div>';
 						?>
@@ -59,7 +61,7 @@ if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=savedproperty");
 		<?php endforeach ?>
 		<?php if(!count($favourites)){?>
 				<div style="padding: 1rem 0.3rem;">
-					You currently do not have any saved properties
+					You haven't saved any properties yet.
 					<p>Click save to add a listing to saved property</p>
 				</div>
 		<?php } ?>

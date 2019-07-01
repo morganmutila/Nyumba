@@ -1,6 +1,6 @@
 <?php
 
-// For loading un declared classes
+// Auto load classes in case they have not been required
 function my_autoload ($class_name){
     if(preg_match("/\A\w+\Z/", $class_name)){
         $path = CLASS_PATH .DS. strtolower($class_name) . ".class.php";
@@ -13,7 +13,6 @@ function my_autoload ($class_name){
     }    
 }
 
-// Auto load classes in case they have not been required
 spl_autoload_register("my_autoload");
 
 function NY_SEARCH_ENGINE(){
@@ -145,7 +144,6 @@ function search_filters($price_filters, $beds_filters){
     // endif;
 }
 
-
 function pre($value){
     echo '<pre>';
     print_r($value);
@@ -208,7 +206,7 @@ function time_ago($time){
 
         if( $d >= 1 ){
             $t = round( $d );
-            return strtoupper($t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago');
+            return ucfirst($t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago');
         }
 
     }
@@ -218,11 +216,14 @@ function text_to_datetime($format){
     return strftime($format, time());
 }
 
+function mysql_datetime(){
+    return text_to_datetime(Config::get('mysql_date_time_format'));
+}
+
 function datetime_to_text($datetime="") {
   $unixdatetime = strtotime($datetime);
   return strftime("%B %d, %Y at %I:%M %p", $unixdatetime);
-}
-// End Time functions
+} // End Time functions
 
 function page_title($page_title=""){
     if(empty($page_title)  && !isset($page_title)){
@@ -339,7 +340,7 @@ function generate_form_select($name="", $empty_select=true, $key_values=array())
     if(count($key_values)){
         $output = "<select name=\"{$name}\">";
             if ($empty_select) {
-                $output .= "<option>Please select --</option>";
+                $output .= "<option value=\"\">Please select --</option>";
             }
             foreach ($key_values as $key => $value) {
                 $output .= "<option value=\"$value\" ";
@@ -387,10 +388,7 @@ function fav_add($property_id=0){
     global $session;
 
     if ($session->isLoggedIn()){
-        return '<a href="listsave.php?id='.$property_id.'" style="float:right;padding:.5rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
-    }
-    else{
-        return '<a href="login.php?redirect=saved" style="float:right;padding:.5rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
+        return '<a href="list_save.php?id='.$property_id.'"style="color:#fff;float:right;padding:.4rem;background:#0000004f;height:2.1rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
     }
 }
 
@@ -398,10 +396,6 @@ function fav_remove($property_id=0){
     global $session;
 
     if ($session->isLoggedIn()){
-        return '<a href="listremove.php?id='.$property_id.'" style="float:right;padding:.5rem;color:#1db954;"><i class="mdi mdi-heart mdi-24px"></i></a>';
-    }
-    else{
-        return '<a href="login.php?redirect=saved" style="float:right;padding:.5rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
+        return '<a href="list_unsave.php?id='.$property_id.'" style="color:#01e675;float:right;padding:.4rem;background:#0000004f;height:2.1rem;"><i class="mdi mdi-heart mdi-24px"></i></a>';
     }
 }
-

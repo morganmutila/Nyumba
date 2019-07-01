@@ -1,94 +1,95 @@
-<?php require '../init.php';
+<?php
+include '../init.php';
 
-	//Redirect if a search query has not been set
-	if(Input::get('q') == false){
-		Session::flash('invalid_location', "Enter a location to search for property listings");
-		Redirect::to('index.php');
-	}
+//Redirect if a search query has not been set
+if(Input::get('q') == false){
+	Session::flash('invalid_location', "Enter a location to search for property listings");
+	Redirect::home();
+}
 
-	// Store the search query string into a variable
-	$search_query = escape(trim(Input::get('q')));
+// Store the search query string into a variable
+$search_query = escape(trim(Input::get('q')));
 
-	//Query to find the Location
-	$sql  = "SELECT * FROM location ";
-	$sql .= " WHERE location LIKE ? LIMIT 1";
+//Query to find the Location
+$sql  = "SELECT * FROM location ";
+$sql .= " WHERE location LIKE ? LIMIT 1";
 
-	if($location = Location::findFirst($sql, array($search_query."%"))){			
-		//Found location name and ID
-		$found_location    = ucwords($location->location);
-		$found_location_id = (int) $location->id;
-	}else{
-		Session::flash('invalid_location', "'".$search_query."' is not in our database");
-		Redirect::to('index.php');
-	}
-
-
-	//Get the sort by from the Query string if any
-	if(Input::get('sortby')) {
-		Session::put('SORT_BY', escape(Input::get('sortby')));
-		$sortby = Session::get('SORT_BY');
-	}elseif(Session::exists('SORT_BY') == true){
-		$sortby = Session::get('SORT_BY');
-	}
-	else{
-		Session::put('SORT_BY', Config::get('default_sortby'));
-		$sortby = Config::get('default_sortby');
-	}
+if($location = Location::findFirst($sql, array($search_query."%"))){			
+	//Found location name and ID
+	$found_location    = ucwords($location->location);
+	$found_location_id = (int) $location->id;
+}else{
+	Session::flash('invalid_location', "'".$search_query."' is not in our database");
+	Redirect::home();
+}
 
 
-	//Get the sort by from the Query string if any
-	if(Input::get('price') && Input::get('beds')) {
-		// Put the GET values in a SESSION
-		Session::put('SRCH_FILTER_PRICE', escape(trim(Input::get('price'))));
-		Session::put('SRCH_FILTER_BEDS' , escape(trim(Input::get('beds'))));
-
-		// Assign variables from the SESSION values
-		$filter_price = $_SESSION['SRCH_FILTER_PRICE'];
-		$filter_beds  = $_SESSION['SRCH_FILTER_BEDS'];
-
-	} 
-	elseif(Session::exists('SRCH_FILTER_PRICE') && Session::exists('SRCH_FILTER_BEDS')){
-		$filter_price = Session::get('SRCH_FILTER_PRICE');
-		$filter_beds  = Session::get('SRCH_FILTER_BEDS');
-	}
-	else{
-		Session::put('SRCH_FILTER_PRICE', escape(trim(Config::get('default_srch_filter/filter_price'))));
-		Session::put('SRCH_FILTER_BEDS' , escape(trim(Config::get('default_srch_filter/filter_beds'))));
-		$filter_price = escape(Config::get('default_srch_filter/filter_price'));
-		$filter_beds  = escape(Config::get('default_srch_filter/filter_beds'));
-	}
+//Get the sort by from the Query string if any
+if(Input::get('sortby')) {
+	Session::put('SORT_BY', escape(Input::get('sortby')));
+	$sortby = Session::get('SORT_BY');
+}elseif(Session::exists('SORT_BY') == true){
+	$sortby = Session::get('SORT_BY');
+}
+else{
+	Session::put('SORT_BY', Config::get('default_sortby'));
+	$sortby = Config::get('default_sortby');
+}
 
 
-	// Get the total number of property from that Location
-	$sql_count  = "SELECT COUNT(*) AS count FROM property WHERE status >= ? AND location_id = ? ";	
-	$sql_count .= search_filters($filter_price, $filter_beds);
-	DB::getInstance()->query($sql_count, array(2, $found_location_id));
+//Get the sort by from the Query string if any
+if(Input::get('price') && Input::get('beds')) {
+	// Put the GET values in a SESSION
+	Session::put('SRCH_FILTER_PRICE', escape(trim(Input::get('price'))));
+	Session::put('SRCH_FILTER_BEDS' , escape(trim(Input::get('beds'))));
 
-	// Number of property found
-	$property_count = DB::getInstance()->result('count');
+	// Assign variables from the SESSION values
+	$filter_price = $_SESSION['SRCH_FILTER_PRICE'];
+	$filter_beds  = $_SESSION['SRCH_FILTER_BEDS'];
 
-	// ACTIVATE PAGINATION
-	// 1. the current page number ($current_page)
-	$page = Input::get('page') ? (int) Input::get('page') : 1;
-
-	// 2. records per page ($per_page)
-	$per_page = Config::get('records_per_page');
-
-	// 3. total record count ($total_count)
-	$total_count = $property_count;
-
-	$pagination = new Pagination($page, $per_page, $total_count);
-
-	// Build the query for found property
-	$sql  = "SELECT * FROM property WHERE status >= ? AND location_id = ? ";	
-	$sql .=   search_filters($filter_price, $filter_beds);
-	$sql .= " ORDER BY ". sortby_filters(Session::get('SORT_BY'));
-	$sql .= " LIMIT {$per_page} ";
-	$sql .= " OFFSET {$pagination->offset()}";
-	$properties = Property::findBySql($sql, array(1, $found_location_id));
+} 
+elseif(Session::exists('SRCH_FILTER_PRICE') && Session::exists('SRCH_FILTER_BEDS')){
+	$filter_price = Session::get('SRCH_FILTER_PRICE');
+	$filter_beds  = Session::get('SRCH_FILTER_BEDS');
+}
+else{
+	Session::put('SRCH_FILTER_PRICE', escape(trim(Config::get('default_srch_filter/filter_price'))));
+	Session::put('SRCH_FILTER_BEDS' , escape(trim(Config::get('default_srch_filter/filter_beds'))));
+	$filter_price = escape(Config::get('default_srch_filter/filter_price'));
+	$filter_beds  = escape(Config::get('default_srch_filter/filter_beds'));
+}
 
 
-	$number_of_homes = 458;
+// Get the total number of property from that Location
+$sql_count  = "SELECT COUNT(*) AS count FROM property WHERE status >= ? AND location_id = ? ";	
+$sql_count .= search_filters($filter_price, $filter_beds);
+DB::getInstance()->query($sql_count, array(2, $found_location_id));
+
+// Number of property found
+$property_count = DB::getInstance()->result('count');
+
+// ACTIVATE PAGINATION
+// 1. the current page number ($current_page)
+$page = Input::get('page') ? (int) Input::get('page') : 1;
+
+// 2. records per page ($per_page)
+$per_page = Config::get('records_per_page');
+
+// 3. total record count ($total_count)
+$total_count = $property_count;
+
+$pagination = new Pagination($page, $per_page, $total_count);
+
+// Build the query for found property
+$sql  = "SELECT * FROM property WHERE status >= ? AND location_id = ? ";	
+$sql .=   search_filters($filter_price, $filter_beds);
+$sql .= " ORDER BY ". sortby_filters(Session::get('SORT_BY'));
+$sql .= " LIMIT {$per_page} ";
+$sql .= " OFFSET {$pagination->offset()}";
+$properties = Property::findBySql($sql, array(1, $found_location_id));
+
+
+$number_of_homes = 458;
 ?>
 
 <?php include_layout_template('header.php'); ?>
@@ -149,10 +150,11 @@
 
 <?php echo output_message($message, "success"); ?>
 <br><br>
+
 <div class ="properties">
 	<?php foreach ($properties as $property):?>
 		<div class="listing">
-			<div style=" margin: 0; position: relative;margin-bottom: 1rem;">
+			<div style=" margin:0;position:relative;">
 				<img src="<?php echo $property->photo();?>"/>
 				<?php
 				    echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';
@@ -161,37 +163,37 @@
 					 			echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span><br>";
 							}
 							if(end_post_date($property->added)){
-								echo "<span style=\"color:#fff;font-size:0.75rem;float:left;line-height:1rem;background-color: #333333b0;padding:0 .3rem;\">".time_ago($property->added)."</span>";
+								echo "<span style=\"float:left;background:rgba(0,0,0,.54);color:#FFF;padding: 5px 15px;font-size:12px;\">".time_ago($property->added)."</span>";
 							}
 						echo "</div>";	
 						if(isset($user)){
-						echo ($user->SavedProperty($property->id)) ?
-								"<a href=\"listremove.php?id=$property->id\" style=\"float:right;padding:.5rem;color:#1db954;\"><i class=\"mdi mdi-heart mdi-24px\"></i></a>":
-								"<a href=\"listsave.php?id=$property->id\" style=\"float:right;padding:.5rem;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
+							echo ($user->savedProperty($property->id)) ? fav_remove($property->id) : fav_add($property->id);		
 						}else{
-							echo "<a href=\"login.php?redirect=saved\" style=\"float:right;padding:.5rem;\"><i class=\"mdi mdi-heart-outline mdi-24px\"></i></a>";
+							echo '<a href="login.php?redirect=saved" style="color:#fff;float:right;padding:1rem .5rem;"><i class="mdi mdi-heart-outline mdi-36px"></i></a>';
 						}
 					echo '</div>';
 				?>
 			</div>	
-			<div style="padding: .5rem">		
+			<div style="padding:.5rem">		
 			<?php				  
-				echo "<div style=\"letter-spacing: 0.02rem;font-size:1.1rem;\">".amount_format($property->price)."&nbsp;<small>".$property->terms()."</small>";
-				echo  ($property->negotiable == true) ? "<small style=\"color:#11cc11;\">NG</small>" : "";
-				echo "<span style=\"float:right;\">".$property->priceCut()."</span></div>";
 				echo "<div>";
-				echo $property->beds    . " beds<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
-				echo $property->baths   . " baths<strong>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</strong>";
-				echo number_format($property->size)    . " Sqft";
-				echo "</div>";
-				echo "<div><a href=\"property.php?id={$property->id}\" style=\"color:#777;font-size:.85rem;\">";
+					echo "<div style=\"float:left;letter-spacing: 0.02rem;font-size:1.2rem;\">".amount_format($property->price)."</div>";
+					echo "<span style=\"float:left;\">&nbsp;".$property->terms()."</span>";
+					echo  $property->negotiable == true ? "<span style=\"color:#11cc11;float:left;\">NG</span>" : "";
+					echo "<div style=\"float:left;margin-left:1rem\">";
+						echo "<span>" .$property->beds  . " beds<strong>&nbsp;·&nbsp;</strong></span>";
+						echo "<span>" .$property->baths . " baths";
+						//echo "<strong>&nbsp;·&nbsp;</strong></span><span>" .number_format($property->size)    . " Sqft</span>";
+					echo "</div>";
+				echo "<div style=\"clear:both\"></div></div>";
+				echo "<div style=\"padding:.4rem 0;font-size:.85rem;\"><a href=\"property.php?id={$property->id}\" style=\"color:#777;\">";
 				echo $property->type    . " for ".ucfirst($property->market)." ".$property->address .", ". $property->Location();
 				echo "</a></div>";
 			?>
-			</div> 
+			</div>
 	 	</div>
 	<?php endforeach; ?>
-	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;">Oohh no, there is currently no listings at the moment</div><?php } ?>
+	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;">Oohh no,  there is currently no listings at the moment</div><?php } ?>
 </div>
 	
 <div style="text-align: center">

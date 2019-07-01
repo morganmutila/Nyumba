@@ -76,12 +76,16 @@ class Redirect {
     }
 
     public static function prevPage(){
-        if($_SERVER['HTTP_REFERER'])
+        if(isset($_SERVER['HTTP_REFERER']))
         return self::to($_SERVER['HTTP_REFERER']);
     }
 
     public static function home(){
         return self::to(self::$base_url);
+    }
+
+    public static function authPage(){
+        return self::to("login.php");
     }
 } 
 
@@ -91,10 +95,8 @@ class URL {
     private static $base_url = "index";
     
     function link($string=""){
-        if(!empty($string)){
-            $build_url = rawurldecode($string).".php";            
-            return $build_url;
-        }
+        if(!empty($string))                               
+            return  rawurldecode($string).".php";
     }
 }
 

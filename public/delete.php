@@ -1,6 +1,6 @@
-<?php require_once("../init.php"); ?>
-<?php if (!$session->isLoggedIn()) { Redirect::to("index.php"); } ?>
 <?php
+include "../init.php"; 
+$session->comfirm_logged_in("index.php");
 
 
 if(!Input::get('id')) {
