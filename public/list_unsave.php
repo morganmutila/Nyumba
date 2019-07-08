@@ -1,6 +1,6 @@
-<?php require "../init.php"; 
-if (!$session->isLoggedIn()) { Redirect::to("login.php?redirect=saved"); }
-
+<?php
+include "../init.php";
+$session->comfirm_logged_in("login.php?redirect=saved");
 
 if(Input::get('id') && is_numeric(Input::get('id'))){
 
@@ -18,7 +18,7 @@ if(Input::get('id') && is_numeric(Input::get('id'))){
 		if(Input::get('redirect') == "saved"){
 			Redirect::to('saved.php');
 		}else{
-       		Redirect::to($_SERVER['HTTP_REFERER']);
+       		Redirect::prevPage();
 		}
     }
     else{
@@ -26,7 +26,7 @@ if(Input::get('id') && is_numeric(Input::get('id'))){
         if(Input::get('redirect') == "saved"){
 			Redirect::to('saved.php');
 		}else{
-       		Redirect::to($_SERVER['HTTP_REFERER']);
+       		Redirect::prevPage();
 		}
     }
 }

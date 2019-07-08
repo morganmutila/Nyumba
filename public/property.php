@@ -1,4 +1,5 @@
-<?php require_once("../init.php"); 
+<?php
+include "../init.php"; 
 
 if(!Input::get('id')) {
   Redirect::to('index.php');

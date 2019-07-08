@@ -1,10 +1,9 @@
 <?php
-require "../init.php";
-require PACKAGE_PATH;
+include "../init.php";
+include PACKAGE_PATH;
 
 use Rakit\Validation\Validator;
 $validator = new Validator;
-
 	
 if(Input::exists()){
     $validation = $validator->make($_POST, [

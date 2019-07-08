@@ -4,7 +4,7 @@ class Property extends DBO{
 
 	protected static $table_name = "property";
     protected static $db_fields = ['id', 'user_id', 'location_id', 'type', 'address',
-    'beds', 'baths', 'terms', 'photo', 'contact_number', 'contact_email','reference', 'listed_by', 'size', 'status', 'price', 'price_old', 'negotiable', 'available', 'units','views', 'market', 'contact_name', 'description', 'added', 'flags'];
+    'beds', 'baths', 'terms', 'photo', 'contact_number', 'contact_email','reference', 'listed_by', 'size', 'status', 'price', 'negotiable', 'available', 'units','views', 'market', 'contact_name', 'description', 'added', 'flags'];
 
     private const PROPERTY_TYPE = [
         1   => "House",
@@ -31,7 +31,6 @@ class Property extends DBO{
     public $size;
     public $status;
     public $price;
-    public $price_old;
     public $negotiable;
     public $units;
     public $available;
@@ -95,25 +94,6 @@ class Property extends DBO{
         } else {
             return "";
         }
-    }
-
-    public function priceCut(){
-        if((int) $this->price_old == true){
-            if($this->price > $this->price_old){
-                $price_diff = $this->price - $this->price_old;
-                $price_diff = "<span style=\"color:#1db954;font-size:.85rem;\"><i class=\"mdi mdi-arrow-up\"></i>&nbsp;".amount_format($price_diff)."</span>";
-            }elseif($this->price < $this->price_old){
-                $price_diff = $this->price_old - $this->price;
-                $price_diff = "<span style=\"color:red;font-size:.85rem;\"><i class=\"mdi mdi-arrow-down\"></i>&nbsp;".amount_format($price_diff)."</span>";
-            }
-            else{
-                $price_diff = "";
-            }
-        }    
-        else{
-            $price_diff = "";
-        }
-        return $price_diff;
     }
 
     public function terms(){        

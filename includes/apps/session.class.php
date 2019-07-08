@@ -49,6 +49,18 @@ class Session {
         }
     }
 
+
+    public function comfirm_logged_in($redirect_url=""){
+        if(!$this->isLoggedIn()){
+            if($redirect_url !== ""){
+                Redirect::to($redirect_url);
+            }    
+            else{
+                Redirect::prevPage();
+            }
+        }
+    }
+
     private function checkUserLocation(){
         if(self::exists('LOCATION')){
             $this->location = self::get('LOCATION');
@@ -98,7 +110,12 @@ class Session {
     public function logout(){
         self::delete('USER_ID');
         unset($this->user_id);
+        // $_SESSION = array();
+        // if(isset($_COOKIE[session_name()])){
+        //    Cookie::delete(session_name());
+        // }
         Cookie::delete(Config::get('remember/cookie_name'));
+        // session_destroy();        
         $this->logged_in = false;
     }
 

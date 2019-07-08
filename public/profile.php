@@ -1,12 +1,13 @@
 <?php
-require '../init.php';
-if($session->isLoggedIn()){ Redirect::to("index.php");}
+include '../init.php';
+$session->comfirm_logged_in("index.php");
 
 $page_title = "Profile";
 
 if(!$username = Input::get('user')){
     Redirect::to('index.php');
-}else{
+}
+else{
     $user = new User($username);
     if(!$user->exists()){
         Redirect::to(404);

@@ -16,7 +16,7 @@ class Photo extends DBO{
     private $upload_errors = array();
     private static $upload_dir = UPLOAD_FOLDER;
 
-    public function attachFile($files, $property_id=0, $multiple=false){
+    public function attachFile($files=null, $property_id=0, $multiple=false){
         if($multiple == true) {
             // ---------- MULTIPLE UPLOADS ----------
             // as it is multiple uploads, we will parse the $_FILES array to reorganize it into $files
@@ -34,16 +34,17 @@ class Photo extends DBO{
 
                 $handle = new upload($file);
                 // Set variables
-                $handle->allowed = ['image/*'];
-                $handle->file_safe_name = true;
-                $handle->file_auto_rename = false;
+                $handle->allowed            = ['image/*'];
+                $handle->file_safe_name     = true;
+                $handle->file_auto_rename   = true;
+                $handle->file_new_name_body = $this->rename();
 
-                $handle->image_ratio_crop = true;
-                $handle->image_resize     = true;
-                $handle->image_ratio_y    = true;
-                $handle->image_x          = 400;
-                $handle->image_contrast   = 20;
-
+                $handle->image_ratio_crop   = true;
+                $handle->image_resize       = true;
+                $handle->image_ratio_y      = true;
+                $handle->image_x            = 596;
+                $handle->image_y            = 446;
+                $handle->image_contrast     = 20;
 
                 if ($handle->uploaded) {
                     //Yes, the file is on the server           
@@ -78,15 +79,17 @@ class Photo extends DBO{
             // ---------- SINGLE UPLOADS ----------
             $handle = new upload($files);
             // Set variables
-            $handle->allowed = ['image/*'];
-            $handle->file_safe_name = true;
-            $handle->file_auto_rename = false;
+            $handle->allowed            = ['image/*'];
+            $handle->file_safe_name     = true;
+            $handle->file_auto_rename   = false;
+            $handle->file_new_name_body = $this->rename();
 
-            $handle->image_ratio_crop = true;
-            $handle->image_resize     = true;
-            $handle->image_ratio_y    = true;
-            $handle->image_x          = 400;
-            $handle->image_contrast   = 20;
+            $handle->image_ratio_crop   = true;
+            $handle->image_resize       = true;
+            $handle->image_ratio_y      = true;
+            $handle->image_x            = 596;
+            $handle->image_y            = 446;
+            $handle->image_contrast     = 20;
 
 
             if ($handle->uploaded) {
@@ -96,12 +99,12 @@ class Photo extends DBO{
                 // we check if everything went OK
                 if ($handle->processed) {
                     // everything was fine  
-                    $this->property_id = $property_id;
+                    $this->property_id     = $property_id;
                     $this->filename    = $handle->file_dst_name;
-                    $this->type        = $handle->file_dst_name_ext;
-                    $this->size        = filesize($handle->file_dst_pathname);
-                    $this->width       = $handle->image_dst_x;
-                    $this->height      = $handle->image_dst_y;
+                    $this->type            = $handle->file_dst_name_ext;
+                    $this->size            = filesize($handle->file_dst_pathname);
+                    $this->width           = $handle->image_dst_x;
+                    $this->height          = $handle->image_dst_y;
                     $this->create();
                 }
                 else {
@@ -116,6 +119,37 @@ class Photo extends DBO{
             $handle->clean();  
         }      
     }   
+
+    public function generateHash($length = 32) {
+
+        # don't add vowels and we won't get dirty words...
+        $chars = 'BCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz1234567890';
+
+        # length of character list
+        $chars_length = (strlen($chars) - 1);
+
+        # crete our string
+        $string = $chars{
+        rand(0, $chars_length)};
+
+        # generate random string
+        for ($i = 1; $i < $length; $i = strlen($string)) {
+
+            # grap a random character
+            $r = $chars{
+            rand(0, $chars_length)};
+
+            # make sure the same characters don't appear next to each other
+            if ($r != $string{
+            $i - 1}) $string .= $r;
+        }
+
+        return $string;
+    }
+
+    public function rename(){
+        return "NY".$this->generateHash(8).time();
+    }
 
     public function uploadSuccess(){
         return empty($this->upload_errors) ? true : false;

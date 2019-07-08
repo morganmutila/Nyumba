@@ -55,6 +55,9 @@ class Input {
 
 //The Redirect class *********************************************************************************
 class Redirect {
+
+    private static $base_url = "index.php";
+
     public static function to($location = null){
         if($location){
             if(is_numeric($location)){
@@ -71,7 +74,31 @@ class Redirect {
             exit();
         }
     }
+
+    public static function prevPage(){
+        if(isset($_SERVER['HTTP_REFERER']))
+        return self::to($_SERVER['HTTP_REFERER']);
+    }
+
+    public static function home(){
+        return self::to(self::$base_url);
+    }
+
+    public static function authPage(){
+        return self::to("login.php");
+    }
 } 
+
+//The URL class *********************************************************************************
+class URL {
+
+    private static $base_url = "index";
+    
+    function link($string=""){
+        if(!empty($string))                               
+            return  rawurldecode($string).".php";
+    }
+}
 
 
 //The Pagination class *******************************************************************************

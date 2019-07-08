@@ -1,9 +1,9 @@
-<?php
-require '../init.php';
+<?php 
+include '../init.php';
 require LIB_PATH.DS.'formr'.DS.'class.formr.php';
-require PACKAGE_PATH;
+include PACKAGE_PATH;
 
-if($session->isLoggedIn()){ Redirect::to("index.php");}
+if($session->isLoggedIn()) Redirect::to("index.php");
 
 use Rakit\Validation\Validator;
 $validator = new Validator;
@@ -28,9 +28,9 @@ if(Input::exists()):
         ]);
 
         $validation->setMessages([
-            'name:required' => ':attribute can not be blank',
+            'name:required'  => ':attribute can not be blank',
             'email:required' => 'Please provide a valid :attribute',
-            'unique'        => ':attribute has already been taken'
+            'unique'         => ':attribute has already been taken'
         ]);
 
         // run the validation method
@@ -62,11 +62,11 @@ if(Input::exists()):
                 $user->ip           = (string) $_SERVER['REMOTE_ADDR'];
                 $user->email        = (string) Input::get('email');
                 $user->password     = (string) password_hash(Input::get('password'), PASSWORD_DEFAULT);
-
+                $remember_me = (Input::get('rememberme') === 'on') ? true : false;
                 if($user->create()){
                 // Log the newly created user
                     if ($user){
-                            $session->login($user);
+                            $session->login($user, $remember_me);
                             //See if there is a return URL
                             if(Input::get('returnurl')){
                                 //Then redirect to the return url
@@ -93,9 +93,9 @@ $page_title = "Sign up - Nyumba Yanga";
 ?>
 <?php include_layout_template('header.php'); ?>
 
-<h2 class="text-center mb-4 font-weight-bold" style="text-align: center;margin-bottom: 0;">Join Nyumba Yanga</h2>
+<h2 class="text-center mb-4 font-weight-bold" style="text-align:left;margin-bottom: 0;">Welcome, Join Nyumba Yanga</h2>
 
-<p style="text-align: center;">Join Nyumba yanga and see Houses, Apartments, Flats and Town House's on rent and sale by property owners.</p>
+<p style="text-align:center;font-size:1.05rem">Join and see Houses, Apartments, Flats and Town House's on rent and sale by property owners.</p>
 
 <?php
     $form = new Formr('bootstrap');
@@ -103,15 +103,18 @@ $page_title = "Sign up - Nyumba Yanga";
     $form->html5 = true; 
     $form->method = 'POST';
 
-    $html_form  = $form->form_open();
+    $html_form  = output_message($message, "text-danger");
+
+    $html_form .= $form->form_open();
     $html_form .= $form->input_text('name',  '', escape(Input::get('name')),'full_name', 'placeholder="First & Last Name"');
     $html_form .= $form->input_tel('phone', '', escape(Input::get('phone')),'phone_number', 'placeholder="Phone Number"');
     $html_form .= $form->input_email('email', '', escape(Input::get('email')),'email', 'placeholder="Email Address"');
     $html_form .= $form->input_password('password',  '', escape(Input::get('password')),'password', 'placeholder="Create password"');
+    $html_form .= $form->input_checkbox('rememberme',  'Remember me', 'on','rememberme');
     $html_form .= '<p class="text-center text-muted py-2 px-4 small" style="text-align: center;">By signing up, you agree to Nyumba Yanga Terms and  Privacy Policy</p>';
     $html_form .= $form->input_hidden('token', Session::generateToken());
     $html_form .= $form->input_submit('submit', '', 'SIGN UP', 'sign_up', 'class="btn-success btn-block font-weight-bold"');
-    $html_form .= output_message($message, "text-danger");
+    
     $html_form .= '<p class="my-3 text-center" style="text-align: center;"><a href="login.php" class="small text-muted">Already on Nyumba yanga?&nbsp;Log in</a></p>';  
     $html_form .= $form->form_close();
 
