@@ -26,7 +26,7 @@ if(Input::exists()){
             // Check the database to see if username / password exists
             $username    = $email = $phone = Input::get('username');
             $password    = Input::get('password');
-            $remember_me = (Input::get('rememberme') === 'on') ? true : false;
+            $remember_me = Input::get('rememberme') === 'on' ? true : false;
 
             $found_user = User::authenticate($username, $password, $email, $phone);
 
@@ -45,7 +45,7 @@ $page_title = "Login - Nyumba Yanga";
 <?php include_layout_template('header.php'); ?>
 
 <?php if(Input::get('redirect') == "addproperty"){?>
-    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center"><!-- First thing first. Join Nyumba yanga and list your property --> Start by Joining Nyumba yanga</h2>
+    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center"><!-- First thing first. Join Nyumba yanga and list your property --> Start by Joining NyumbaYanga</h2>
     <p style="text-align: center;">-----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Already have an account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----</p>
     <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in to NyumbaYanga</h2>
 <?php } 

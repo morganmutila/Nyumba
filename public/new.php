@@ -1,5 +1,5 @@
 <?php 
-require '../init.php';
+include '../init.php';
 include PACKAGE_PATH;
 $session->comfirm_logged_in("login.php?redirect=addproperty");
 
@@ -77,8 +77,7 @@ if(Input::exists()){
         if($property->create()){
             // Add the property and re-direct            
             Session::put('LIST_PROPERTY_ID', $property->id);
-            $build_url = rawurlencode("list.php");
-            Redirect::to($build_url);
+            Redirect::to("list.php");
         }
         else{
             $message = "Oops! could not add your property, something went wrong, please try again";
@@ -94,7 +93,15 @@ $page_title = "Add your property";
 
     <?php echo output_message($message); ?>
 
-  	<form action="add.php" method="POST" accept-charset="utf-8">
+  	<form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="POST" accept-charset="utf-8">
+
+        <label class="control-label" for="property_address">Property Name / Address</label>
+        <input type="text" id="property_address" name="property_address" value="<?php echo Input::get('address');?>" placeholder="Address or name"/>
+        <?php 
+            if(isset($validation) && $errors->has('property_address'))
+            echo "<div class=\"text-danger\" style=\"margin-top:-.8rem;\">". $errors->first('property_address') ."</div>";
+        ?>
+
   		<label class="control-label" for="property_type">Property Type</label>
 		<?php
 
@@ -104,8 +111,7 @@ $page_title = "Add your property";
                 "Flat"                      => "Flat",
                 "Apartment"                 => "Apartment",
                 "Semi-detached house"       => "Semi-detached house",
-                "Townhouse"                 => "Townhouse",
-                "Condo"                     => "Condo"
+                "Townhouse"                 => "Townhouse"
             ];
 
             $select_property_type = "<select name=\"property_type\" id=\"property_type\">";
@@ -144,14 +150,6 @@ $page_title = "Add your property";
             echo "<div class=\"text-danger\" style=\"margin-top:-.8rem;\">". $errors->first('location') ."</div>";
         ?>
         
-        <label class="control-label" for="property_address">Property Name / Address</label>
-        <input type="text" id="property_address" name="property_address" value="<?php echo Input::get('address');?>" placeholder="Address or name"/>
-        <?php 
-            if(isset($validation) && $errors->has('property_address'))
-            echo "<div class=\"text-danger\" style=\"margin-top:-.8rem;\">". $errors->first('property_address') ."</div>";
-        ?>
-
-
         <div id="_rent" class="radioradio">
             <label class="control-label" for="rent">
                 <input type="radio" name="market_name" id="rent" value="rent" checkbox-inline="inline" <?php if(Input::get('market_name') == "rent") echo "checked";?> > For Rent
@@ -168,7 +166,7 @@ $page_title = "Add your property";
 
         <div class="form-group">
             <label class="sr-only" for="submit"></label>
-            <button type="submit" id="submit" class="btn btn-success btn-block font-weight-bold">Add property</button>
+            <button type="submit" id="submit" class="btn btn-success btn-block font-weight-bold submit">Add property</button>
         </div>
   	</form>
 

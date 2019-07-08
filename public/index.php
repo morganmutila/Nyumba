@@ -87,7 +87,8 @@ endif; // End if($session->location)
 
 <?php if($session->location):?>
 	<?php if(count($properties_2)):?>
-		<h4>Houses in <?php echo Location::findLocationOn($session->location);//The Location name?>&nbsp;·&nbsp;<small style="color: #666;"><?php echo $number_of_homes;?>&nbsp; found</small></h4>
+		<h4><?php echo Location::findLocationOn($session->location);//The Location name?>&nbsp;Houses and Apartments</h4>
+		<p style="margin:-.7rem 0 1rem 0;"><?php echo $number_of_homes;?>&nbsp;results found</p>
 		<div class ="properties">
 			<?php foreach ($properties_2 as $property_2):?>
 				<div class="listing">
@@ -100,7 +101,7 @@ endif; // End if($session->location)
 							 			echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span><br>";
 									}
 									if(end_post_date($property_2->added)){
-										echo "<span style=\"float:left;background:rgba(0,0,0,.54);color:#FFF;padding:5px 15px;font-size:12px;\">".time_ago($property_2->added)."</span>";
+										echo "<span style=\"float:left;background:rgba(0,0,0,.54);color:#FFF;padding:4px 10px;font-size:12px;\">".time_ago($property_2->added)."</span>";
 									}
 								echo "</div>";	
 								if(isset($user)){
@@ -133,7 +134,7 @@ endif; // End if($session->location)
 		</div>
 	<?php else: ?>
 
-		<div style="margin:1rem 0" class="message-info">Oohh no, there is currently no listings in your location at the moment</div>
+		<div style="margin:1rem 0" class="message-info">Oohh no, there is currently no listings in <?php echo Location::findLocationOn($session->location);?> at the moment</div>
 	
 	<?php endif ?>
 
@@ -152,7 +153,7 @@ endif; // End if($session->location)
 					 			echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span><br>";
 							}
 							if(end_post_date($property->added)){
-								echo "<span style=\"float:left;background:rgba(0,0,0,.54);color:#FFF;padding: 5px 15px;font-size:12px;\">".time_ago($property->added)."</span>";
+								echo "<span style=\"float:left;background:rgba(0,0,0,.54);color:#FFF;padding:4px 10px;font-size:12px;\">".time_ago($property->added)."</span>";
 							}
 						echo "</div>";	
 						if(isset($user)){

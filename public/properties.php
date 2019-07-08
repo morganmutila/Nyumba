@@ -4,7 +4,7 @@ $session->comfirm_logged_in("login.php");
 
 // Get all the property for the user
 $sql = "SELECT * FROM property WHERE user_id = ? AND status >= ?";
-$properties = Property::findBySql($sql, array($user->id, 1));
+$properties = Property::findBySql($sql, [$user->id, 1]);
 
 if(count($properties) == 0){
     Redirect::home();   
@@ -15,7 +15,7 @@ $page_title = "My Listings";
 
 <?php include_layout_template('header.php'); ?>
 
-	<h2>My Listings&nbsp;&nbsp;<small style="font-weight: normal;"><a href="add.php">+ Add property</a></small></h2>
+	<h2>My Listings&nbsp;&nbsp;<small style="font-weight: normal;"><a href="new.php">+ Add property</a></small></h2>
 	
 	<?php echo output_message($message); ?>
 
@@ -30,7 +30,10 @@ $page_title = "My Listings";
 							echo "For ".ucfirst($property->market)." ".$property->address." in ". $property->Location();
 							echo "</div>";
 							echo "<p>20% complete</p>";
-
+						?>
+					</div>
+					<div>
+						<?php	
 							echo "<a href=\"list.php?id={$property->id}\"><button type=\"button\" class=\"btn btn-white btn-block font-weight-bold\">Finish listing</button></a>";
 							echo "&nbsp;&nbsp;&nbsp;";
 							echo "<a href=\"delete.php?id={$property->id}\"><button type=\"button\" class=\"btn btn-white btn-block font-weight-bold\">Delete</button></a>";
@@ -47,7 +50,7 @@ $page_title = "My Listings";
 							<?php				  
 								echo "<div style=\"letter-spacing: 0.02rem;\">".amount_format($property->price)."&nbsp;<small>".$property->terms()."</small>";
 								echo  ($property->negotiable == true) ? "<small style=\"color:#11cc11;\">NG</small>" : "";
-								echo "<span style=\"float:right;\">".$property->priceCut()."</span></div>";
+								echo "</div>";
 								echo "<div style=\"font-size:.8rem;\">";
 								echo $property->beds    . " bd · ";
 								echo $property->baths   . " ba · ";

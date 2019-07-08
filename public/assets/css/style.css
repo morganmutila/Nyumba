@@ -46,7 +46,7 @@ ul{
 
 #main {padding: 0  0 1rem 0; width: 100%;}
 
-input, select, form button{
+input, select, form button.submit{
   font-size: .95rem;
   height: 2.55rem;
   width: 100%;

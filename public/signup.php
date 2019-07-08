@@ -95,7 +95,7 @@ $page_title = "Sign up - Nyumba Yanga";
 
 <h2 class="text-center mb-4 font-weight-bold" style="text-align:left;margin-bottom: 0;">Welcome, Join Nyumba Yanga</h2>
 
-<p style="text-align: center;">Join and see Houses, Apartments, Flats and Town House's on rent and sale by property owners.</p>
+<p style="text-align:center;font-size:1.05rem">Join and see Houses, Apartments, Flats and Town House's on rent and sale by property owners.</p>
 
 <?php
     $form = new Formr('bootstrap');
@@ -103,7 +103,7 @@ $page_title = "Sign up - Nyumba Yanga";
     $form->html5 = true; 
     $form->method = 'POST';
 
-    $html_form  = output_message($message, "danger");
+    $html_form  = output_message($message, "text-danger");
 
     $html_form .= $form->form_open();
     $html_form .= $form->input_text('name',  '', escape(Input::get('name')),'full_name', 'placeholder="First & Last Name"');

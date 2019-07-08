@@ -16,7 +16,7 @@ class Photo extends DBO{
     private $upload_errors = array();
     private static $upload_dir = UPLOAD_FOLDER;
 
-    public function attachFile($files, $property_id=0, $multiple=false){
+    public function attachFile($files=null, $property_id=0, $multiple=false){
         if($multiple == true) {
             // ---------- MULTIPLE UPLOADS ----------
             // as it is multiple uploads, we will parse the $_FILES array to reorganize it into $files
@@ -100,8 +100,7 @@ class Photo extends DBO{
                 if ($handle->processed) {
                     // everything was fine  
                     $this->property_id     = $property_id;
-                    $this->real_filename   = $handle->file_dst_name;
-                    $this->filename        = uniqid($handle->file_dst_name);
+                    $this->filename    = $handle->file_dst_name;
                     $this->type            = $handle->file_dst_name_ext;
                     $this->size            = filesize($handle->file_dst_pathname);
                     $this->width           = $handle->image_dst_x;
@@ -121,7 +120,7 @@ class Photo extends DBO{
         }      
     }   
 
-    protected function generateHash($length = 32) {
+    public function generateHash($length = 32) {
 
         # don't add vowels and we won't get dirty words...
         $chars = 'BCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz1234567890';
@@ -149,7 +148,7 @@ class Photo extends DBO{
     }
 
     public function rename(){
-        return "NY".$this->generateHash(6).uniqid();
+        return "NY".$this->generateHash(8).time();
     }
 
     public function uploadSuccess(){
