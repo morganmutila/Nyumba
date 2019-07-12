@@ -48,6 +48,8 @@ if(Input::exists()){
     $validation->setMessages([
         'required'           => ':attribute can not be empty',
         'available:required' => ':attribute is required',
+        'bedrooms:required'  => 'Number of bedrooms cannot be blank.',
+        'bathrooms:required' => 'Number of bathrooms cannot be blank.',
         'photo:required'     => ':attribute is required'
     ]);
 

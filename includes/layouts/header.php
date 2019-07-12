@@ -11,7 +11,7 @@
     <link href="assets/css/nyumbayanga.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom mb-3">
         <a class="navbar-brand mb-1 h3 font-weight-bold" href="index.php">NyumbaYanga</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#NY_navbar">
             <span class="navbar-toggler-icon"></span>
@@ -19,20 +19,20 @@
 
         <div class="collapse navbar-collapse" id="NY_navbar">
             <?php if($session->isLoggedIn()): ?>
-                <div class="navbar-nav mr-auto">
+                <div class="navbar-nav ml-auto">
                     <a class="nav-item nav-link ml-3" href="new.php">List your Property</a>
                     <?php if($user->propertyCount() >= 1){ ?>          
                         <a class="nav-item nav-link ml-3" href="properties.php">My Listings</a></li>
                     <?php } ?>
                     <a class="nav-item nav-link ml-3" href="saved.php">Saved Properties</a>
-                    <a class="nav-item nav-link ml-3" href="logout.php"><?php echo $user->initials();?></a>
+                    <a class="nav-item nav-link ml-3" href="logout.php"><?php echo $user->fullName();?></a>
                 </div>
             <?php else: ?>  
-                <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link ml-3" href="new.php">List your Property</a>
+                <div class="navbar-nav ml-auto">
+                    <a class="nav-item nav-link mr-3" href="new.php">List your Property</a>
                 </div>                                
-                <a class="btn btn-light" href="login.php">Log In</a></li> 
-                <a class="btn btn-outline-success rounded ml-3" href="signup.php">Sign Up</a></li> 
+                <a class="btn btn-outline-secondary font-weight-bold" href="login.php">Log In</a></li> 
+                <a class="btn btn-outline-secondary font-weight-bold ml-3" href="signup.php">Sign Up</a></li> 
             <?php endif; ?>     
         </div>
     </nav>

@@ -20,21 +20,17 @@ function NY_SEARCH_ENGINE(){
 
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
     $html .=    "<div class=\"input-group mb-2 mr-sm-2 mb-sm-0\">
-                    <div class=\"input-group-addon\"><i class=\"mdi mdi-magnify mdi-24px\"></i></div>
-                    <input type=\"text\" name= \"q\" class=\"form-control\" placeholder=\"Search location\" ";
+                    <input type=\"text\" name= \"q\" class=\"form-control form-control-lg\" placeholder=\"Search location\" ";
     $html .=            "value=";
                         if(Input::get('q')){
                             $html .= $found_location;
                         }
     $html .=           ">";
-    $html .=        "<div class=\"input-group-addon\">@</div>";
-    $html .=    "</div>";
-
     if(isset($session->location)){
-        $html .= "<div style=\"font-size:.9rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #aaa;height:65%;line-height:1.6rem;margin:2% 0;\"><i class=\"mdi mdi-map-marker-outline\"></i>";            
-        $html .= "<small>".Location::findLocationOn($session->location)."</small>";
-        $html .= "</div>";   
-    }     
+        $html .=        "<div class=\"input-group-append\"><div class=\"input-group-text\"><i class=\"mdi mdi-map-marker-outline\"></i>".Location::findLocationOn($session->location)."</div></div>";
+    }
+    $html .=    "</div>";
+    
     $html .= "</form>";
     return $html;
 }
