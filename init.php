@@ -41,19 +41,19 @@ define('LIB_PATH', INCLUDE_PATH.DS.'apps'.DS.'library');
 define('PACKAGE_PATH', LIB_PATH.DS.'vendor'.DS.'autoload.php');
 
 // Include Application configuration script
-require INCLUDE_PATH .DS. 'config.php';
+include INCLUDE_PATH .DS. 'config.php';
 
 // load basic functions next so that everything after can use them
-require INCLUDE_PATH .DS. 'functions.php';
+include INCLUDE_PATH .DS. 'functions.php';
 
 // load common messages for site wide usage
-require INCLUDE_PATH .DS. 'messages.php';
+include INCLUDE_PATH .DS. 'messages.php';
 
 //Include the common classes
-require CLASS_PATH   .DS. "common.class.php";
+include CLASS_PATH   .DS. "common.class.php";
 
 //Include Nyumba yanga small classes
-require CLASS_PATH   .DS. "ny.class.php";
+include CLASS_PATH   .DS. "ny.class.php";
 
 
 // Start the session, checks Loggin through COOKIE and SESSION values and initialise $message

@@ -14,5 +14,9 @@
         <p style="text-align: center"><small>© <?php echo date("Y", time()); ?>
         NyumbaYanga.com. All rights reserved.&nbsp;<br>Nyumba Yanga is not responsible for the innacuracy of content posted on the website</small></p>
     </div>
+
+    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/bootstrap.bundle.js"></script>
+
   </body>
 </html>

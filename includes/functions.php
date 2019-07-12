@@ -19,11 +19,17 @@ function NY_SEARCH_ENGINE(){
     global $session, $found_location;
 
     $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
-    $html .= "    <i class=\" mdi mdi-magnify mdi-24px\" style=\"position:absolute;left:0;top:0;padding:0 .5rem;color: #1db954;height:65%;line-height:1.6rem;margin:2% 0;\"></i><input type=\"text\" name=\"q\" placeholder=\"Search location\" style=\"padding:0 35% 0 12%;border-radius: 4px;box-shadow: 1px 2px 2px #eee;border-color:#eee;margin-bottom:.4rem;font-size:.9rem;\" value=";
-        if(Input::get('q')){
-            $html .= $found_location;
-        }
-    $html .= ">";
+    $html .=    "<div class=\"input-group mb-2 mr-sm-2 mb-sm-0\">
+                    <div class=\"input-group-addon\"><i class=\"mdi mdi-magnify mdi-24px\"></i></div>
+                    <input type=\"text\" name= \"q\" class=\"form-control\" placeholder=\"Search location\" ";
+    $html .=            "value=";
+                        if(Input::get('q')){
+                            $html .= $found_location;
+                        }
+    $html .=           ">";
+    $html .=        "<div class=\"input-group-addon\">@</div>";
+    $html .=    "</div>";
+
     if(isset($session->location)){
         $html .= "<div style=\"font-size:.9rem;position:absolute;right:0;top:0;padding:0 .6rem;border-left:1px solid #ddd;color: #aaa;height:65%;line-height:1.6rem;margin:2% 0;\"><i class=\"mdi mdi-map-marker-outline\"></i>";            
         $html .= "<small>".Location::findLocationOn($session->location)."</small>";

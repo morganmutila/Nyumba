@@ -16,14 +16,14 @@ $pagination = new Pagination($page, $per_page, $total_count);
 // for this page
 
 //Get the sort by from the Query string if any
-if(Input::get('sortby')) {
-	Session::put('SORT_BY', escape(Input::get('sortby')));
-	$sortby = Session::get('SORT_BY');
-} elseif(Session::exists('SORT_BY') == true){
-	$sortby = Session::get('SORT_BY');
+if(Input::get('sort')) {
+	Session::put('SORT', escape(Input::get('sort')));
+	$sortby = Session::get('SORT');
+} elseif(Session::exists('SORT') == true){
+	$sortby = Session::get('SORT');
 } else{
-	Session::put('SORT_BY', Config::get('default_sortby'));
-	$sortby = Config::get('default_sortby');
+	Session::put('SORT', Config::get('default_sort'));
+	$sortby = Config::get('default_sort');
 }
 
 
@@ -69,10 +69,10 @@ endif; // End if($session->location)
   			"Bedrooms"		=> "beds"
 	  	);
 
-        $select_sortby = "<i class=\"mdi mdi-sort-descending mdi-18px\"></i><select onchange=\"this.form.submit()\" name=\"sortby\" style=\"width:auto;height:auto;display:inline;border:0;padding:0;margin:0;font-size:.9rem;background-color:transparent;color:#1db954;\">";
+        $select_sortby = "<i class=\"mdi mdi-sort-descending mdi-18px\"></i><select onchange=\"this.form.submit()\" name=\"sort\" style=\"width:auto;height:auto;display:inline;border:0;padding:0;margin:0;background-color:transparent;color:#1db954;\">";
             foreach ($sortby_types as $type => $value) {
                 $select_sortby .= "<option value=\"$value\" ";
-                    if(Session::get('SORT_BY') == $value || Config::get('default_sortby') == $value){
+                    if(Session::get('SORT') == $value || Config::get('default_sort') == $value){
                         $select_sortby .= "selected";
                     }
                 $select_sortby .= ">".$type."</option>";

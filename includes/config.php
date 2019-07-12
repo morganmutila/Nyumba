@@ -23,7 +23,7 @@ $GLOBALS['config'] = array(
     'php_date_time_format'	   => "m/d/Y, h:i a",
     'new_listing'              => "P5D",  // 5 days before we remove the NEW tag on the listing
     'end_post_date'            => "P20D", // 20 days before we remove the posted date
-    'default_sortby'           => "new",  //Sort Listings by Newest
+    'default_sort'             => "new",  //Sort Listings by Newest
     'default_srch_filter'      => array('filter_price' => 'anyprice', 'filter_beds' => 'any')
 
 );
