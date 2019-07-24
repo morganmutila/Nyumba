@@ -3,7 +3,7 @@
 class Photo extends DBO{
 
 	protected static $table_name = "photos";
-    protected static $db_fields  = ['id', 'property_id', 'filename', 'type','size','width','height'];
+    protected static $columns  = ['id', 'property_id', 'filename', 'type','size','width','height'];
 
     public $id;
     public $property_id;

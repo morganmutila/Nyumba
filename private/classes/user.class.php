@@ -3,7 +3,7 @@
 class User extends DBO{
 
     protected static $table_name = "users";
-    protected static $db_fields = ['id','username', 'first_name', 'last_name', 'email',
+    protected static $columns = ['id','username', 'first_name', 'last_name', 'email',
              'phone', 'joined', 'group_id', 'location_id', 'status', 'password', 'last_login', 'ip'];
 
     // Class attributes
@@ -21,6 +21,21 @@ class User extends DBO{
     public $last_login;
     public $ip;
 
+
+    public function __construct($args=[]) {
+        $this->username     = $args['username'] ?? '';
+        $this->first_name   = $args['first_name'] ?? '';
+        $this->last_name    = $args['last_name'] ?? '';
+        $this->email        = $args['email'] ?? '';
+        $this->phone        = $args['phone'] ?? '';
+        $this->joined       = $args['joined'] ?? '0';
+        $this->group_id     = $args['group_id'] ?? 0;
+        $this->location_id  = $args['location_id'] ?? 0;
+        $this->status       = $args['status'] ?? 0;
+        $this->password     = $args['password'] ?? '';
+        $this->last_login   = $args['last_login'] ?? '0';
+        $this->ip           = $args['ip'] ?? '';
+    }
 
     // Class methods
     public static function authenticate($username = "", $password = "", $email="", $phone="", $remember_me=false){
@@ -46,14 +61,6 @@ class User extends DBO{
     public function fullName(){
         if(isset($this->first_name) && isset($this->last_name)){
             return $this->first_name . " " . $this->last_name;
-        }else{
-            return "";
-        }
-    }
-
-    public function initials(){
-        if(isset($this->first_name) && isset($this->last_name)){
-            return ucwords($this->first_name[0]).ucwords($this->last_name[0]);
         }else{
             return "";
         }

@@ -1,5 +1,5 @@
 <?php
-include "../init.php";
+include '../private/init.php';
 include PACKAGE_PATH;
 
 use Rakit\Validation\Validator;
@@ -53,7 +53,7 @@ if(Input::exists()){
 
 $page_title = "Add your location";
 ?>
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 
 	<h2><?php echo (isset($session->location) || isset($user->location_id)) ? "Change location":"Add your location";?></h2>
 	
@@ -87,5 +87,5 @@ $page_title = "Add your location";
   	</form>
   
 
-<?php include_layout_template('footer.php'); ?>
+<?php layout_template('footer.php'); ?>
 		

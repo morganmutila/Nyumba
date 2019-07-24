@@ -30,7 +30,7 @@
 ?>
 
 
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 
 	<h2>Reported properties</h2>
 	
@@ -55,5 +55,5 @@
 	}?>
   
 
-<?php include_layout_template('footer.php'); ?>
+<?php layout_template('footer.php'); ?>
 		

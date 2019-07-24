@@ -1,6 +1,7 @@
 <?php 
-include '../init.php';
-$session->comfirm_logged_in("login.php?redirect=savedproperty");
+include '../private/init.php';
+
+require_login("login.php?redirect=savedproperty");
 
 $saved_sql  = "SELECT DATE_FORMAT(saved, '%W, %D %M') AS saved, property_id FROM saved";
 $saved_sql .= " WHERE user_id = ? ORDER BY id DESC";
@@ -12,7 +13,7 @@ $page_title = "Saved Properties";
 
 ?>
 
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 
 	<h2>Saved Properties</h2>
 
@@ -68,5 +69,5 @@ $page_title = "Saved Properties";
   
 	</div>
 
-<?php include_layout_template('footer.php'); ?>
+<?php layout_template('footer.php'); ?>
 		

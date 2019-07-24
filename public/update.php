@@ -1,6 +1,6 @@
 <?php
-include '../init.php';
-$session->comfirm_logged_in("index.php");
+include '../private/init.php';
+require_login("index.php");
 
 if(Input::exists()){
     if(Session::checkToken(Input::get('token'))){

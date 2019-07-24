@@ -1,497 +1,194 @@
-<?php 
-include '../../init.php';
+<?php
+include '../../private/init.php';
+
+// 1. the current page number ($current_page)
+$page = Input::get('page') ? (int) Input::get('page') : 1;
+
+// 2. records per page ($per_page)
+$per_page = Config::get('records_per_page');
+
+// 3. total record count ($total_count)
+$total_count = Property::total();
+
+$pagination = new Pagination($page, $per_page, $total_count);
+
+// Instead of finding all records, just find the records
+// for this page
+
+//Get the sort by from the Query string if any
+if(Input::get('sort')) {
+  Session::put('SORT', escape(Input::get('sort')));
+  $sortby = Session::get('SORT');
+} elseif(Session::exists('SORT') == true){
+  $sortby = Session::get('SORT');
+} else{
+  Session::put('SORT', Config::get('default_sort'));
+  $sortby = Config::get('default_sort');
+}
+
+
+$sql  = " SELECT * FROM property WHERE status >= ? ";
+$sql .= " ORDER BY ";
+$sql .=   sortby_filters($sortby);  
+$sql .= " LIMIT {$per_page} ";
+$sql .= " OFFSET {$pagination->offset()}";
+
+$properties = Property::findBySql($sql, array(2));
+
+
+// Instead of finding all records, just find the records
+// for this page
+if($session->location):
+  // Get the number of listings in the selected Location
+  $sql_count = "SELECT COUNT(*) AS count FROM property WHERE location_id = ?";
+  DB::getInstance()->query($sql_count, array($session->location));
+  $number_of_homes = DB::getInstance()->result('count');
+
+  $sql_2  = "SELECT * FROM property WHERE status >= ? AND location_id = ? ";
+  $sql_2 .= "ORDER BY ";
+  $sql_2 .=  sortby_filters($sortby);
+  $sql_2 .= " LIMIT {$per_page} ";
+  $sql_2 .= "OFFSET {$pagination->offset()}";
+
+  $properties_2 = Property::findBySql($sql_2, array(2, $session->location));
   
-  //Check if user is logged in
-  if (!$session->isLoggedIn()) { Redirect::to('signin.php'); }
+endif; // End if($session->location)
 ?>
 
-<?php 
-    //Bring in the header
-    get_admin_template("navbar");
-?>
 
-    <div class="container-fluid page-body-wrapper">
-      <?php 
-        //Bring in the side
-        get_admin_template("sidebar");
-      ?>
+<?php admin_template('a_header.php'); ?>
+<?php echo NY_SEARCH_ENGINE(); ?>
 
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 grid-margin stretch-card">
-              <div class="card card-statistics">
-                <div class="card-body">
-                  <div class="clearfix">
-                    <div class="float-left">
-                      <i class="mdi mdi-cube text-danger icon-lg"></i>
-                    </div>
-                    <div class="float-right">
-                      <p class="mb-0 text-right">Total Revenue</p>
-                      <div class="fluid-container">
-                        <h3 class="font-weight-medium text-right mb-0">$65,650</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="text-muted mt-3 mb-0">
-                    <i class="mdi mdi-alert-octagon mr-1" aria-hidden="true"></i> 65% lower growth
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 grid-margin stretch-card">
-              <div class="card card-statistics">
-                <div class="card-body">
-                  <div class="clearfix">
-                    <div class="float-left">
-                      <i class="mdi mdi-receipt text-warning icon-lg"></i>
-                    </div>
-                    <div class="float-right">
-                      <p class="mb-0 text-right">Orders</p>
-                      <div class="fluid-container">
-                        <h3 class="font-weight-medium text-right mb-0">3455</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="text-muted mt-3 mb-0">
-                    <i class="mdi mdi-bookmark-outline mr-1" aria-hidden="true"></i> Product-wise sales
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 grid-margin stretch-card">
-              <div class="card card-statistics">
-                <div class="card-body">
-                  <div class="clearfix">
-                    <div class="float-left">
-                      <i class="mdi mdi-poll-box text-success icon-lg"></i>
-                    </div>
-                    <div class="float-right">
-                      <p class="mb-0 text-right">Sales</p>
-                      <div class="fluid-container">
-                        <h3 class="font-weight-medium text-right mb-0">5693</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="text-muted mt-3 mb-0">
-                    <i class="mdi mdi-calendar mr-1" aria-hidden="true"></i> Weekly Sales
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 grid-margin stretch-card">
-              <div class="card card-statistics">
-                <div class="card-body">
-                  <div class="clearfix">
-                    <div class="float-left">
-                      <i class="mdi mdi-account-location text-info icon-lg"></i>
-                    </div>
-                    <div class="float-right">
-                      <p class="mb-0 text-right">Employees</p>
-                      <div class="fluid-container">
-                        <h3 class="font-weight-medium text-right mb-0">246</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="text-muted mt-3 mb-0">
-                    <i class="mdi mdi-reload mr-1" aria-hidden="true"></i> Product-wise sales
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-4 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h2 class="card-title text-primary mb-5">Performance History</h2>
-                  <div class="wrapper d-flex justify-content-between">
-                    <div class="side-left">
-                      <p class="mb-2">The best performance</p>
-                      <p class="display-3 mb-4 font-weight-light">+45.2%</p>
-                    </div>
-                    <div class="side-right">
-                      <small class="text-muted">2017</small>
-                    </div>
-                  </div>
-                  <div class="wrapper d-flex justify-content-between">
-                    <div class="side-left">
-                      <p class="mb-2">Worst performance</p>
-                      <p class="display-3 mb-5 font-weight-light">-35.3%</p>
-                    </div>
-                    <div class="side-right">
-                      <small class="text-muted">2015</small>
-                    </div>
-                  </div>
-                  <div class="wrapper">
-                    <div class="d-flex justify-content-between">
-                      <p class="mb-2">Sales</p>
-                      <p class="mb-2 text-primary">88%</p>
-                    </div>
-                    <div class="progress">
-                      <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 88%" aria-valuenow="88"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                  <div class="wrapper mt-4">
-                    <div class="d-flex justify-content-between">
-                      <p class="mb-2">Visits</p>
-                      <p class="mb-2 text-success">56%</p>
-                    </div>
-                    <div class="progress">
-                      <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 56%" aria-valuenow="56"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-8 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row d-none d-sm-flex mb-4">
-                    <div class="col-4">
-                      <h5 class="text-primary">Unique Visitors</h5>
-                      <p>34657</p>
-                    </div>
-                    <div class="col-4">
-                      <h5 class="text-primary">Bounce Rate</h5>
-                      <p>45673</p>
-                    </div>
-                    <div class="col-4">
-                      <h5 class="text-primary">Active session</h5>
-                      <p>45673</p>
-                    </div>
-                  </div>
-                  <div class="chart-container">
-                    <canvas id="dashboard-area-chart" height="80"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-12 grid-margin">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Orders</h4>
-                  <div class="table-responsive">
-                    <table class="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th>
-                            #
-                          </th>
-                          <th>
-                            First name
-                          </th>
-                          <th>
-                            Progress
-                          </th>
-                          <th>
-                            Amount
-                          </th>
-                          <th>
-                            Sales
-                          </th>
-                          <th>
-                            Deadline
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="font-weight-medium">
-                            1
-                          </td>
-                          <td>
-                            Herman Beck
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-success progress-bar-striped" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $ 77.99
-                          </td>
-                          <td class="text-danger"> 53.64%
-                            <i class="mdi mdi-arrow-down"></i>
-                          </td>
-                          <td>
-                            May 15, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="font-weight-medium">
-                            2
-                          </td>
-                          <td>
-                            Messsy Adam
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-danger progress-bar-striped" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $245.30
-                          </td>
-                          <td class="text-success"> 24.56%
-                            <i class="mdi mdi-arrow-up"></i>
-                          </td>
-                          <td>
-                            July 1, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="font-weight-medium">
-                            3
-                          </td>
-                          <td>
-                            John Richards
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-warning progress-bar-striped" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $138.00
-                          </td>
-                          <td class="text-danger"> 28.76%
-                            <i class="mdi mdi-arrow-down"></i>
-                          </td>
-                          <td>
-                            Apr 12, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="font-weight-medium">
-                            4
-                          </td>
-                          <td>
-                            Peter Meggik
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-primary progress-bar-striped" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $ 77.99
-                          </td>
-                          <td class="text-danger"> 53.45%
-                            <i class="mdi mdi-arrow-down"></i>
-                          </td>
-                          <td>
-                            May 15, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="font-weight-medium">
-                            5
-                          </td>
-                          <td>
-                            Edward
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-danger progress-bar-striped" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $ 160.25
-                          </td>
-                          <td class="text-success"> 18.32%
-                            <i class="mdi mdi-arrow-up"></i>
-                          </td>
-                          <td>
-                            May 03, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="font-weight-medium">
-                            6
-                          </td>
-                          <td>
-                            Henry Tom
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-warning progress-bar-striped" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $ 150.00
-                          </td>
-                          <td class="text-danger"> 24.67%
-                            <i class="mdi mdi-arrow-down"></i>
-                          </td>
-                          <td>
-                            June 16, 2015
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12 grid-margin">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title mb-4">Manage Tickets</h5>
-                  <div class="fluid-container">
-                    <div class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3">
-                      <div class="col-md-1">
-                        <img class="img-sm rounded-circle mb-4 mb-md-0" src="assets/images/faces/face1.jpg" alt="profile image">
-                      </div>
-                      <div class="ticket-details col-md-9">
-                        <div class="d-flex">
-                          <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">James :</p>
-                          <p class="text-primary mr-1 mb-0">[#23047]</p>
-                          <p class="mb-0 ellipsis">Donec rutrum congue leo eget malesuada.</p>
-                        </div>
-                        <p class="text-gray ellipsis mb-2">Donec rutrum congue leo eget malesuada. Quisque velit nisi, pretium ut lacinia in, elementum id enim
-                          vivamus.
-                        </p>
-                        <div class="row text-gray d-md-flex d-none">
-                          <div class="col-4 d-flex">
-                            <small class="mb-0 mr-2 text-muted text-muted">Last responded :</small>
-                            <small class="Last-responded mr-2 mb-0 text-muted text-muted">3 hours ago</small>
-                          </div>
-                          <div class="col-4 d-flex">
-                            <small class="mb-0 mr-2 text-muted text-muted">Due in :</small>
-                            <small class="Last-responded mr-2 mb-0 text-muted text-muted">2 Days</small>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ticket-actions col-md-2">
-                        <div class="btn-group dropdown">
-                          <button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Manage
-                          </button>
-                          <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-reply fa-fw"></i>Quick reply</a>
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-history fa-fw"></i>Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-check text-success fa-fw"></i>Resolve Issue</a>
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-times text-danger fa-fw"></i>Close Issue</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3">
-                      <div class="col-md-1">
-                        <img class="img-sm rounded-circle mb-4 mb-md-0" src="assets/images/faces/face2.jpg" alt="profile image">
-                      </div>
-                      <div class="ticket-details col-md-9">
-                        <div class="d-flex">
-                          <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">Stella :</p>
-                          <p class="text-primary mr-1 mb-0">[#23135]</p>
-                          <p class="mb-0 ellipsis">Curabitur aliquet quam id dui posuere blandit.</p>
-                        </div>
-                        <p class="text-gray ellipsis mb-2">Pellentesque in ipsum id orci porta dapibus. Sed porttitor lectus nibh. Curabitur non nulla sit amet
-                          nisl.
-                        </p>
-                        <div class="row text-gray d-md-flex d-none">
-                          <div class="col-4 d-flex">
-                            <small class="mb-0 mr-2 text-muted">Last responded :</small>
-                            <small class="Last-responded mr-2 mb-0 text-muted">3 hours ago</small>
-                          </div>
-                          <div class="col-4 d-flex">
-                            <small class="mb-0 mr-2 text-muted">Due in :</small>
-                            <small class="Last-responded mr-2 mb-0 text-muted">2 Days</small>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ticket-actions col-md-2">
-                        <div class="btn-group dropdown">
-                          <button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Manage
-                          </button>
-                          <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-reply fa-fw"></i>Quick reply</a>
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-history fa-fw"></i>Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-check text-success fa-fw"></i>Resolve Issue</a>
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-times text-danger fa-fw"></i>Close Issue</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row ticket-card mt-3">
-                      <div class="col-md-1">
-                        <img class="img-sm rounded-circle mb-4 mb-md-0" src="assets/images/faces/face3.jpg" alt="profile image">
-                      </div>
-                      <div class="ticket-details col-md-9">
-                        <div class="d-flex">
-                          <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">John Doe :</p>
-                          <p class="text-primary mr-1 mb-0">[#23246]</p>
-                          <p class="mb-0 ellipsis">Mauris blandit aliquet elit, eget tincidunt nibh pulvinar.</p>
-                        </div>
-                        <p class="text-gray ellipsis mb-2">Nulla quis lorem ut libero malesuada feugiat. Proin eget tortor risus. Lorem ipsum dolor sit amet.</p>
-                        <div class="row text-gray d-md-flex d-none">
-                          <div class="col-4 d-flex">
-                            <small class="mb-0 mr-2 text-muted">Last responded :</small>
-                            <small class="Last-responded mr-2 mb-0 text-muted">3 hours ago</small>
-                          </div>
-                          <div class="col-4 d-flex">
-                            <small class="mb-0 mr-2 text-muted">Due in :</small>
-                            <small class="Last-responded mr-2 mb-0 text-muted">2 Days</small>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ticket-actions col-md-2">
-                        <div class="btn-group dropdown">
-                          <button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Manage
-                          </button>
-                          <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-reply fa-fw"></i>Quick reply</a>
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-history fa-fw"></i>Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-check text-success fa-fw"></i>Resolve Issue</a>
-                            <a class="dropdown-item" href="#">
-                              <i class="fa fa-times text-danger fa-fw"></i>Close Issue</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+<form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8">
+  <?php
+      $sortby_types = array(        
+        "Newest"      => "new",       
+        "Best match"  => "best",
+        "Price (Low-High)" => "price_asc",
+        "Price (High-Low)" => "price_desc",
+        "Bedrooms"    => "beds"
+      );
+
+        $select_sortby = "<i class=\"mdi mdi-sort-descending mdi-18px\"></i><select onchange=\"this.form.submit()\" name=\"sort\" style=\"width:auto;height:auto;display:inline;border:0;padding:0;margin:0;background-color:transparent;color:#1db954;\">";
+            foreach ($sortby_types as $type => $value) {
+                $select_sortby .= "<option value=\"$value\" ";
+                    if(Session::get('SORT') == $value || Config::get('default_sort') == $value){
+                        $select_sortby .= "selected";
+                    }
+                $select_sortby .= ">".$type."</option>";
+            }
+        $select_sortby .= "</select>";
+        echo $select_sortby;
+  ?>
+</form>
+
+<?php echo output_message($message, "success"); ?>
+<?php echo flash("invalid_location", "warning"); ?>
+
+<?php if($session->location):?>
+
+  <?php if(count($properties_2)):?>
+    <h4><?php echo Location::findLocationOn($session->location);//The Location name?>&nbsp;Houses and Apartments</h4>
+    <p style="margin:-.7rem 0 1rem 0;"><?php echo $number_of_homes;?>&nbsp;results found</p>
+    <div class ="properties">
+      <?php foreach ($properties_2 as $property_2):?>
+        <div class="listing">
+          <div style="margin:0;position:relative;">
+            <img src="<?php echo $property_2->photo();?>"/>
+            <?php
+                echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';
+                echo "<div style=\"float:left\">";
+                  if(new_listing($property_2->added)){
+                    echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span><br>";
+                  }
+                  if(end_post_date($property_2->added)){
+                    echo "<span style=\"float:left;background:rgba(0,0,0,.54);color:#FFF;padding:4px 10px;font-size:12px;\">".time_ago($property_2->added)."</span>";
+                  }
+                echo "</div>";  
+                if(isset($user)){
+                  echo ($user->savedProperty($property_2->id)) ? fav_remove($property_2->id) : fav_add($property_2->id);    
+                }else{
+                  echo '<a href="login.php?redirect=saved" style="color:#fff;float:right;padding:1rem .5rem;"><i class="mdi mdi-heart-outline mdi-36px"></i></a>';
+                }
+              echo '</div>';
+            ?>
+          </div>  
+          <div style="padding:.5rem">
+          <?php         
+            echo "<div>";
+              echo "<div style=\"float:left;letter-spacing:0.02rem;font-size:1.2rem;\">".amount_format($property_2->price)."</div>";
+              echo "<span style=\"float:left;\">&nbsp;".$property_2->terms()."</span>";
+              echo  $property_2->negotiable == true ? "<span style=\"color:#11cc11;float:left;\">NG</span>" : "";
+              echo "<div style=\"float:left;margin-left:1rem\">";
+                echo "<span>" .$property_2->beds  . " beds<strong>&nbsp;·&nbsp;</strong></span>";
+                echo "<span>" .$property_2->baths . " baths</span>";
+                //echo "<strong>&nbsp;·&nbsp;</strong></span><span>" .number_format($property_2->size)    . " Sqft</span>";
+              echo "</div>";
+            echo "<div style=\"clear:both\"></div></div>";
+            echo "<div style=\"padding:.4rem 0;font-size:.85rem;\"><a href=\"property.php?id={$property_2->id}\" style=\"color:#777\">";
+            echo $property_2->type    . " for ".ucfirst($property_2->market)." ".$property_2->address .", ". $property_2->Location();
+            echo "</a></div>";
+          ?>
+          </div> 
         </div>
-        <?php 
-            //Bring in the footer
-            get_admin_template("footer");
+      <?php endforeach; ?>
+    </div>
+  <?php else: ?>
+
+    <div style="margin:1rem 0" class="message-info">Oohh no, there is currently no listings in <?php echo Location::findLocationOn($session->location);?> at the moment</div>
+  
+  <?php endif ?>
+
+<?php endif ?>
+
+<h4>Properties on Nyumba Yanga</h4>
+<div class ="properties">
+  <?php foreach ($properties as $property):?>
+    <div class="listing">
+      <div style=" margin:0;position:relative;">
+        <img src="<?php echo $property->photo();?>"/>
+        <?php
+            echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';
+            echo "<div style=\"float:left\">";
+              if(new_listing($property->added)){
+                echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span><br>";
+              }
+              if(end_post_date($property->added)){
+                echo "<span style=\"float:left;background:rgba(0,0,0,.54);color:#FFF;padding:4px 10px;font-size:12px;\">".time_ago($property->added)."</span>";
+              }
+            echo "</div>";  
+            if(isset($user)){
+              echo ($user->savedProperty($property->id)) ? fav_remove($property->id) : fav_add($property->id);    
+            }else{
+              echo '<a href="login.php?redirect=saved" style="color:#fff;float:right;padding:1rem .5rem;"><i class="mdi mdi-heart-outline mdi-36px"></i></a>';
+            }
+          echo '</div>';
         ?>
+      </div>  
+      <div style="padding:.5rem">   
+      <?php         
+        echo "<div>";
+          echo "<div style=\"float:left;letter-spacing: 0.02rem;font-size:1.2rem;\">".amount_format($property->price)."</div>";
+          echo "<span style=\"float:left;\">&nbsp;".$property->terms()."</span>";
+          echo  $property->negotiable == true ? "<span style=\"color:#11cc11;float:left;\">NG</span>" : "";
+          echo "<div style=\"float:left;margin-left:1rem\">";
+            echo "<span>" .$property->beds  . " beds<strong>&nbsp;·&nbsp;</strong></span>";
+            echo "<span>" .$property->baths . " baths";
+            //echo "<strong>&nbsp;·&nbsp;</strong></span><span>" .number_format($property->size)    . " Sqft</span>";
+          echo "</div>";
+        echo "<div style=\"clear:both\"></div></div>";
+        echo "<div style=\"padding:.4rem 0;font-size:.85rem;\"><a href=\"property.php?id={$property->id}\" style=\"color:#777;\">";
+        echo $property->type    . " for ".ucfirst($property->market)." ".$property->address .", ". $property->Location();
+        echo "</a></div>";
+      ?>
       </div>
     </div>
+  <?php endforeach; ?>
+  <?php if(empty($properties)){ ?><div style="text-align: center;color:#777;">Oohh no,  there is currently no listings at the moment</div><?php } ?>
+</div>
 
-<?php 
-    //Bring in JS files
-    get_admin_template("jsfiles");
-?>
+<div style="text-align: center">
+  <?php echo NY_PAGINATION(); ?>
+</div>
+
+<?php admin_template('a_footer.php'); ?>

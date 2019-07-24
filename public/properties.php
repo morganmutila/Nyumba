@@ -1,6 +1,6 @@
 <?php 
-include '../init.php';
-$session->comfirm_logged_in("login.php");
+include '../private/init.php';
+require_login("login.php");
 
 // Get all the property for the user
 $sql = "SELECT * FROM property WHERE user_id = ? AND status >= ?";
@@ -13,7 +13,7 @@ if(count($properties) == 0){
 $page_title = "My Listings";
 ?>
 
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 
 	<h2>My Listings&nbsp;&nbsp;<small style="font-weight: normal;"><a href="new.php">+ Add property</a></small></h2>
 	
@@ -68,4 +68,4 @@ $page_title = "My Listings";
 		<?php endforeach; ?>  
 	</div>	
 
-<?php include_layout_template('footer.php'); ?>		
+<?php layout_template('footer.php'); ?>		

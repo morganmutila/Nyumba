@@ -5,7 +5,7 @@
  */
 class Remember extends DBO{	
 	protected static $table_name = "remember";
-    protected static $db_fields = ['user_id', 'hashkey'];
+    protected static $columns = ['user_id', 'hashkey'];
 
     public $user_id;
     public $hashkey;
@@ -16,7 +16,7 @@ class Remember extends DBO{
  */
 class Saved extends DBO{	
 	protected static $table_name = "saved";
-    protected static $db_fields = ['id', 'user_id', 'property_id', 'saved'];
+    protected static $columns = ['id', 'user_id', 'property_id', 'saved'];
 
     public $id;
     public $user_id;
@@ -30,7 +30,7 @@ class Saved extends DBO{
  */
 class Amenities extends DBO{	
 	protected static $table_name = "amenities";
-    protected static $db_fields = ['property_id', 'feature_id'];
+    protected static $columns = ['property_id', 'feature_id'];
 
     public $feature_id;
     public $property_id;
@@ -55,7 +55,7 @@ class Amenities extends DBO{
  */
 class Location extends DBO{	
 	protected static $table_name = "location";
-    protected static $db_fields = ['id', 'city_id', 'location', 'description'];
+    protected static $columns = ['id', 'city_id', 'location', 'description'];
 
     public $id;
     public $city_id;
@@ -108,7 +108,7 @@ class Location extends DBO{
  */
 class City extends DBO{	
 	protected static $table_name = "city";
-    protected static $db_fields = ['id', 'city', 'description'];
+    protected static $columns = ['id', 'city', 'description'];
 
     public $id;
     public $city;    

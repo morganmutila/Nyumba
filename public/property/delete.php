@@ -1,5 +1,5 @@
 <?php
-include "../init.php"; 
+include '../../private/init.php';
 $session->comfirm_logged_in("index.php");
 
 

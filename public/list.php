@@ -1,8 +1,9 @@
 <?php 
-include '../init.php';
+include '../private/init.php';
 include PACKAGE_PATH;
-require LIB_PATH.DS.'class.upload'.DS.'class.upload.php';
-$session->comfirm_logged_in("login.php?redirect=addproperty");
+include LIB_PATH.DS.'class.upload/class.upload.php';
+
+require_login("login.php?redirect=addproperty");
 
 use Rakit\Validation\Validator;
 $validator = new Validator;
@@ -108,7 +109,7 @@ $page_title = "Listing";
 ?>
 
 
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 
 	<?php 
         if (empty($property->address)) {
@@ -255,5 +256,5 @@ $page_title = "Listing";
         </div>
     </form>
   
-<?php include_layout_template('footer.php'); ?>
+<?php layout_template('footer.php'); ?>
 		

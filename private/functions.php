@@ -1,33 +1,60 @@
-<?php
+<?php if ( ! defined('SITE_ROOT')) exit('Direct access is not allowed.');
 
-// Auto load classes in case they have not been required
-function my_autoload ($class_name){
-    if(preg_match("/\A\w+\Z/", $class_name)){
-        $path = CLASS_PATH .DS. strtolower($class_name) . ".class.php";
-        if (file_exists($path)) {
-            include($path);
-        }
-        else{
-            die("The file {$class_name}.class.php can not be found");
-        }   
-    }    
+function url_for($script_path) {
+  // add the leading '/' if not present
+  if($script_path[0] != '/') {
+    $script_path = "/" . $script_path;
+  }
+  return WWW_ROOT . $script_path;
 }
 
-spl_autoload_register("my_autoload");
+function u($string="") {
+  return urlencode($string);
+}
+
+function error_404() {
+  header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+  exit();
+}
+
+function error_500() {
+  header($_SERVER["SERVER_PROTOCOL"] . " 500 Internal Server Error");
+  exit();
+}
+
+function is_post_request() {
+  return $_SERVER['REQUEST_METHOD'] == 'POST';
+}
+
+function is_get_request() {
+  return $_SERVER['REQUEST_METHOD'] == 'GET';
+}
+
+function require_login($redirect_url=""){
+    global $session;
+    if(!$session->isLoggedIn()){
+        if($redirect_url !== ""){
+            Redirect::to($redirect_url);
+        }    
+        else{
+            Redirect::prevPage();
+        }
+    }
+}
 
 function NY_SEARCH_ENGINE(){
     global $session, $found_location;
 
-    $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\">";
-    $html .=    "<div class=\"input-group mb-2 mr-sm-2 mb-sm-0\">
-                    <input type=\"text\" name= \"q\" class=\"form-control form-control-lg\" placeholder=\"Search location\" ";
+    $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\" class=\"form-inline\">";
+    $html .=    "<div class=\"input-group\">
+                    <input type=\"text\" name= \"q\" class=\"form-control\" placeholder=\"Search location\" ";
     $html .=            "value=";
                         if(Input::get('q')){
                             $html .= $found_location;
                         }
     $html .=           ">";
     if(isset($session->location)){
-        $html .=        "<div class=\"input-group-append\"><div class=\"input-group-text\"><i class=\"mdi mdi-map-marker-outline\"></i>".Location::findLocationOn($session->location)."</div></div>";
+        $html .=        "<div class=\"input-group-prepend\"><div class=\"input-group-text\"><i class=\"mdi mdi-map-marker-outline\"></i>".Location::findLocationOn($session->location)."</div></div>";
     }
     $html .=    "</div>";
     
@@ -38,7 +65,7 @@ function NY_SEARCH_ENGINE(){
 function NY_PAGINATION(){
     global $pagination, $page;
 
-    $html = "<ul class=\"pagination\">"; 
+    $html = "<ul class=\"pagination justify-content-center\">"; 
             $pages = ceil($pagination->offset() - 1);
             if($pagination->total_pages() > 1){
                 if($pagination->has_previous_page()){                                 
@@ -69,6 +96,11 @@ function NY_PAGINATION(){
     return $html;
 }   
 
+function current_user_id(){
+    global $session;
+    return $session->loggedUserId();
+}
+
 function sortby_filters($sortby){
     if (isset($sortby)):
         switch ($sortby) {
@@ -94,67 +126,9 @@ function sortby_filters($sortby){
     endif;
 }
 
-function search_filters($price_filters, $beds_filters){
-    //if(isset($price_filters) AND isset($beds_filter)):
-        switch ($price_filters) {
-            case 'anyprice':
-                $price_filters = "IS NOT NULL";
-                break;
-            case 'below2k':
-                $price_filters = "<= 2000";
-                break;
-            case 'between2kto5k':
-                $price_filters = "BETWEEN 2000 AND 5000";
-                break;        
-            case 'between5kto10k':
-                $price_filters = "BETWEEN 5000 AND 10000";
-                break;
-            case 'between10kto15k':
-                $price_filters = "BETWEEN 10000 AND 15000";
-                break;
-            case 'between15kto20k':
-                $price_filters = "BETWEEN 15000 AND 20000";
-                break;
-            case 'above20k':
-                $price_filters = ">= 20000";
-                break;        
-        }
-
-        switch ($beds_filters) {
-            case 'any':
-                $beds_filters = "IS NOT NULL";
-                break;
-            case '1':
-                $beds_filters = "= 1";
-                break;
-            case '2':
-                $beds_filters = "= 2";
-                break;        
-            case '3':
-                $beds_filters = "= 3";
-                break;
-            case '4':
-                $beds_filters = "= 4";
-                break;
-            case 'above5':
-                $beds_filters = ">= 5";
-                break;       
-        }
-         return " AND price ".$price_filters . " AND beds " . $beds_filters;
-    // else:    
-    //     return "";
-    // endif;
-}
-
 function pre($value){
     echo '<pre>';
     print_r($value);
-    echo '</pre>';
-}
-
-function varpre($value){
-    echo '<pre>';
-    var_dump($value);
     echo '</pre>';
 }
 
@@ -237,9 +211,14 @@ function page_title($page_title=""){
     return $page_title;
 }
 
-function include_layout_template($template=""){
+function admin_template($template=""){
     global $page_title, $session, $user;
-    include(INCLUDE_PATH .DS.'layouts'.DS.$template);
+    include(PRIVATE_PATH . '/shared/' . $template);
+}
+
+function layout_template($template=""){
+    global $page_title, $session, $user;
+    include(PRIVATE_PATH . '/shared/' . $template);
 }
 
 function output_message($message="",  $type="info") {
@@ -295,7 +274,7 @@ function flash($name, $type="info"){
 }
 
 function log_action($action, $message="") {
-    $logfile = SITE_ROOT.DS.'logs'.DS.'log.txt';
+    $logfile = SITE_ROOT.'/logs/log.txt';
     $new = file_exists($logfile) ? false : true;
   if($handle = fopen($logfile, 'a')) { // append
     $timestamp = strftime("%Y-%m-%d %H:%M:%S", time());
@@ -370,7 +349,6 @@ function generate_form_checkbox($name="", $key_values=array()){
     return "";
 }
 
-//Money format
 function amount_format($amount = '0', $symbol = 'K') {
     $amount = round($amount, 2);
     $sign = '';
@@ -390,7 +368,7 @@ function fav_add($property_id=0){
     global $session;
 
     if ($session->isLoggedIn()){
-        return '<a href="list_save.php?id='.$property_id.'"style="color:#fff;float:right;padding:.4rem;background:#0000004f;height:2.1rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
+        return '<a href="list_save.php?id='.$property_id.'"style="color:#fff;float:right;padding:.2rem .4rem;height:2.1rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
     }
 }
 
@@ -398,6 +376,6 @@ function fav_remove($property_id=0){
     global $session;
 
     if ($session->isLoggedIn()){
-        return '<a href="list_unsave.php?id='.$property_id.'" style="color:#01e675;float:right;padding:.4rem;background:#0000004f;height:2.1rem;"><i class="mdi mdi-heart mdi-24px"></i></a>';
+        return '<a href="list_unsave.php?id='.$property_id.'" style="color:#01e675;float:right;padding:.2rem .4rem;height:2.1rem;"><i class="mdi mdi-heart mdi-24px"></i></a>';
     }
 }

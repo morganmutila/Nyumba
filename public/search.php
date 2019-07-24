@@ -1,5 +1,5 @@
 <?php
-include '../init.php';
+include '../private/init.php';
 
 //Redirect if a search query has not been set
 if(Input::get('q') == false){
@@ -92,7 +92,7 @@ $properties = Property::findBySql($sql, array(1, $found_location_id));
 $number_of_homes = 458;
 ?>
 
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 <?php echo NY_SEARCH_ENGINE(); ?>
 
 <h2 style="font-size: 1.15rem;"><?php echo Location::cityLocation($found_location_id); ?></h2>
@@ -226,4 +226,4 @@ $number_of_homes = 458;
 	<a href="#">5 bedrooms</a><br>
 </div>
 
-<?php include_layout_template('footer.php'); ?>
+<?php layout_template('footer.php'); ?>

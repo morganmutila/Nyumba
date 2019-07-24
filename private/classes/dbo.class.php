@@ -7,8 +7,21 @@
 Abstract class DBO{
 
 	protected static $table_name;
-    protected static $db_fields = array();
+    protected static $columns = [];
 
+    public static function findBySql($sql="", $params = array()){
+        // The SQL syntax for Selecting or reading database rows is
+        // - SELECT columns FROM table
+
+        // Create a new object array out of a result set
+        $object_array = [];
+
+        $result_set = DB::getInstance()->query($sql, $params);       
+        while ($row = DB::getInstance()->fetch($result_set, 'FETCH_ASSOC')) {
+            $object_array[] = static::instantiate($row);
+        }
+        return $object_array;
+    }
  
     public static function findAll(){
         return static::findBySql("SELECT * FROM ".static::$table_name);
@@ -21,20 +34,6 @@ Abstract class DBO{
         return !empty($result_array) ? array_shift($result_array) : false;
     }
 
-    public static function findBySql($sql="", $params = array()){
-        // The SQL syntax for Selecting or reading database rows is
-        // - SELECT fields FROM table
-
-        // Create a new object array out of a result set
-        $object_array = array();
-
-        $result_set = DB::getInstance()->query($sql, $params);       
-        while ($row = DB::getInstance()->fetch($result_set, 'FETCH_ASSOC')) {
-            $object_array[] = static::instantiate($row);
-        }
-        return $object_array;
-    }
-
     public static function findFirst($sql, $params=array()){
         // Return only the first occurance
         $result_array = static::findBySql($sql, $params); 
@@ -45,26 +44,27 @@ Abstract class DBO{
     protected static function instantiate($record){
         $object  = new static;
         foreach ($record as $attribute => $value) {
-            if($object->hasAttribute($attribute)){
+            if(property_exists($object, $attribute)) {
                 $object->$attribute = $value;
             }
         }
         return $object;
     }
 
-    //Look for matching attributes from the Database table and the class properties
-    protected function hasAttribute($attribute){
-        $object_vars = $this->attributes();
-        return array_key_exists($attribute, $object_vars);
+    public function merge_attributes($args=[]) {
+        foreach($args as $key => $value) {
+            if(property_exists($this, $key) && !is_null($value)) {
+                $this->$key = $value;
+            }
+        }
     }
 
     protected function attributes(){
         // Return an array of attribute keys and their values
-        $attributes = array();
-        foreach (static::$db_fields as $field) {
-            if(property_exists($this, $field)){
-                $attributes[$field] = $this->$field;
-            }
+        $attributes = [];
+        foreach (static::$columns as $column) {
+            if($column == 'id') { continue; }
+            $attributes[$column] = $this->$column;
         }
         return $attributes;
     }

@@ -1,23 +1,27 @@
 <?php
-include "../init.php"; 
+include '../private/init.php';
 
-if(!Input::get('id')) {
+$id = Input::get('id') ?? false;
+
+if(!$id) {
   Redirect::to('index.php');
 }
   
-$property = Property::findById(Input::get('id'));
+$property = Property::findById($id);
   
 if(!$property) {
-  $session->message("The property could not be found.");
-  redirect_to('index.php');
+  $session->message("That property could not be found.");
+  Redirect::to('index.php');
 }else{
 	$property->views = $property->views + 1;
 	$property->save();
 }
 	
+
+	$page_title = $property->details();
 ?>
 
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 
 <p><a href="properties.php">My properties &raquo;</a></p>
 
@@ -38,4 +42,4 @@ if(!$property) {
  ?>
 </div>
 
-<?php include_layout_template('footer.php'); ?>
+<?php layout_template('footer.php'); ?>

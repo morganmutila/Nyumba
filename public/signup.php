@@ -1,5 +1,5 @@
 <?php 
-include '../init.php';
+include '../private/init.php';
 require LIB_PATH.DS.'formr'.DS.'class.formr.php';
 include PACKAGE_PATH;
 
@@ -91,7 +91,7 @@ endif; //End if(Input::exists())
 
 $page_title = "Sign up - Nyumba Yanga";
 ?>
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 
 <h2 class="text-center mb-4 font-weight-bold" style="text-align:left;margin-bottom: 0;">Welcome, Join Nyumba Yanga</h2>
 

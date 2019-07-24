@@ -1,6 +1,7 @@
 <?php
-include "../init.php";
-$session->comfirm_logged_in("login.php?redirect=saved");
+include '../private/init.php';
+require_login("login.php?redirect=saved");
+
 
 if(Input::get('id') && is_numeric(Input::get('id'))){
 	

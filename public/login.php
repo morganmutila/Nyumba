@@ -1,5 +1,5 @@
 <?php 
-include '../init.php';
+include '../private/init.php';
 include LIB_PATH.DS.'formr'.DS.'class.formr.php';
 include PACKAGE_PATH;
 
@@ -34,7 +34,7 @@ if(Input::exists()){
                 $session->login($found_user, $remember_me);
                 Redirect::prevPage();
             } else {
-                $message = "Log in failed, account does not exist. Please check your password or sign up for an account</a></strong>";
+                $message = "Log in failed, account does not exist. Please check your password or sign up for a new account</a></strong>";
             }
         }
     }
@@ -42,7 +42,7 @@ if(Input::exists()){
 $page_title = "Login - Nyumba Yanga";
 ?>
 
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 
 <?php if(Input::get('redirect') == "addproperty"){?>
     <h2 class="text-center mb-4 font-weight-bold" style="text-align: center"><!-- First thing first. Join Nyumba yanga and list your property --> Start by Joining NyumbaYanga</h2>
@@ -71,10 +71,10 @@ else {?>
     $html_form .= $form->input_hidden('token', Session::generateToken());
     $html_form .= $form->input_submit('submit', '', 'LOG IN', 'sign_up', 'class="btn-success btn-block font-weight-bold"');
     $html_form .= '<p class="my-3 text-center" style="text-align: center;">By logging in you agree to our<br>Terms and Privacy Policy</p>'; 
-    $html_form .= ' <ul class="menu" style="text-align: center;">
-                        <li><a href="#" class="small text-muted">Forgot password?</a></li>
-                        <li><strong>·</strong></li>
-                        <li><a href="signup.php" class="small text-muted">Join NyumbaYanga?</a></li>
+    $html_form .= ' <ul class="list-inline" style="text-align: center;">
+                        <li class="list-inline-item"><a href="#" class="small text-muted">Forgot password?</a></li>
+                        <li class="list-inline-item"><strong>·</strong></li>
+                        <li class="list-inline-item"><a href="signup.php" class="small text-muted">Join NyumbaYanga?</a></li>
                      </ul>';  
     $html_form .= $form->form_close();
 

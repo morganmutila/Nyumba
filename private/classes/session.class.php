@@ -5,7 +5,7 @@ class Session {
 
     private $logged_in = false;    
 
-    public  $user_id;
+    private $user_id;
     public  $location;
     public  $message;
 
@@ -49,18 +49,6 @@ class Session {
         }
     }
 
-
-    public function comfirm_logged_in($redirect_url=""){
-        if(!$this->isLoggedIn()){
-            if($redirect_url !== ""){
-                Redirect::to($redirect_url);
-            }    
-            else{
-                Redirect::prevPage();
-            }
-        }
-    }
-
     private function checkUserLocation(){
         if(self::exists('LOCATION')){
             $this->location = self::get('LOCATION');
@@ -72,8 +60,9 @@ class Session {
     public function message($msg=""){
         if(!empty($msg)){
             self::put('MESSAGE', $msg);
+            return true;
         }else{
-            return htmlentities($this->message);
+            return escape($this->message);
         }
     }
 
@@ -88,12 +77,17 @@ class Session {
     }
 
     public function isLoggedIn(){
-        return $this->logged_in;
+        return $this->logged_in && isset($this->user_id);
+    }
+
+    public function loggedUserId(){
+        return $this->user_id;
     }
 
     public function login($user, $remember_me = false){
         // The database will take care of finding user based on the username/password
         if($user){
+            session_regenerate_id();
             self::put('USER_ID', $user->id);
             $this->user_id = self::get('USER_ID');
             // Put the user ID in the cookie as well
@@ -110,12 +104,7 @@ class Session {
     public function logout(){
         self::delete('USER_ID');
         unset($this->user_id);
-        // $_SESSION = array();
-        // if(isset($_COOKIE[session_name()])){
-        //    Cookie::delete(session_name());
-        // }
         Cookie::delete(Config::get('remember/cookie_name'));
-        // session_destroy();        
         $this->logged_in = false;
     }
 

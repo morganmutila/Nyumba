@@ -40,6 +40,10 @@ class Input {
         }
     }
 
+    public static function is_post(){
+        return $_SERVER['REQUEST_METHOD'] ? true : false;
+    }
+
     public static function get($item){
 
         if(isset($_POST[$item])){

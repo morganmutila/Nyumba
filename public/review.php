@@ -1,6 +1,6 @@
 <?php 
-include '../init.php';
-$session->comfirm_logged_in("login.php");
+include '../private/init.php';
+require_login("login.php");
 
 if(!Input::get('id')) {
   Redirect::to('index.php');
@@ -18,7 +18,7 @@ if(!$property) {
 	
 ?>
 
-<?php include_layout_template('header.php'); ?>
+<?php layout_template('header.php'); ?>
 
 <p><a href="properties.php">My properties &raquo;</a></p>
 
@@ -39,4 +39,4 @@ if(!$property) {
 	?>
 </div>
 
-<?php include_layout_template('footer.php'); ?>
+<?php layout_template('footer.php'); ?>
