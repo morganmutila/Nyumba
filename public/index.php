@@ -43,18 +43,19 @@ $properties = Property::findBySql($sql, array(2));
 <?php echo output_message($message, "success"); ?>
 <?php echo flash("invalid_location", "warning"); ?>
 
-<h4 class="mb-4">Properties on Nyumba Yanga</h4>
-
-<div class="d-flex flex-row pb-3">	
-	<?php echo NY_SEARCH_ENGINE(); ?>
-	<form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" class="ml-5">
+<div class="d-flex flex-row justify-content-between">	
+	<div class="order-1">
+		<h4 class="mb-2">Properties on Nyumba Yanga</h4>
+		<p class="text-secondary mb-4"><?php echo Property::total()." properties available on Nyumba yanga";?></p>
+	</div>	
+	<form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" class="order-2 float-right">
 		<?php
 		  	$sortby_types = array(	  		
-		        "Newest"      		=> "new",       
-		        // "Best match"  		=> "best",
-		        "Bedrooms"    	  	=> "beds",
-		        "Price: Highest"    => "price_asc",
-		        "Price: Lowest"     => "price_desc"
+		        "Newest"      	      => "new",       
+		        // "Best match"  	  => "best",
+		        "Bedrooms"    	  	  => "beds",
+		        "Price (high to low)" => "price_asc",
+		        "Price (low to high)" => "price_desc"
 		  	);
 
 	        $select_sortby = "<select onchange=\"this.form.submit()\" name=\"sort\" class=\"form-control\">";
@@ -71,52 +72,43 @@ $properties = Property::findBySql($sql, array(2));
 	</form>
 </div>
 
-<div class ="properties pt-4 d-flex flex-row flex-wrap">
+<div class ="properties row pt-4 d-flex flex-wrap">
 	<?php foreach ($properties as $property):?>
-		<div class="card-deck col-4 mb-5">			
-			<div class="card">
+		<div class="col-3 mb-4">
+			<a href="property.php?id=<?php echo $property->id; ?>">
 				<div style="position:relative;">
-					<img src="<?php echo $property->photo();?>" class="card-img-top"/>
+					<img src="<?php echo $property->photo();?>" class="rounded img-fluid"/>
 					<?php
 					    echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';
 						 	echo "<div style=\"float:left\">";
 						 		if(new_listing($property->added)){
-						 			echo "<span style=\"background-color:#11cc11;color:#fff;padding:0 .2rem;font-weight:bold;font-size:0.7rem;float:left;line-height:1rem;\">NEW</span><br>";
+						 			echo "<div style=\"background-color:#11cc11;color:#fff;padding:.1rem;border-radius:4px;margin:.5rem 0 .1rem .4rem;font-weight:bold;font-size:.7rem;width:38px;text-align:center;line-height:1rem;\">NEW</div>";
 								}
 								if(end_post_date($property->added)){
-									echo "<span style=\"float:left;background:rgba(0,0,0,.54);color:#FFF;padding:4px 10px;font-size:12px;\">".time_ago($property->added)."</span>";
+									echo "<div style=\"background:rgba(0,0,0,0.3);color:#FFF;padding:2px 4px;margin-left:.4rem;border-radius:4px;font-size:.7rem;font-weight:bold;\">".time_ago($property->added)."</div>";
 								}
 							echo "</div>";	
 							if(isset($user)){
 								echo ($user->savedProperty($property->id)) ? fav_remove($property->id) : fav_add($property->id);		
 							}else{
-								echo '<a href="login.php?redirect=saved" style="color:#fff;float:right;padding: .2rem .4rem;"><i class="mdi mdi-heart-outline mdi-36px"></i></a>';
+								echo '<a href="login.php?redirect=saved" style="color:#fff;float:right;padding:0 .4rem;margin-top:-.3rem;"><i class="mdi mdi-heart-outline mdi-36px"></i></a>';
 							}
 						echo '</div>';
 					?>
 				</div>	
-				<div class="card-body">		
-					<div class="font-weight-bold">
-						<?php echo amount_format($property->price);?>
-						<small><?php echo $property->terms();?></small>
-						<?php
-							if($property->negotiable == true){
-								echo "<small>NG</small>";
-							}
-						?>
+				<div class="py-1">		
+					<div style="font-size:1.26rem;">
+						<?php echo $property->priceValue();?>
 					</div>
-					<div>
+					<div style="font-size:.95rem;">
 						<span class="pr-2"><?php echo $property->beds;?> Beds</span>
 						<span class="pr-2"><?php echo $property->baths;?> Baths</span>
-						<span><?php echo number_format($property->size);?> Sqft</span>
+						<span><?php echo $property->plotSize();?></span>
 					</div>
-					<div>
-						<a href="property.php?id=<?php echo $property->id; ?>">
-							<?php echo $property->type . " for ".ucfirst($property->market)." ".$property->address .", ". $property->Location();?>
-						</a>
-					</div>
+					<div style="font-size:.95rem;"><?php echo "{$property->type} for {$property->market} {$property->address}";?></div>
+					<div style="font-size:.95rem;"><?php echo $property->location();?></div>
 				</div>
-		 	</div>
+			</a>	
 		</div>
 	<?php endforeach; ?>
 	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;">Oohh no,  there is currently no listings at the moment</div><?php } ?>

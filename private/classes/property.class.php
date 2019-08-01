@@ -129,6 +129,17 @@ class Property extends DBO{
         return strtoupper($status);
     }    
 
+    public function priceValue(){
+        if(isset($this->price) && !empty($this->price)){            
+            if($this->negotiable == true){
+                return amount_format($this->price) . "<small>&nbsp;NG</small>";
+            }else{
+                return amount_format($this->price) . "<small>&nbsp;" . $this->terms() . "</small>";
+            }    
+        }    
+        return "Call for price";
+    }
+
     public function type(){
         if($this->type > 0){
             return self::PROPERTY_TYPE[$this->type];
@@ -145,8 +156,15 @@ class Property extends DBO{
         }
     }    
 
+    public function plotSize(){
+        if(isset($this->size) && !empty($this->size)){
+            return number_format($this->size). " Sqft";
+        }
+        return "Size not set";
+    }
+
     public function location(){ 
-        $location = Location::findLocationOn($this->location_id);
+        $location = Location::cityLocation($this->location_id);
         return ucwords($location);
     }
 

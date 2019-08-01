@@ -1,10 +1,10 @@
 <?php
 include '../../private/init.php';
-$session->comfirm_logged_in("index.php");
+require_login("index.php");
 
 
 if(!Input::get('id')) {
-    Redirect::to('properties.php');
+    Redirect::to('../properties.php');
 }
 
 $property = Property::findById(Input::get('id'));

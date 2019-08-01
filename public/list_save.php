@@ -7,7 +7,7 @@ if(Input::get('id') && is_numeric(Input::get('id'))){
 	
 	$property_id = Input::get('id');
 	$savedproperty = new Saved();
-	$savedproperty->user_id     = $session->user_id;
+	$savedproperty->user_id     = current_user_id();
 	$savedproperty->property_id = $property_id;
 	
 	// Save the listing to the save list

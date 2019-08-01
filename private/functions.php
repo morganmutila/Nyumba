@@ -42,30 +42,11 @@ function require_login($redirect_url=""){
     }
 }
 
-function NY_SEARCH_ENGINE(){
-    global $session, $found_location;
-
-    $html  = "<form action=\"search.php\" method=\"GET\" style=\"position:relative;\" class=\"form-inline\">";
-    $html .=    "<div class=\"input-group\">
-                    <input type=\"text\" name= \"q\" class=\"form-control\" placeholder=\"Search location\" ";
-    $html .=            "value=";
-                        if(Input::get('q')){
-                            $html .= $found_location;
-                        }
-    $html .=           ">";
-    if(isset($session->location)){
-        $html .=        "<div class=\"input-group-prepend\"><div class=\"input-group-text\"><i class=\"mdi mdi-map-marker-outline\"></i>".Location::findLocationOn($session->location)."</div></div>";
-    }
-    $html .=    "</div>";
-    
-    $html .= "</form>";
-    return $html;
-}
 
 function NY_PAGINATION(){
     global $pagination, $page;
 
-    $html = "<ul class=\"pagination justify-content-center\">"; 
+    $html = "<ul class=\"pagination justify-content-center mb-5\">"; 
             $pages = ceil($pagination->offset() - 1);
             if($pagination->total_pages() > 1){
                 if($pagination->has_previous_page()){                                 
@@ -100,6 +81,14 @@ function current_user_id(){
     global $session;
     return $session->loggedUserId();
 }
+
+function current_user_location(){
+    global $session;
+    if(isset($session->location)){
+        return Location::cityLocation($session->location);
+    }
+    return "";
+}    
 
 function sortby_filters($sortby){
     if (isset($sortby)):
@@ -182,7 +171,7 @@ function time_ago($time){
 
         if( $d >= 1 ){
             $t = round( $d );
-            return ucfirst($t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago');
+            return strtoupper($t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago');
         }
 
     }
@@ -368,7 +357,7 @@ function fav_add($property_id=0){
     global $session;
 
     if ($session->isLoggedIn()){
-        return '<a href="list_save.php?id='.$property_id.'"style="color:#fff;float:right;padding:.2rem .4rem;height:2.1rem;"><i class="mdi mdi-heart-outline mdi-24px"></i></a>';
+        return '<a href="list_save.php?id='.$property_id.'"style="color:#fff;float:right;padding:0 .4rem;height:2.1rem;margin-top:-.3rem;"><i class="mdi mdi-heart-outline mdi-36px"></i></a>';
     }
 }
 
@@ -376,6 +365,6 @@ function fav_remove($property_id=0){
     global $session;
 
     if ($session->isLoggedIn()){
-        return '<a href="list_unsave.php?id='.$property_id.'" style="color:#01e675;float:right;padding:.2rem .4rem;height:2.1rem;"><i class="mdi mdi-heart mdi-24px"></i></a>';
+        return '<a href="list_unsave.php?id='.$property_id.'" style="color:#01e675;float:right;padding:0 .4rem;margin-top:-.3rem;"><i class="mdi mdi-heart mdi-36px"></i></a>';
     }
 }

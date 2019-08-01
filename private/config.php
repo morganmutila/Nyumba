@@ -30,7 +30,7 @@ $GLOBALS['config'] = [
     // These are the default reference values for the webapp
     'max_file_size'            => 10048576, // 10 MB
     'allow_user_folders'	   => false,
-    'records_per_page'	       => 6,
+    'records_per_page'	       => 8,
     'mysql_date_format'        => "%m/%d/%Y",
     'mysql_date_time_format'   => "%Y-%m-%d %H:%M:%S",
     'php_date_format'		   => "n/j/Y",

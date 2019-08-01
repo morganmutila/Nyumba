@@ -2,7 +2,7 @@
 
 class DB {
 
-    private static $instance = null;
+    private static $instance;
     private        $conn;
     private        $lastquery;
     private        $fetchquery;
@@ -37,7 +37,7 @@ class DB {
 
     // Use a singleton pattern to connect to the database
     public static function getInstance(){
-        if(!isset(self::$instance)){
+        if(!self::$instance instanceof self){
             self::$instance = new self;
         }
         return self::$instance;
