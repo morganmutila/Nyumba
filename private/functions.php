@@ -357,7 +357,8 @@ function fav_add($property_id=0){
     global $session;
 
     if ($session->isLoggedIn()){
-        return '<a href="list_save.php?id='.$property_id.'"style="color:#fff;float:right;padding:0 .4rem;height:2.1rem;margin-top:-.3rem;"><i class="mdi mdi-heart-outline mdi-36px"></i></a>';
+        return '<a href="list_save.php?id='.$property_id.'" class="float-right px-2 py-1 m-1 bg-white align-bottom text-success rounded-circle"><i class="mdi mdi-heart-outline mdi-18px"></i></a>';
+
     }
 }
 
@@ -365,6 +366,6 @@ function fav_remove($property_id=0){
     global $session;
 
     if ($session->isLoggedIn()){
-        return '<a href="list_unsave.php?id='.$property_id.'" style="color:#01e675;float:right;padding:0 .4rem;margin-top:-.3rem;"><i class="mdi mdi-heart mdi-36px"></i></a>';
+        return '<a href="list_unsave.php?id='.$property_id.'" class="float-right px-2 py-1 m-1 bg-white align-bottom text-success rounded-circle"><i class="mdi mdi-heart mdi-18px"></i></a>';
     }
 }

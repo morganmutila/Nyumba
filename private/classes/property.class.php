@@ -132,9 +132,9 @@ class Property extends DBO{
     public function priceValue(){
         if(isset($this->price) && !empty($this->price)){            
             if($this->negotiable == true){
-                return amount_format($this->price) . "<small>&nbsp;NG</small>";
+                return "<div class=\"font-weight-bold\" style=\"font-size:1.15rem;\">".amount_format($this->price) . "<small class=\"text-success ml-2\" style=\"font-size:.8rem;\">NEG</small></div> <div class=\"text-info pr-2 small\">" . $this->type." for ".$this->market."</div>";
             }else{
-                return amount_format($this->price) . "<small>&nbsp;" . $this->terms() . "</small>";
+                return "<div class=\"font-weight-bold\" style=\"font-size:1.15rem;\">".amount_format($this->price) . "<small>&nbsp;" . $this->terms() . "</small></div> <div class=\"text-info pr-2 small\">" . $this->type." for ".$this->market."</div>";
             }    
         }    
         return "Call for price";
@@ -160,7 +160,7 @@ class Property extends DBO{
         if(isset($this->size) && !empty($this->size)){
             return number_format($this->size). " Sqft";
         }
-        return "Size not set";
+        return "Size unavailable";
     }
 
     public function location(){ 

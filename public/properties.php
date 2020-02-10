@@ -59,7 +59,7 @@ $page_title = "My Listings";
 								echo "<div><a href=\"property.php?id={$property->id}\" style=\"color:#777;font-size:.85rem;\">";
 								echo "For ".ucfirst($property->market)." in ". $property->Location();
 								echo "</a></div>";
-								echo "<div><a href=\"property/delete.php?id={$property->id}\">Delete</a></div>";
+								echo "<div><a href=\"delete.php?id={$property->id}\">Delete</a></div>";
 							?>
 						</div>
 					</div>	

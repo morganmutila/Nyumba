@@ -21,11 +21,11 @@ if(is_post_request()){
         'property_type'     => 'required',
         'location'          => 'required',
         'market_name'       => 'required',
-        'property_address'  => 'min:3'
+        // 'property_address'  => 'min:3'
     ]);
 
     $validation->setAliases([
-        'property_address'  => 'Property address',
+        // 'property_address'  => 'Property address',
         'property_type'     => 'Property type',
         'market_name'       => 'Market type'
     ]);
@@ -34,7 +34,7 @@ if(is_post_request()){
         'property_type:required' => 'Please tell us the type of property you are listing.',
         'location:required'      => 'Specify where your property is located.',
         'market_name:required'   => 'Tell us the type of market you are listing.',
-        'property_address:min'   => 'The minimum characters in the :attribute or name is 3'
+        // 'property_address:min'   => 'The minimum characters in the :attribute or name is 3'
     ]);
 
     // run the validation method
@@ -48,7 +48,7 @@ if(is_post_request()){
         $property = new Property;
         $property->user_id 			= current_user_id();
         $property->location_id  	= (int)    Input::get('location');
-        $property->address     		= (string) Input::get('property_address');
+        $property->address     		= "";
         $property->beds      	    = 0;
         $property->baths     	    = 0;
         $property->terms      	    = "";
@@ -94,13 +94,6 @@ $page_title = "Add your property";
     <?php echo output_message($message); ?>
 
   	<form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="POST" accept-charset="utf-8">
-
-        <label class="control-label" for="property_address">Property Name / Address</label>
-        <input type="text" id="property_address" name="property_address" value="<?php echo Input::get('address');?>" placeholder="Address or name"/>
-        <?php 
-            if(isset($validation) && $errors->has('property_address'))
-            echo "<div class=\"text-danger\" style=\"margin-top:-.8rem;\">". $errors->first('property_address') ."</div>";
-        ?>
 
   		<label class="control-label" for="property_type">Property Type</label>
 		<?php

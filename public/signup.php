@@ -89,40 +89,42 @@ if(Input::exists()):
     }
 endif; //End if(Input::exists())
 
-$page_title = "Sign up - Nyumba Yanga";
+$page_title = "Sign up - Nyumba Yanga"; 
+
 ?>
+
 <?php layout_template('header.php'); ?>
-    
-    <section class="d-flex flex-column col-6 align-content-center">
-        <h2 class="text-center mb-4 font-weight-bold" style="text-align:left;margin-bottom: 0;">Welcome, Join Nyumba Yanga</h2>
+<section class="px-4 mb-5">
 
-        <p style="text-align:center;font-size:1.05rem">Join and see Houses, Apartments, Flats and Town House's on rent and sale by property owners.</p>
+    <h5 class="my-4 font-weight-bold text-center">Join Nyumba Yanga</h5>
 
-        <?php
-            $form = new Formr('bootstrap');
-         
-            $form->html5 = true; 
-            $form->method = 'POST';
+    <p class="text-center d-none">Join and see Houses, Apartments, Flats and Town House's on rent and sale by property owners.</p>
 
-            $html_form  = output_message($message, "text-danger");
+    <?php
+        $form = new Formr('bootstrap');
+     
+        $form->html5 = true; 
+        $form->method = 'POST';
 
-            $html_form .= $form->form_open();
-            $html_form .= $form->input_text('name',  '', escape(Input::get('name')),'full_name', 'placeholder="First & Last Name"');
-            $html_form .= $form->input_tel('phone', '', escape(Input::get('phone')),'phone_number', 'placeholder="Phone Number"');
-            $html_form .= $form->input_email('email', '', escape(Input::get('email')),'email', 'placeholder="Email Address"');
-            $html_form .= $form->input_password('password',  '', escape(Input::get('password')),'password', 'placeholder="Create password"');
-            $html_form .= $form->input_checkbox('rememberme',  'Remember me', 'on','rememberme');
-            $html_form .= '<p class="text-center text-muted py-2 px-4 small" style="text-align: center;">By signing up, you agree to Nyumba Yanga Terms and  Privacy Policy</p>';
-            $html_form .= $form->input_hidden('token', Session::generateToken());
-            $html_form .= $form->input_submit('submit', '', 'SIGN UP', 'sign_up', 'class="btn-success btn-block font-weight-bold"');
-            
-            $html_form .= '<p class="my-3 text-center" style="text-align: center;"><a href="login.php" class="small text-muted">Already on Nyumba yanga?&nbsp;Log in</a></p>';  
-            $html_form .= $form->form_close();
+        $html_form  = output_message($message, "text-danger");
 
-            // Display the generated Form
-            echo $html_form;
-        ?>
-    </section>>
+        $html_form .= $form->form_open();
+        $html_form .= $form->input_text('name',  '', escape(Input::get('name')),'full_name', 'placeholder="First & Last Name"');
+        $html_form .= $form->input_tel('phone', '', escape(Input::get('phone')),'phone_number', 'placeholder="Phone Number"');
+        $html_form .= $form->input_email('email', '', escape(Input::get('email')),'email', 'placeholder="Email Address"');
+        $html_form .= $form->input_password('password',  '', escape(Input::get('password')),'password', 'placeholder="Create password"');
+        // $html_form .= $form->input_checkbox('rememberme',  'Remember me', 'on','rememberme');
+        $html_form .= '<p class="text-center text-muted py-2 px-4 small" style="text-align: center;">By signing up, you agree to Nyumba Yanga Terms and  Privacy Policy</p>';
+        $html_form .= $form->input_hidden('token', Session::generateToken());
+        $html_form .= $form->input_submit('submit', '', 'SIGN UP', 'sign_up', 'class="btn-success btn-block font-weight-bold"');
+        
+      
+        $html_form .= $form->form_close();
 
-
-<?php layout_template('footer.php'); ?>
+        // Display the generated Form
+        echo $html_form;
+    ?>
+</section>    
+<footer class="bg-light py-4 mx-n4">
+    <p class="m-0 text-center"><a href="login.php" class="text-success">Already on Nyumba yanga?&nbsp;Log in</a></p>
+</footer>  

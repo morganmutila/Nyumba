@@ -42,8 +42,8 @@ class Photo extends DBO{
                 $handle->image_ratio_crop   = true;
                 $handle->image_resize       = true;
                 $handle->image_ratio_y      = true;
-                $handle->image_x            = 320;
-                $handle->image_y            = 240;
+                $handle->image_x            = 300;
+                $handle->image_y            = 100;
                 $handle->image_contrast     = 20;
 
                 if ($handle->uploaded) {
@@ -87,9 +87,10 @@ class Photo extends DBO{
             $handle->image_ratio_crop   = true;
             $handle->image_resize       = true;
             $handle->image_ratio_y      = true;
-            $handle->image_x            = 320;
-            $handle->image_y            = 240;
+            $handle->image_x            = 640;
+            $handle->image_y            = 480;
             $handle->image_contrast     = 20;
+
 
 
             if ($handle->uploaded) {

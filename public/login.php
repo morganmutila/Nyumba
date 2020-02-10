@@ -44,40 +44,52 @@ $page_title = "Login - Nyumba Yanga";
 
 <?php layout_template('header.php'); ?>
 
-<?php if(Input::get('redirect') == "addproperty"){?>
-    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center"><!-- First thing first. Join Nyumba yanga and list your property --> Start by Joining NyumbaYanga</h2>
-    <p style="text-align: center;">-----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Already have an account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----</p>
-    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in to NyumbaYanga</h2>
-<?php } 
-elseif(Input::get('redirect') == "savedproperty" || Input::get('redirect') == "saved"){?>
-    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in or Sign up to save a listing</h2>  
-<?php }
-else {?>
-    <h2 class="text-center mb-4 font-weight-bold" style="text-align: center">Log in to NyumbaYanga</h2>
-<?php } ?>
+<section class="px-4 mb-5">
+
+    <?php if(Input::get('redirect') == "addproperty"){?>
+        <h5 class="text-center my-5 font-weight-bold">Start by Joining NyumbaYanga.</h5>
+        <p class="text-center">-----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Already have an account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----</p>
+        <h5 class="text-center my-5 font-weight-bold">Log in to NyumbaYanga.</h5>
+    <?php } 
+    elseif(Input::get('redirect') == "savedproperty" || Input::get('redirect') == "saved"){?>
+        <h5 class="text-center my-5 font-weight-bold">Log in or Sign up to save a listing.</h5>  
+    <?php }
+    else {?>
+        <h5 class="text-center my-5 font-weight-bold">To continue, log in to NyumbaYanga.</h5>
+    <?php } ?>
 
 
-<?php
-    $form = new Formr('bootstrap');
+    <?php
+        $form = new Formr('bootstrap');
 
-    $form->html5 = true; 
-    $form->method = 'POST';
+        $form->html5 = true; 
+        $form->method = 'POST';
 
-    $html_form  = output_message($message, "text-danger");
-    $html_form .= $form->form_open();
-    $html_form .= $form->input_text('username',  '', escape(Input::get('username')),'username', 'placeholder="Email, Phone or username" style="background-color:#F8F8F8";');
-    $html_form .= $form->input_password('password',  '', escape(Input::get('password')),'password', 'placeholder="Password" style="background-color:#F8F8F8";');
-    $html_form .= $form->input_checkbox('rememberme',  'Remember me', 'on','rememberme');
-    $html_form .= $form->input_hidden('token', Session::generateToken());
-    $html_form .= $form->input_submit('submit', '', 'LOG IN', 'sign_up', 'class="btn-success btn-block font-weight-bold"');
-    $html_form .= '<p class="my-3 text-center" style="text-align: center;">By logging in you agree to our<br>Terms and Privacy Policy</p>'; 
-    $html_form .= ' <ul class="list-inline" style="text-align: center;">
-                        <li class="list-inline-item"><a href="#" class="small text-muted">Forgot password?</a></li>
-                        <li class="list-inline-item"><strong>·</strong></li>
-                        <li class="list-inline-item"><a href="signup.php" class="small text-muted">Join NyumbaYanga?</a></li>
-                     </ul>';  
-    $html_form .= $form->form_close();
 
-    // Display the generated Form
-    echo $html_form;
-?>
+        //Display form messages
+        $html_form = output_message($message, "text-danger");
+
+        
+        $html_form .= $form->form_open();
+        $html_form .= $form->input_text('username',  '', escape(Input::get('username')),'username', 'placeholder="Email, Phone or username" style="background-color:#F8F8F8";');
+        $html_form .= $form->input_password('password',  '', escape(Input::get('password')),'password', 'placeholder="Password" style="background-color:#F8F8F8";');
+        $html_form .= $form->input_checkbox('rememberme',  'Remember me', 'on','rememberme');
+        $html_form .= $form->input_hidden('token', Session::generateToken());
+        $html_form .= $form->input_submit('submit', '', 'LOG IN', 'sign_up', 'class="btn-success rounded-lg btn-block"');
+     
+        $html_form .= $form->form_close();
+
+        // Display the generated Form
+        echo $html_form;
+    ?>
+        <p class="my-3 text-center">By logging in you agree to our<br>Terms and Privacy Policy</p>
+ 
+</section>  
+
+<footer class="bg-light py-3 mx-n4">
+    <ul class="nav justify-content-center">
+        <li class="nav-item"><a href="#" class="nav-link text-success">Forgot password?</a></li>
+        <li class="nav-item nav-link px-0 font-weight-bold">·</li>
+        <li class="nav-item"><a href="signup.php" class="nav-link text-success">Join NyumbaYanga?</a></li>
+    </ul>
+</footer>         

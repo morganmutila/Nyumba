@@ -37,84 +37,113 @@ $properties = Property::findBySql($sql, array(2));
 
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+	<?php layout_template('head.php'); ?>
+	<body class="bg-white">
 
-<?php layout_template('header.php'); ?>
+		<div id="root__ny">
 
-<?php echo output_message($message, "success"); ?>
-<?php echo flash("invalid_location", "warning"); ?>
+			<?php layout_template('nav.php'); ?>
 
-<div class="d-flex flex-row justify-content-between">	
-	<div class="order-1">
-		<h4 class="mb-2">Properties on Nyumba Yanga</h4>
-		<p class="text-secondary mb-4"><?php echo Property::total()." properties available on Nyumba yanga";?></p>
-	</div>	
-	<form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" class="order-2 float-right">
-		<?php
-		  	$sortby_types = array(	  		
-		        "Newest"      	      => "new",       
-		        // "Best match"  	  => "best",
-		        "Bedrooms"    	  	  => "beds",
-		        "Price (high to low)" => "price_asc",
-		        "Price (low to high)" => "price_desc"
-		  	);
-
-	        $select_sortby = "<select onchange=\"this.form.submit()\" name=\"sort\" class=\"form-control\">";
-	            foreach ($sortby_types as $type => $value) {
-	                $select_sortby .= "<option value=\"$value\" ";
-	                    if(Session::get('SORT') == $value || Config::get('default_sort') == $value){
-	                        $select_sortby .= "selected";
-	                    }
-	                $select_sortby .= ">".$type."</option>";
-	            }
-	        $select_sortby .= "</select>";
-	        echo $select_sortby;
-		?>
-	</form>
-</div>
-
-<div class ="properties row pt-4 d-flex flex-wrap">
-	<?php foreach ($properties as $property):?>
-		<div class="col-3 mb-4">
-			<a href="property.php?id=<?php echo $property->id; ?>">
-				<div style="position:relative;">
-					<img src="<?php echo $property->photo();?>" class="rounded img-fluid"/>
-					<?php
-					    echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';
-						 	echo "<div style=\"float:left\">";
-						 		if(new_listing($property->added)){
-						 			echo "<div style=\"background-color:#11cc11;color:#fff;padding:.1rem;border-radius:4px;margin:.5rem 0 .1rem .4rem;font-weight:bold;font-size:.7rem;width:38px;text-align:center;line-height:1rem;\">NEW</div>";
-								}
-								if(end_post_date($property->added)){
-									echo "<div style=\"background:rgba(0,0,0,0.3);color:#FFF;padding:2px 4px;margin-left:.4rem;border-radius:4px;font-size:.7rem;font-weight:bold;\">".time_ago($property->added)."</div>";
-								}
-							echo "</div>";	
-							if(isset($user)){
-								echo ($user->savedProperty($property->id)) ? fav_remove($property->id) : fav_add($property->id);		
-							}else{
-								echo '<a href="login.php?redirect=saved" style="color:#fff;float:right;padding:0 .4rem;margin-top:-.3rem;"><i class="mdi mdi-heart-outline mdi-36px"></i></a>';
-							}
-						echo '</div>';
-					?>
-				</div>	
-				<div class="py-1">		
-					<div style="font-size:1.26rem;">
-						<?php echo $property->priceValue();?>
-					</div>
-					<div style="font-size:.95rem;">
-						<span class="pr-2"><?php echo $property->beds;?> Beds</span>
-						<span class="pr-2"><?php echo $property->baths;?> Baths</span>
-						<span><?php echo $property->plotSize();?></span>
-					</div>
-					<div style="font-size:.95rem;"><?php echo "{$property->type} for {$property->market} {$property->address}";?></div>
-					<div style="font-size:.95rem;"><?php echo $property->location();?></div>
+			<section id="main-content" class="d-flex flex-column" style="position: relative;max-width: 100vw; min-height: calc(100vh - 60px);">
+				<div class="message-alerts">
+					<?php echo output_message($message, "success"); ?>
+					<?php echo flash("invalid_location", "warning"); ?>
 				</div>
-			</a>	
-		</div>
-	<?php endforeach; ?>
-	<?php if(empty($properties)){ ?><div style="text-align: center;color:#777;">Oohh no,  there is currently no listings at the moment</div><?php } ?>
-</div>
+				<div class="filters" style="height: 70px">
+					<div class="d-flex p-3 align-items-center border-bottom" style="height:70px;">
+						<button class="btn btn-white border rounded-lg mr-2 text-dark" style="max-width: calc(100% - 160px);"><i class="mdi mdi-filter-variant text-success"></i>&nbsp;Filter</button>
+						<form action="<?php echo escape($_SERVER['PHP_SELF']);?>" method="get" accept-charset="utf-8" class="pl-0 col-6" style="width:160px;">
+							<?php
+							  	$sortby_types = array(	  			  		       
+							        "Just for you"  	  => "best",
+							        "Newest"      	      => "new",
+							        "Bedrooms"    	  	  => "beds",
+							        "Price (high to low)" => "price_asc",
+							        "Price (low to high)" => "price_desc"
+							  	);
 
+						        $select_sortby = "<select onchange=\"this.form.submit()\" name=\"sort\" class=\"form-control rounded-lg\">";
+						            foreach ($sortby_types as $type => $value) {
+						                $select_sortby .= "<option value=\"$value\" ";
+						                    if(Session::get('SORT') == $value || Config::get('default_sort') == $value){
+						                        $select_sortby .= "selected";
+						                    }
+						                $select_sortby .= ">".$type."</option>";
+						            }
+						        $select_sortby .= "</select>";
+						        echo $select_sortby;
+							?>
+						</form>
+					</div>	
+				</div>
+				<div class="results_column d-flex flex-column flex-grow-1 flex-shrink-0">
+					<div class="results_container d-flex flex-column flex-grow-1 flex-shrink-1 py-4 px-3">
+						<div class="results_heading d-flex flex-column flex-grow-1 flex-shrink-1 pb-2">
+							<div class="heading-text mr-2">
+								<h1 class="font-weight-bold mb-3" style="font-size:1.25rem;">Properties for Rent & Sale on Nyumba Yanga</h1>
+								<h2 class="text-black-50 pb-3 m-0"  style="font-size: 1rem;"><?php echo Property::total()." homes found on Nyumba yanga";?></h2>
+							</div>
+						</div>
+						<div class ="properties">
+							<?php foreach ($properties as $property):?>
+								<div class="mb-4 rounded shadow-sm" style="position: relative; height: 260px; width: 100%; overflow: hidden;" role="presentation">
+									<div class="property-photo">
+										<div style="user-select: none; height: 100%;">
+											<div style="top: 0; height: inherit; position: relative;">
+												<div style="width: 100%; height: 158px; padding: 0; overflow: hidden; top: 0; left: 0;position: relative;background: transparent;"> 
+													<img src="<?php echo $property->photo();?>" class="bg-dark" style="object-fit: cover; height: 160px; width: 100%"/>
+													<?php
+													    echo '<div style="position:absolute;top: 0;right:0;left:0;width:100%;">';
+														 	echo "<div class=\"float-left\">";
+														 		if(new_listing($property->added)){
+														 			echo "<span class=\"d-inline-block bg-white text-success p-1 ml-1 mr-0 my-1 rounded font-weight-bold text-center\" style=\"font-size:.8rem;\">NEW</span>";
+																}
+																if(end_post_date($property->added)){
+																	echo "<span class=\"d-inline-block bg-secondary text-white p-1 ml-1 mr-0 my-1 rounded font-weight-bold text-center\" style=\"font-size:.7rem;\">".time_ago($property->added)."</span>";
+																}
+															echo "</div>";	
+															if(isset($user)){
+																echo ($user->savedProperty($property->id)) ? fav_remove($property->id) : fav_add($property->id);		
+															}else{
+																echo '<a href="login.php?redirect=saved" class="float-right px-2 py-1 m-1 bg-white align-bottom text-success rounded-circle"><i class="mdi mdi-heart-outline mdi-18px"></i></a>';
+															}
+														echo '</div>';
+													?>
+												</div>
+											</div>
+										</div>	
+									</div>	
+									<div class="ml-2" style="position: absolute; width: 100%; top: 165px">		
+										<div class="d-flex justify-content-between align-items-center mr-2">
+											<?php echo $property->priceValue();?>
+										</div>
+										<div class="d-flex justify-content-start align-items-center mr-2" style="font-size:.94rem;">
+											<span><?php echo $property->beds;?> bed</span>
+											<small class="px-2">•</small>
+											<span><?php echo $property->baths;?> bath</span>
+											<small class="px-2">•</small>
+											<span><?php echo $property->plotSize();?></span>						
+										</div>
+										<div class="mr-2" style="font-size:.96rem;"><?php echo $property->location();?></div>
+									</div>
+								</div>
+							<?php endforeach; ?>
+							<?php if(empty($properties)){ ?><div class="text-center gray-300">Oohh no,  there is currently no listings at the moment</div><?php } ?>
+						</div>
+					</div>
+					<div class="results_pagination">
+						<?php echo NY_PAGINATION(); ?>
+					</div>	
+				</div>
 
-<?php echo NY_PAGINATION(); ?>
+				<?php layout_template('footer.php'); ?>
+			</section>
 
-<?php layout_template('footer.php'); ?>
+		</div>	
+
+    	<script src="assets/js/jquery.js"></script>
+    	<script src="assets/js/bootstrap.bundle.js"></script>
+	</body>
+</html>
